@@ -2,57 +2,76 @@ import type { WorkPost } from '~/lib/content/work'
 
 interface WorkPostViewProps {
   post: WorkPost
+  position: number
 }
 
-const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-})
+const monoLabel = 'font-mono text-xs uppercase tracking-wider text-muted'
 
-function formatDate(iso: string): string {
-  const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return iso
-  return DATE_FORMATTER.format(d)
+function indexLabel(position: number): string {
+  return (position + 1).toString().padStart(2, '0')
 }
 
-export function WorkPostView({ post }: WorkPostViewProps) {
+function morphNameFor(slug: string): string {
+  return `work-title-${slug}`
+}
+
+function buildDateline(tags: string[], year: number | string): string {
+  if (tags.length === 0) return `${year}`
+  return `${tags.join(' · ')} · ${year}`
+}
+
+export function WorkPostView({ post, position }: WorkPostViewProps) {
   const { Body } = post
+  const morphName = morphNameFor(post.slug)
+  const yearValue = (() => {
+    const d = new Date(post.date)
+    return Number.isNaN(d.getTime()) ? post.date : d.getFullYear()
+  })()
+  const dateline = buildDateline(post.tags, yearValue)
+
   return (
-    <article className="mx-auto max-w-3xl pt-24 pb-32 sm:pt-32 lg:pt-40">
-      <header
-        className="mb-10"
-        style={{ viewTransitionName: `work-card-${post.slug}` }}
-      >
-        <time
-          dateTime={post.date}
-          className="font-mono text-xs uppercase tracking-wide text-muted"
+    <article className="mx-auto max-w-6xl pt-16 pb-32 sm:pt-24 lg:pt-32">
+      <header className="mb-12 sm:mb-16">
+        <div className="flex items-baseline justify-between border-b border-border/40 pb-3">
+          <span className={monoLabel}>{indexLabel(position)}</span>
+          <time dateTime={post.date} className={monoLabel}>
+            {yearValue}
+          </time>
+        </div>
+        <h1
+          className="mt-6 font-serif text-fg leading-[0.92] tracking-tight"
+          style={{
+            fontSize: 'clamp(3rem, 9vw, 7rem)',
+            viewTransitionName: morphName,
+          }}
+          data-view-transition-name={morphName}
         >
-          {formatDate(post.date)}
-        </time>
-        <h1 className="mt-3 font-sans font-halbfett tracking-tight text-fg text-4xl sm:text-5xl lg:text-6xl">
           {post.title}
         </h1>
+        <p className={`mt-6 ${monoLabel}`}>{dateline}</p>
+        {post.heroImage ? (
+          <div className="mt-10 aspect-[16/9] w-full overflow-hidden border border-border/40">
+            <img
+              src={post.heroImage}
+              alt={`${post.title} — case study hero`}
+              className="h-full w-full object-cover"
+            />
+          </div>
+        ) : (
+          <div
+            aria-hidden="true"
+            data-hero-placeholder
+            className="mt-10 aspect-[16/9] w-full border border-border/40 bg-surface/40"
+          />
+        )}
         {post.excerpt && (
-          <p className="mt-4 font-sans font-buch text-lg sm:text-xl text-muted max-w-prose">
+          <p className="mt-8 font-sans font-buch text-lg sm:text-xl text-muted max-w-prose">
             {post.excerpt}
           </p>
         )}
-        {post.tags.length > 0 && (
-          <ul className="mt-6 flex flex-wrap gap-2">
-            {post.tags.map((tag) => (
-              <li
-                key={tag}
-                className="font-mono text-xs uppercase tracking-wide text-muted border border-muted/30 rounded-full px-2 py-0.5"
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
-        )}
       </header>
 
-      <div className="prose-body font-sans font-buch text-fg max-w-prose [&_h2]:font-halbfett [&_h2]:text-2xl [&_h2]:mt-12 [&_h2]:mb-4 [&_p]:mt-4 [&_p]:leading-relaxed">
+      <div className="mx-auto max-w-prose font-sans font-buch text-fg [&_h2]:font-halbfett [&_h2]:text-2xl [&_h2]:mt-12 [&_h2]:mb-4 [&_p]:mt-4 [&_p]:leading-relaxed">
         <Body />
       </div>
     </article>

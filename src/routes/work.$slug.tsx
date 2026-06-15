@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import {
   getWorkPost,
+  getWorkPostSummaries,
   resolveWorkPost,
   WorkNotFoundError,
 } from '~/lib/content/work'
@@ -13,7 +14,8 @@ export const Route = createFileRoute('/work/$slug')({
       const post = resolveWorkPost(params.slug)
       const { Body: _Body, ...summary } = post
       void _Body
-      return { summary }
+      const position = getWorkPostSummaries().findIndex((p) => p.slug === params.slug)
+      return { summary, position: position >= 0 ? position : 0 }
     } catch (err) {
       if (err instanceof WorkNotFoundError) throw notFound()
       throw err
@@ -24,12 +26,12 @@ export const Route = createFileRoute('/work/$slug')({
 })
 
 function WorkPostPage() {
-  const { summary } = Route.useLoaderData()
+  const { summary, position } = Route.useLoaderData()
   const post = getWorkPost(summary.slug)
   if (!post) throw notFound()
   return (
-    <main className="min-h-screen bg-bg text-fg px-6">
-      <WorkPostView post={post} />
+    <main className="min-h-screen px-6">
+      <WorkPostView post={post} position={position} />
     </main>
   )
 }

@@ -1,61 +1,105 @@
 import type { WorkPostSummary } from '~/lib/content/work'
+import { HoverLift } from './HoverLift'
 import { ViewTransitionLink } from './ViewTransitionLink'
 
 interface WorkIndexViewProps {
   posts: WorkPostSummary[]
 }
 
-const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'short',
-})
+const monoLabel = 'font-mono text-xs uppercase tracking-wider text-muted'
 
-function formatDate(iso: string): string {
+function indexLabel(i: number): string {
+  return (i + 1).toString().padStart(2, '0')
+}
+
+function year(iso: string): number | string {
   const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return iso
-  return DATE_FORMATTER.format(d)
+  return Number.isNaN(d.getTime()) ? iso : d.getFullYear()
+}
+
+function morphNameFor(slug: string): string {
+  return `work-title-${slug}`
+}
+
+function buildDateline(tags: string[], yr: number | string): string {
+  if (tags.length === 0) return `${yr}`
+  return `${tags.join(' · ')} · ${yr}`
+}
+
+function Spread({ post, position }: { post: WorkPostSummary; position: number }) {
+  const morphName = morphNameFor(post.slug)
+  const yr = year(post.date)
+  const dateline = buildDateline(post.tags, yr)
+
+  return (
+    <li>
+      <HoverLift>
+        <article>
+          <ViewTransitionLink
+            to="/work/$slug"
+            params={{ slug: post.slug }}
+            className="block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            {post.heroImage ? (
+              <div className="mb-6 sm:mb-8 aspect-[16/9] w-full overflow-hidden border border-border/40">
+                <img
+                  src={post.heroImage}
+                  alt={`${post.title} — case study hero`}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            ) : (
+              <div
+                aria-hidden="true"
+                data-hero-placeholder
+                className="mb-6 sm:mb-8 aspect-[16/9] w-full border border-border/40 bg-surface/40"
+              />
+            )}
+            <div className="flex items-baseline justify-between border-b border-border/40 pb-3">
+              <span className={monoLabel}>{indexLabel(position)}</span>
+              <span className={monoLabel}>{yr}</span>
+            </div>
+            <h2
+              className="mt-6 font-serif text-fg leading-[0.95] tracking-tight"
+              style={{
+                fontSize: 'clamp(2.5rem, 7vw, 5rem)',
+                viewTransitionName: morphName,
+              }}
+              data-view-transition-name={morphName}
+            >
+              {post.title}
+            </h2>
+            <p className={`mt-4 ${monoLabel}`}>{dateline}</p>
+            {post.excerpt && (
+              <p className="mt-6 font-sans font-buch text-base sm:text-lg text-muted max-w-prose">
+                {post.excerpt}
+              </p>
+            )}
+          </ViewTransitionLink>
+        </article>
+      </HoverLift>
+    </li>
+  )
 }
 
 export function WorkIndexView({ posts }: WorkIndexViewProps) {
   return (
-    <section className="mx-auto max-w-3xl pt-24 pb-32 sm:pt-32 lg:pt-40">
-      <header className="mb-12">
-        <h1 className="font-sans font-halbfett tracking-tight text-fg text-4xl sm:text-5xl">
+    <section className="mx-auto max-w-6xl pt-20 pb-32 sm:pt-28 lg:pt-32">
+      <header className="mb-16 sm:mb-20">
+        <h1
+          className="font-serif text-fg leading-[0.92] tracking-tight"
+          style={{ fontSize: 'clamp(4rem, 12vw, 9rem)' }}
+        >
           Work
         </h1>
-        <p className="mt-3 font-sans font-buch text-base sm:text-lg text-muted max-w-prose">
-          Case studies on biomechanics tooling, movement modeling, and the systems that connect
-          lab work to performance staff.
+        <p className={`mt-6 ${monoLabel}`}>
+          Case studies — biomechanics tooling, movement modeling, lab-to-field systems
         </p>
       </header>
 
-      <ul className="flex flex-col gap-10">
-        {posts.map((post) => (
-          <li key={post.slug}>
-            <article>
-              <ViewTransitionLink
-                to="/work/$slug"
-                params={{ slug: post.slug }}
-                name={`work-card-${post.slug}`}
-                className="group block focus:outline-none"
-              >
-                <time
-                  dateTime={post.date}
-                  className="font-mono text-xs uppercase tracking-wide text-muted"
-                >
-                  {formatDate(post.date)}
-                </time>
-                <h2 className="mt-2 font-sans font-halbfett text-2xl sm:text-3xl text-fg group-hover:underline group-focus-visible:underline underline-offset-4">
-                  {post.title}
-                </h2>
-                {post.excerpt && (
-                  <p className="mt-2 font-sans font-buch text-base text-muted max-w-prose">
-                    {post.excerpt}
-                  </p>
-                )}
-              </ViewTransitionLink>
-            </article>
-          </li>
+      <ul className="flex flex-col gap-24 sm:gap-32">
+        {posts.map((post, i) => (
+          <Spread key={post.slug} post={post} position={i} />
         ))}
       </ul>
     </section>

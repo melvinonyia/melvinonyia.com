@@ -12,7 +12,7 @@ export const Route = createFileRoute('/work/')({
 function WorkIndexPage() {
   const { posts } = Route.useLoaderData()
   return (
-    <main className="min-h-screen bg-bg text-fg px-6">
+    <main className="min-h-screen px-6">
       <WorkIndexView posts={posts} />
     </main>
   )
