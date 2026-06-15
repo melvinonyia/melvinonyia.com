@@ -31,6 +31,7 @@ const ESSAY: EssaySummary = {
   excerpt: 'A short excerpt.',
   tags: ['code'],
   readTime: 4,
+  coverImage: null,
 }
 
 describe('RecentArticles', () => {
@@ -39,10 +40,18 @@ describe('RecentArticles', () => {
     expect(container.firstChild).toBeNull()
   })
 
-  it('renders the Recent Articles section when essays exist', () => {
+  it('renders the Recent Articles section with title, subtitle, and uppercase meta', () => {
     render(<RecentArticles essays={[ESSAY]} />)
     expect(screen.getByText('Recent Articles')).toBeInTheDocument()
     expect(screen.getByText('A Test Essay')).toBeInTheDocument()
+    expect(screen.getByText('A short excerpt.')).toBeInTheDocument()
+    expect(screen.getByText('CODE')).toBeInTheDocument()
+  })
+
+  it('links the card to /writing/$slug', () => {
+    render(<RecentArticles essays={[ESSAY]} />)
+    const card = screen.getByLabelText('A Test Essay')
+    expect(card).toHaveAttribute('href', '/writing/a-test-essay')
   })
 
   it('renders the More Articles CTA linking to /writing', () => {

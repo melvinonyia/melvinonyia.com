@@ -34,21 +34,23 @@ const POST: WorkPostSummary = {
 }
 
 describe('RecentWork', () => {
-  it('renders nothing when there are no work posts', () => {
+  it('renders nothing when there are no posts', () => {
     const { container } = render(<RecentWork posts={[]} />)
     expect(container.firstChild).toBeNull()
   })
 
-  it('renders the Recent Work section with title and date', () => {
+  it('renders the Recent Work section with title, subtitle, and uppercase meta', () => {
     render(<RecentWork posts={[POST]} />)
     expect(screen.getByText('Recent Work')).toBeInTheDocument()
     expect(screen.getByText('A Test Project')).toBeInTheDocument()
+    expect(screen.getByText('Short summary.')).toBeInTheDocument()
+    expect(screen.getByText('TOOLING')).toBeInTheDocument()
   })
 
-  it('links the title to the /work/$slug detail route', () => {
+  it('links the card to /work/$slug', () => {
     render(<RecentWork posts={[POST]} />)
-    const titleLink = screen.getByText('A Test Project').closest('a')!
-    expect(titleLink).toHaveAttribute('href', '/work/a-test-project')
+    const card = screen.getByLabelText('A Test Project')
+    expect(card).toHaveAttribute('href', '/work/a-test-project')
   })
 
   it('renders the More Work CTA linking to /work', () => {

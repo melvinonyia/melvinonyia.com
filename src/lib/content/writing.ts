@@ -6,6 +6,7 @@ export interface EssayFrontmatter {
   excerpt?: string
   tags?: string[]
   readTime?: number
+  coverImage?: string
 }
 
 export interface EssaySummary {
@@ -15,6 +16,7 @@ export interface EssaySummary {
   excerpt: string
   tags: string[]
   readTime?: number
+  coverImage?: string | null
 }
 
 export interface Essay extends EssaySummary {
@@ -42,6 +44,7 @@ function toEssay(filePath: string, mod: MdxModule): Essay {
     excerpt: mod.frontmatter.excerpt ?? '',
     tags: mod.frontmatter.tags ?? [],
     readTime: mod.frontmatter.readTime,
+    coverImage: mod.frontmatter.coverImage ?? null,
     Body: mod.default,
   }
 }

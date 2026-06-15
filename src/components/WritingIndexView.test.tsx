@@ -31,6 +31,7 @@ const ESSAY: EssaySummary = {
   excerpt: 'A short excerpt.',
   tags: ['code'],
   readTime: 4,
+  coverImage: null,
 }
 
 describe('WritingIndexView', () => {
@@ -44,16 +45,16 @@ describe('WritingIndexView', () => {
     expect(screen.getByText(/No essays yet/)).toBeInTheDocument()
   })
 
-  it('renders an essay title, date, and excerpt when essays exist', () => {
+  it('renders the article card with title, subtitle, and uppercase meta', () => {
     render(<WritingIndexView essays={[ESSAY]} />)
     expect(screen.getByText('A Test Essay')).toBeInTheDocument()
     expect(screen.getByText('A short excerpt.')).toBeInTheDocument()
-    expect(screen.getByText(/Oct 2025/)).toBeInTheDocument()
+    expect(screen.getByText('CODE')).toBeInTheDocument()
   })
 
-  it('links the essay title to its detail route', () => {
+  it('links the card to /writing/$slug', () => {
     render(<WritingIndexView essays={[ESSAY]} />)
-    const titleLink = screen.getByText('A Test Essay').closest('a')!
-    expect(titleLink).toHaveAttribute('href', '/writing/a-test-essay')
+    const card = screen.getByLabelText('A Test Essay')
+    expect(card).toHaveAttribute('href', '/writing/a-test-essay')
   })
 })

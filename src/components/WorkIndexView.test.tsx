@@ -44,16 +44,16 @@ describe('WorkIndexView', () => {
     expect(screen.getByText(/No projects yet/)).toBeInTheDocument()
   })
 
-  it('renders post title, date, and excerpt when posts exist', () => {
+  it('renders the article card with title, subtitle, and uppercase meta', () => {
     render(<WorkIndexView posts={[POST]} />)
     expect(screen.getByText('A Test Project')).toBeInTheDocument()
     expect(screen.getByText('Short summary.')).toBeInTheDocument()
-    expect(screen.getByText(/(?:Aug|Sep) 2025/)).toBeInTheDocument()
+    expect(screen.getByText('TOOLING')).toBeInTheDocument()
   })
 
-  it('links the title to /work/$slug', () => {
+  it('links the card to /work/$slug', () => {
     render(<WorkIndexView posts={[POST]} />)
-    const link = screen.getByText('A Test Project').closest('a')!
-    expect(link).toHaveAttribute('href', '/work/a-test-project')
+    const card = screen.getByLabelText('A Test Project')
+    expect(card).toHaveAttribute('href', '/work/a-test-project')
   })
 })

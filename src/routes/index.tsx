@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Hero } from '~/components/Hero'
-import { TechnologyGrid } from '~/components/TechnologyGrid'
+import { TechnologyIcons } from '~/components/TechnologyIcons'
 import { RecentArticles } from '~/components/RecentArticles'
 import { RecentWork } from '~/components/RecentWork'
 import { getEssaySummaries } from '~/lib/content/writing'
@@ -23,7 +23,7 @@ function HomePage() {
   return (
     <>
       <Hero />
-      <TechnologyGrid />
+      <TechnologyIcons />
       <RecentWork posts={workPosts} />
       <RecentArticles essays={essays} />
     </>
