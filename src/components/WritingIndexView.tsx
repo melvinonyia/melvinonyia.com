@@ -1,11 +1,12 @@
 import type { EssaySummary } from '~/lib/content/writing'
-import { Link } from '@tanstack/react-router'
+import { ViewTransitionLink } from './ViewTransitionLink'
+import { HoverLift } from './HoverLift'
 
 interface WritingIndexViewProps {
   essays: EssaySummary[]
 }
 
-const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
+const MONTH_FORMATTER = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
   month: 'short',
 })
@@ -13,29 +14,32 @@ const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
 function formatDate(iso: string): string {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
-  return DATE_FORMATTER.format(d)
+  return MONTH_FORMATTER.format(d)
+}
+
+function essayYear(iso: string): string {
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return ''
+  return String(d.getFullYear())
 }
 
 function WritingEmptyState() {
   return (
-    <div
-      data-empty-state
-      className="rounded-md border border-dashed border-border/60 p-8"
-    >
-      <p className="font-sans font-buch text-base sm:text-lg text-fg">
-        Writing soon.
+    <div data-empty-state className="mt-12 max-w-prose">
+      <p className="font-serif text-4xl sm:text-5xl text-fg leading-tight">
+        Issue — in preparation.
       </p>
-      <p className="mt-2 font-sans font-buch text-sm text-muted max-w-prose">
-        Follow along on{' '}
+      <p className="mt-6 font-mono text-xs uppercase tracking-wider text-muted">
+        First essay arriving soon. Follow on{' '}
         <a
           href="https://x.com/melvinonyia"
           target="_blank"
           rel="noreferrer noopener"
-          className="text-accent underline underline-offset-4 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="underline underline-offset-4 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           X
-        </a>{' '}
-        until the first essay lands here.
+        </a>
+        .
       </p>
     </div>
   )
@@ -43,45 +47,54 @@ function WritingEmptyState() {
 
 export function WritingIndexView({ essays }: WritingIndexViewProps) {
   return (
-    <section className="mx-auto max-w-3xl pt-24 pb-32 sm:pt-32 lg:pt-40">
-      <header className="mb-12">
-        <h1 className="font-sans font-halbfett tracking-tight text-fg text-4xl sm:text-5xl">
+    <section className="mx-auto max-w-5xl pt-24 pb-32 sm:pt-32 lg:pt-40">
+      <header className="mb-16">
+        <h1
+          className="font-serif text-fg leading-[0.95] tracking-tight"
+          style={{ fontSize: 'clamp(4rem, 12vw, 9rem)' }}
+        >
           Writing
         </h1>
-        <p className="mt-3 font-sans font-buch text-base sm:text-lg text-muted max-w-prose">
-          Essays on movement modeling, biomechanics tooling, and the gap between lab work and
-          the field.
+        <p className="mt-6 font-mono text-xs uppercase tracking-wider text-muted">
+          Essays on movement modeling, biomechanics tooling, and the gap between lab and field.
         </p>
       </header>
 
       {essays.length === 0 ? (
         <WritingEmptyState />
       ) : (
-        <ul className="flex flex-col gap-10">
+        <ul className="border-t border-border">
           {essays.map((essay) => (
-            <li key={essay.slug}>
-              <article>
-                <Link
+            <li key={essay.slug} className="border-b border-border">
+              <HoverLift>
+                <ViewTransitionLink
                   to="/writing/$slug"
                   params={{ slug: essay.slug }}
-                  className="group block focus:outline-none"
+                  className="block focus:outline-none"
                 >
-                  <time
-                    dateTime={essay.date}
-                    className="font-mono text-xs uppercase tracking-wide text-muted"
-                  >
-                    {formatDate(essay.date)}
-                  </time>
-                  <h2 className="mt-2 font-sans font-halbfett text-2xl sm:text-3xl text-fg group-hover:underline group-focus-visible:underline underline-offset-4">
-                    {essay.title}
-                  </h2>
-                  {essay.excerpt && (
-                    <p className="mt-2 font-sans font-buch text-base text-muted max-w-prose">
-                      {essay.excerpt}
-                    </p>
-                  )}
-                </Link>
-              </article>
+                  <article className="grid grid-cols-[7rem_1fr_4rem] items-baseline gap-6 py-8 sm:py-10">
+                    <time
+                      dateTime={essay.date}
+                      className="font-mono text-xs uppercase tracking-wider text-muted"
+                    >
+                      {formatDate(essay.date)}
+                    </time>
+                    <div>
+                      <h2 className="font-serif text-3xl sm:text-4xl leading-tight text-fg">
+                        {essay.title}
+                      </h2>
+                      {essay.excerpt && (
+                        <p className="mt-3 font-sans font-buch text-base text-muted max-w-prose">
+                          {essay.excerpt}
+                        </p>
+                      )}
+                    </div>
+                    <span className="justify-self-end font-mono text-xs uppercase tracking-wider text-muted">
+                      {essayYear(essay.date)}
+                    </span>
+                  </article>
+                </ViewTransitionLink>
+              </HoverLift>
             </li>
           ))}
         </ul>
