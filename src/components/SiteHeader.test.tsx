@@ -48,12 +48,15 @@ describe('SiteHeader', () => {
     expect(within(nav).getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '/contact')
   })
 
-  it('renders a non-interactive ⌘K hint', () => {
+  it('renders a ⌘K trigger button that opens the command palette', () => {
     const { container } = render(<SiteHeader />)
-    const kbd = container.querySelector('kbd')
-    expect(kbd).not.toBeNull()
-    expect(kbd!.textContent).toMatch(/⌘.*K/)
-    expect(kbd).toHaveAttribute('aria-hidden', 'true')
+    const trigger = container.querySelector(
+      '[data-palette-trigger]',
+    ) as HTMLButtonElement | null
+    expect(trigger).not.toBeNull()
+    expect(trigger!.tagName).toBe('BUTTON')
+    expect(trigger!.textContent).toMatch(/⌘.*K/)
+    expect(trigger).toHaveAttribute('aria-label', 'Open command palette')
   })
 
   it('renders the wordmark as a link back to home', () => {

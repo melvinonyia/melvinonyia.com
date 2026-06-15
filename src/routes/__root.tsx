@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import appCss from '~/styles/globals.css?url'
 import { SiteHeader } from '~/components/SiteHeader'
 import { SiteFooter } from '~/components/SiteFooter'
+import { CommandPaletteController } from '~/components/CommandPaletteController'
 
 const COPYRIGHT_YEAR = 2026
 
@@ -48,9 +49,11 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <RootDocument>
-      <SiteHeader />
-      <Outlet />
-      <SiteFooter year={COPYRIGHT_YEAR} />
+      <CommandPaletteController>
+        <SiteHeader />
+        <Outlet />
+        <SiteFooter year={COPYRIGHT_YEAR} />
+      </CommandPaletteController>
     </RootDocument>
   )
 }

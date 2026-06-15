@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import type { ComponentProps } from 'react'
 import { MagneticLink } from './MagneticLink'
+import { useOpenCommandPalette } from './CommandPaletteController'
 
 interface NavItem {
   label: string
@@ -16,6 +17,7 @@ const NAV_ITEMS: readonly NavItem[] = [
 ] as const
 
 export function SiteHeader() {
+  const openPalette = useOpenCommandPalette()
   return (
     <header className="sticky top-0 z-20 border-b border-border/40 bg-bg/80 backdrop-blur supports-[backdrop-filter]:bg-bg/60">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
@@ -45,13 +47,16 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <kbd
-          aria-hidden="true"
-          className="hidden sm:inline-flex items-center gap-1 rounded-sm border border-border/60 bg-surface/60 px-2 py-1 font-mono text-xs text-muted"
+        <button
+          type="button"
+          onClick={() => openPalette?.()}
+          aria-label="Open command palette"
+          data-palette-trigger
+          className="hidden sm:inline-flex items-center gap-1 rounded-sm border border-border/60 bg-surface/60 px-2 py-1 font-mono text-xs text-muted transition-colors hover:text-fg hover:border-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
-          <span>⌘</span>
-          <span>K</span>
-        </kbd>
+          <span aria-hidden="true">⌘</span>
+          <span aria-hidden="true">K</span>
+        </button>
       </div>
     </header>
   )
