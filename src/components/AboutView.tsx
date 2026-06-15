@@ -1,16 +1,31 @@
 import { Link } from '@tanstack/react-router'
-import { SocialLinks } from './SocialLinks'
+import { HoverLift } from './HoverLift'
+import { CONTACT_EMAIL, SOCIAL_LINKS } from '~/lib/site/socials'
+
+interface AboutLink {
+  label: string
+  href: string
+  external: boolean
+}
+
+const ABOUT_LINKS: readonly AboutLink[] = [
+  ...SOCIAL_LINKS.map((s) => ({ label: s.label, href: s.href, external: true })),
+  { label: 'Email', href: `mailto:${CONTACT_EMAIL}`, external: false },
+]
 
 export function AboutView() {
   return (
-    <section className="mx-auto max-w-3xl pt-24 pb-32 sm:pt-32 lg:pt-40">
-      <header className="mb-10">
-        <h1 className="font-sans font-halbfett tracking-tight text-fg text-4xl sm:text-5xl">
+    <section className="mx-auto max-w-2xl pt-24 pb-32 sm:pt-32 lg:pt-40">
+      <header>
+        <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl text-fg leading-none">
           About
         </h1>
+        <p className="mt-6 font-mono text-xs uppercase tracking-wider text-muted">
+          Staff Software Engineer — Currently writing
+        </p>
       </header>
 
-      <div className="font-sans font-buch text-base sm:text-lg text-fg max-w-prose space-y-5 leading-relaxed">
+      <div className="mt-12 font-sans text-base sm:text-lg text-fg space-y-6 leading-relaxed">
         <p>
           I'm a staff software engineer whose work sits between biomechanics and engineering.
           The questions I'm closest to: how do we model the way an athlete moves, and how do we
@@ -29,18 +44,35 @@ export function AboutView() {
         </p>
       </div>
 
-      <div className="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <SocialLinks
-          className="flex items-center gap-5"
-          labelClassName="font-sans font-buch text-sm text-muted"
-        />
+      <nav aria-label="Find me elsewhere" className="mt-16">
+        <ul className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-8">
+          {ABOUT_LINKS.map((link) => (
+            <li key={link.label}>
+              <HoverLift className="w-fit">
+                <a
+                  href={link.href}
+                  {...(link.external
+                    ? { target: '_blank', rel: 'noreferrer noopener' }
+                    : {})}
+                  className="block py-2 pr-4 font-mono text-xs uppercase tracking-wider text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+                >
+                  {link.label}
+                </a>
+              </HoverLift>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
+      <div className="mt-16">
         <Link
           to="/contact"
-          className="inline-flex items-center gap-2 rounded-sm border border-accent/60 px-4 py-2 font-sans font-buch text-sm text-accent transition-colors hover:bg-accent/10 focus-visible:bg-accent/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="inline-flex items-baseline gap-3 font-serif text-2xl sm:text-3xl text-fg transition-opacity hover:opacity-70 focus-visible:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         >
           <span>Get in touch</span>
-          <span aria-hidden="true">→</span>
+          <span aria-hidden="true" className="font-mono text-base">
+            →
+          </span>
         </Link>
       </div>
     </section>
