@@ -23,7 +23,7 @@ function kindLabel(kind: SearchEntry['kind']): string {
     case 'route':
       return 'Route'
     case 'work':
-      return 'Case study'
+      return 'Work'
     case 'essay':
       return 'Essay'
     case 'external':
@@ -31,6 +31,16 @@ function kindLabel(kind: SearchEntry['kind']): string {
     case 'mailto':
       return 'Email'
   }
+}
+
+const ROW_BASE =
+  'flex w-full items-center justify-between gap-4 border-l-2 px-4 py-3 text-left cursor-pointer'
+
+function rowClass(isSelected: boolean): string {
+  const state = isSelected
+    ? 'border-l-[color:var(--hover-rule-color)] text-fg'
+    : 'border-l-transparent text-fg/85 hover:text-fg'
+  return `${ROW_BASE} ${state}`
 }
 
 export function CommandPalette({ entries, onClose }: CommandPaletteProps) {
@@ -132,30 +142,31 @@ export function CommandPalette({ entries, onClose }: CommandPaletteProps) {
     <div
       data-palette-backdrop
       onClick={handleBackdropClick}
-      className="fixed inset-0 z-50 flex items-start justify-center bg-bg/80 pt-[12vh] backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-bg/70 pt-[12vh] backdrop-blur-md"
       role="presentation"
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
-        className="w-full max-w-xl mx-4 rounded-md border border-border/60 bg-surface shadow-2xl"
+        className="w-full max-w-[640px] mx-4 border border-border bg-surface"
       >
         <input
           ref={inputRef}
           type="text"
-          placeholder="Search the site…"
+          placeholder="SEARCH —"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full bg-transparent px-4 py-3 font-sans font-buch text-base text-fg placeholder:text-muted outline-none border-b border-border/40"
+          style={{ caretColor: 'var(--hover-rule-color)' }}
+          className="w-full bg-transparent px-4 py-4 font-mono text-xs uppercase tracking-wider text-fg placeholder:text-muted outline-none border-b border-border"
           aria-controls="command-palette-listbox"
           aria-activedescendant={
             results[selected] ? `palette-item-${selected}` : undefined
           }
         />
         {results.length === 0 ? (
-          <div className="px-4 py-8 text-center font-sans font-buch text-sm text-muted">
+          <div className="px-4 py-10 text-center font-mono text-xs uppercase tracking-wider text-muted">
             No results
           </div>
         ) : (
@@ -163,20 +174,28 @@ export function CommandPalette({ entries, onClose }: CommandPaletteProps) {
             id="command-palette-listbox"
             role="listbox"
             ref={listRef}
-            className="max-h-96 overflow-y-auto py-1"
+            className="max-h-96 overflow-y-auto py-2"
           >
             {results.map((entry, i) => {
               const isSelected = i === selected
               const itemId = `palette-item-${i}`
-              const itemClass = `flex w-full items-center justify-between gap-3 px-4 py-2 text-left font-sans font-buch text-sm cursor-pointer ${
-                isSelected ? 'bg-accent/15 text-fg' : 'text-fg/90 hover:bg-surface/60'
-              }`
+              const itemClass = rowClass(isSelected)
               const itemContent = (
                 <>
-                  <span className="flex-1 truncate">{entry.title}</span>
-                  <span className="font-mono text-[0.65rem] uppercase tracking-wide text-muted">
+                  <span className="flex-1 truncate font-serif text-lg leading-tight">
+                    {entry.title}
+                  </span>
+                  <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">
                     {kindLabel(entry.kind)}
                   </span>
+                  {isSelected && (
+                    <span
+                      aria-hidden="true"
+                      className="font-mono text-[0.65rem] uppercase tracking-wider text-muted"
+                    >
+                      ↵
+                    </span>
+                  )}
                 </>
               )
 

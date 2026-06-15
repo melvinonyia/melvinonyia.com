@@ -61,9 +61,11 @@ describe('CommandPalette', () => {
   it('lists all entries when the query is empty', () => {
     render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
     expect(screen.getByText('Home')).toBeInTheDocument()
-    expect(screen.getByText('Work')).toBeInTheDocument()
     expect(screen.getByText('Movement fingerprint')).toBeInTheDocument()
     expect(screen.getByText('GitHub')).toBeInTheDocument()
+    // 'Work' appears twice — once as a route title, once as a kind label
+    // on the work case study row. The listbox renders exactly four entries.
+    expect(screen.getAllByRole('option')).toHaveLength(4)
   })
 
   it('filters results as the user types', () => {
@@ -136,9 +138,10 @@ describe('CommandPalette', () => {
   it('clicking a result activates it', () => {
     const onClose = vi.fn()
     render(<CommandPalette entries={FIXTURE} onClose={onClose} />)
-    fireEvent.click(screen.getByText('Work'))
+    // Use 'Home' (unique) — 'Work' appears as both a title and a kind label.
+    fireEvent.click(screen.getByText('Home'))
     expect(navigateMock).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/work' }),
+      expect.objectContaining({ to: '/' }),
     )
     expect(onClose).toHaveBeenCalledTimes(1)
   })
@@ -157,5 +160,36 @@ describe('CommandPalette', () => {
   it('exposes the listbox with role=listbox for assistive tech', () => {
     render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
     expect(screen.getByRole('listbox')).toBeInTheDocument()
+  })
+
+  it('marks the active row with a brick left-edge rule (no background fill)', () => {
+    render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
+    const items = screen.getAllByRole('option')
+    // Selected row resolves the rule color via --hover-rule-color.
+    expect(items[0]!.className).toMatch(/border-l-\[color:var\(--hover-rule-color\)\]/)
+    // Inactive rows keep a transparent left border so layout doesn't shift.
+    expect(items[1]!.className).toMatch(/border-l-transparent/)
+    // No background fill on the active row.
+    expect(items[0]!.className).not.toMatch(/bg-(accent|surface|fg|muted)/)
+  })
+
+  it('moves the brick left-edge rule when ArrowDown changes selection', () => {
+    render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
+    fireEvent.keyDown(screen.getByPlaceholderText(/search/i), { key: 'ArrowDown' })
+    const items = screen.getAllByRole('option')
+    expect(items[0]!.className).toMatch(/border-l-transparent/)
+    expect(items[1]!.className).toMatch(/border-l-\[color:var\(--hover-rule-color\)\]/)
+  })
+
+  it('input wires the caret-color to --hover-rule-color (brick on dark, fg on paper)', () => {
+    render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
+    const input = screen.getByPlaceholderText(/search/i) as HTMLInputElement
+    expect(input.style.caretColor).toBe('var(--hover-rule-color)')
+  })
+
+  it('input is mono-styled (font-mono utility on the element)', () => {
+    render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
+    const input = screen.getByPlaceholderText(/search/i)
+    expect(input.className).toMatch(/font-mono/)
   })
 })
