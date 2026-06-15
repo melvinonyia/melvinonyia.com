@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
+    "smoke:prod": "node scripts/smoke-prod.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
 const PORT = Number(process.env.E2E_PORT ?? 4173)
-const BASE_URL = `http://localhost:${PORT}`
+const EXTERNAL_BASE_URL = process.env.PLAYWRIGHT_BASE_URL
+const BASE_URL = EXTERNAL_BASE_URL ?? `http://localhost:${PORT}`
 
 export default defineConfig({
   testDir: './e2e',
@@ -21,12 +22,16 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: `npx --yes serve dist/client -p ${PORT} --no-clipboard --single`,
-    port: PORT,
-    reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
-    stdout: 'ignore',
-    stderr: 'pipe',
-  },
+  // When PLAYWRIGHT_BASE_URL is set (e.g., for a production smoke pass),
+  // skip spinning up a local static server and aim tests at the external URL.
+  webServer: EXTERNAL_BASE_URL
+    ? undefined
+    : {
+        command: `npx --yes serve dist/client -p ${PORT} --no-clipboard`,
+        port: PORT,
+        reuseExistingServer: !process.env.CI,
+        timeout: 60_000,
+        stdout: 'ignore',
+        stderr: 'pipe',
+      },
 })
