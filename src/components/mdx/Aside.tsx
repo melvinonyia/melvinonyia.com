@@ -7,13 +7,8 @@ interface AsideProps {
 
 export function Aside({ children, label }: AsideProps) {
   return (
-    <aside
-      data-aside
-      className="my-8 border-l border-border pl-6 font-mono text-sm leading-relaxed text-muted"
-    >
-      {label && (
-        <p className="mb-2 text-xs uppercase tracking-wider text-fg">{label}</p>
-      )}
+    <aside data-aside className="mdx-aside">
+      {label && <p className="mdx-aside-label">{label}</p>}
       {children}
     </aside>
   )

@@ -11,7 +11,7 @@ describe('aboutHead', () => {
     const head = aboutHead()
     expect(findMeta(head.meta, (m) => 'title' in m)?.title).toBe('About — Melvin Onyia')
     expect(findMeta(head.meta, (m) => m.name === 'description')?.content).toMatch(
-      /biomechanics/,
+      /simple & scalable/,
     )
   })
 

@@ -3,20 +3,26 @@ import { describe, it, expect } from 'vitest'
 import { Pullquote } from './Pullquote'
 
 describe('Pullquote', () => {
-  it('renders children inside a serif-styled blockquote', () => {
-    const { container } = render(<Pullquote>A line that earns its emphasis.</Pullquote>)
+  it('renders children inside a class-styled blockquote', () => {
+    const { container } = render(
+      <Pullquote>A line that earns its emphasis.</Pullquote>,
+    )
     const quote = container.querySelector('[data-pullquote]')
     expect(quote).not.toBeNull()
     expect(quote!.tagName).toBe('BLOCKQUOTE')
-    expect(quote!.className).toMatch(/font-serif/)
-    expect(screen.getByText('A line that earns its emphasis.')).toBeInTheDocument()
+    expect(quote!.className).toMatch(/mdx-pullquote/)
+    expect(
+      screen.getByText('A line that earns its emphasis.'),
+    ).toBeInTheDocument()
   })
 
-  it('renders attribution in mono when provided', () => {
+  it('renders attribution in the attribution slot when provided', () => {
     render(<Pullquote attribution="Jorge Luis Borges">Words make worlds.</Pullquote>)
     const attribution = screen.getByText(/Jorge Luis Borges/)
     expect(attribution.closest('footer')).not.toBeNull()
-    expect(attribution.closest('footer')!.className).toMatch(/font-mono/)
+    expect(attribution.closest('footer')!.className).toMatch(
+      /mdx-pullquote-attribution/,
+    )
   })
 
   it('omits the footer when no attribution is provided', () => {

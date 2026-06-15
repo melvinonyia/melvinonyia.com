@@ -1,9 +1,9 @@
 export const SITE_URL = 'https://melvinonyia.com'
 export const SITE_NAME = 'Melvin Onyia'
 
-const TITLE = 'Melvin Onyia — Staff Software Engineer'
+const TITLE = 'Melvin Onyia — Software Engineer'
 const DESCRIPTION =
-  'Staff software engineer building software at the intersection of biomechanics and engineering.'
+  'Melvin Onyia is a software engineer. Build things, solve problems.'
 const OG_IMAGE = `${SITE_URL}/og/home.png`
 const HOME_URL = `${SITE_URL}/`
 

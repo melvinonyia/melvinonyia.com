@@ -26,8 +26,8 @@ describe('homeHead', () => {
   const head = homeHead()
 
   it('declares title and description', () => {
-    expect(findByTitle(head.meta)).toBe('Melvin Onyia — Staff Software Engineer')
-    expect(findByName(head.meta, 'description')).toMatch(/biomechanics/i)
+    expect(findByTitle(head.meta)).toBe('Melvin Onyia — Software Engineer')
+    expect(findByName(head.meta, 'description')).toMatch(/Build things, solve problems/)
   })
 
   it('declares a canonical link to the home URL', () => {
@@ -36,8 +36,8 @@ describe('homeHead', () => {
   })
 
   it('declares the full Open Graph cluster', () => {
-    expect(findByProperty(head.meta, 'og:title')).toBe('Melvin Onyia — Staff Software Engineer')
-    expect(findByProperty(head.meta, 'og:description')).toMatch(/biomechanics/i)
+    expect(findByProperty(head.meta, 'og:title')).toBe('Melvin Onyia — Software Engineer')
+    expect(findByProperty(head.meta, 'og:description')).toMatch(/Build things, solve problems/)
     expect(findByProperty(head.meta, 'og:type')).toBe('website')
     expect(findByProperty(head.meta, 'og:url')).toBe(`${SITE_URL}/`)
     expect(findByProperty(head.meta, 'og:image')).toBe(`${SITE_URL}/og/home.png`)
@@ -46,8 +46,8 @@ describe('homeHead', () => {
 
   it('declares the Twitter card cluster', () => {
     expect(findByName(head.meta, 'twitter:card')).toBe('summary_large_image')
-    expect(findByName(head.meta, 'twitter:title')).toBe('Melvin Onyia — Staff Software Engineer')
-    expect(findByName(head.meta, 'twitter:description')).toMatch(/biomechanics/i)
+    expect(findByName(head.meta, 'twitter:title')).toBe('Melvin Onyia — Software Engineer')
+    expect(findByName(head.meta, 'twitter:description')).toMatch(/Build things, solve problems/)
     expect(findByName(head.meta, 'twitter:image')).toBe(`${SITE_URL}/og/home.png`)
   })
 })

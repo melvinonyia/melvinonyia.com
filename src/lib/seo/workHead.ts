@@ -2,7 +2,7 @@ import { SITE_NAME, SITE_URL } from './homeHead'
 
 const TITLE = `Work — ${SITE_NAME}`
 const DESCRIPTION =
-  'Case studies on biomechanics tooling, movement modeling, and the systems that connect lab work to performance staff.'
+  'Selected work from Melvin Onyia — software engineering across publishing, foodservice, and healthcare.'
 const OG_IMAGE = `${SITE_URL}/og/work.png`
 const WORK_URL = `${SITE_URL}/work`
 

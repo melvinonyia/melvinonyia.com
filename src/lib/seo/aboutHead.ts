@@ -2,7 +2,7 @@ import { SITE_NAME, SITE_URL } from './homeHead'
 
 const TITLE = `About — ${SITE_NAME}`
 const DESCRIPTION =
-  'About Melvin Onyia. Staff software engineer working at the intersection of biomechanics and engineering.'
+  'About Melvin Onyia — software engineer driven and inspired by simple & scalable technical design across publishing, foodservice, and healthcare.'
 const OG_IMAGE = `${SITE_URL}/og/about.png`
 const ABOUT_URL = `${SITE_URL}/about`
 

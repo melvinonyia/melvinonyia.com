@@ -11,7 +11,7 @@ describe('writingHead', () => {
     const head = writingHead()
     expect(findMeta(head.meta, (m) => 'title' in m)?.title).toBe('Writing — Melvin Onyia')
     expect(findMeta(head.meta, (m) => m.name === 'description')?.content).toMatch(
-      /Essays/,
+      /Articles|Build things/,
     )
   })
 

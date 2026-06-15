@@ -2,7 +2,7 @@ import { SITE_NAME, SITE_URL } from './homeHead'
 
 const TITLE = `Writing — ${SITE_NAME}`
 const DESCRIPTION =
-  'Essays on movement modeling, biomechanics tooling, and the gap between lab work and the field.'
+  'Articles and notes from Melvin Onyia on software engineering — build things, solve problems.'
 const OG_IMAGE = `${SITE_URL}/og/writing.png`
 const WRITING_URL = `${SITE_URL}/writing`
 

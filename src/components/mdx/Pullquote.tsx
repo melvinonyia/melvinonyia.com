@@ -7,15 +7,10 @@ interface PullquoteProps {
 
 export function Pullquote({ children, attribution }: PullquoteProps) {
   return (
-    <blockquote
-      data-pullquote
-      className="my-12 border-l border-border pl-6 font-serif text-3xl sm:text-4xl leading-tight text-fg"
-    >
+    <blockquote data-pullquote className="mdx-pullquote">
       {children}
       {attribution && (
-        <footer className="mt-4 font-mono text-xs uppercase tracking-wider text-muted">
-          — {attribution}
-        </footer>
+        <footer className="mdx-pullquote-attribution">— {attribution}</footer>
       )}
     </blockquote>
   )
