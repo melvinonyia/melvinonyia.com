@@ -26,26 +26,32 @@ afterEach(() => {
 import { NotFoundView } from './NotFoundView'
 
 describe('NotFoundView', () => {
-  it('renders the 404 heading and on-brand copy', () => {
+  it('renders the serif 404 as the page heading', () => {
     render(<NotFoundView />)
-    expect(screen.getByText('404')).toBeInTheDocument()
-    expect(
-      screen.getByRole('heading', { level: 1, name: 'Off the map.' }),
-    ).toBeInTheDocument()
+    const h1 = screen.getByRole('heading', { level: 1 })
+    expect(h1).toHaveTextContent('404')
+    expect(h1.className).toMatch(/font-serif/)
   })
 
-  it('renders a link back to the home page', () => {
-    render(<NotFoundView />)
-    expect(screen.getByRole('link', { name: /Take me home/i })).toHaveAttribute(
-      'href',
-      '/',
-    )
+  it('renders the friendly subtitle "Off the map." below the error code', () => {
+    const { container } = render(<NotFoundView />)
+    const subtitle = container.querySelector('[data-not-found-subtitle]')
+    expect(subtitle).not.toBeNull()
+    expect(subtitle).toHaveTextContent('Off the map.')
   })
 
-  it('renders a ⌘K hint that triggers the palette context on click', () => {
+  it('renders a serif link back to the home page', () => {
     render(<NotFoundView />)
-    const trigger = screen.getByRole('button', { name: /Search with/i })
+    const home = screen.getByRole('link', { name: /Take me home/i })
+    expect(home).toHaveAttribute('href', '/')
+    expect(home.className).toMatch(/font-serif/)
+  })
+
+  it('renders a ⌘K hint button with a11y wiring that triggers the palette', () => {
+    render(<NotFoundView />)
+    const trigger = screen.getByRole('button', { name: /Open command palette/i })
     expect(trigger.textContent).toMatch(/⌘K/)
+    expect(trigger).toHaveAttribute('aria-keyshortcuts', 'Meta+K')
     fireEvent.click(trigger)
     expect(openPaletteMock).toHaveBeenCalledTimes(1)
   })

@@ -94,9 +94,8 @@ test.describe('contact form', () => {
 test.describe('404', () => {
   test('an unknown URL renders the on-brand 404 without a hydration flash', async ({ page }) => {
     await page.goto('/blog/this-does-not-exist')
-    await expect(
-      page.getByRole('heading', { level: 1, name: 'Off the map.' }),
-    ).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: '404' })).toBeVisible()
+    await expect(page.getByText('Off the map.')).toBeVisible()
     await expect(page.getByRole('link', { name: /Take me home/ })).toHaveAttribute('href', '/')
   })
 })
