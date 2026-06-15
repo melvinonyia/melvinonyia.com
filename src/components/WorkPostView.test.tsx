@@ -23,6 +23,13 @@ describe('WorkPostView', () => {
     expect(screen.getByText('Movement fingerprint engine')).toBeInTheDocument()
   })
 
+  it('renders the post excerpt as the subtitle', () => {
+    render(<WorkPostView post={makePost()} position={0} />)
+    expect(
+      screen.getByText(/A signal-processing engine for movement data/),
+    ).toBeInTheDocument()
+  })
+
   it('renders the MDX body content', () => {
     render(<WorkPostView post={makePost()} position={0} />)
     expect(
@@ -30,21 +37,41 @@ describe('WorkPostView', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders the date and tags in the meta line', () => {
+  it('renders the date and tag in the meta line', () => {
     const { container } = render(<WorkPostView post={makePost()} position={0} />)
-    const meta = container.querySelector('.writing-post-meta')!
+    const meta = container.querySelector('.article-detail-meta')!
     expect(meta.textContent).toMatch(/November \d+, 2025/)
     expect(meta.textContent).toMatch(/ml/)
   })
 
   it('renders the hero image when provided', () => {
-    render(
+    const { container } = render(
       <WorkPostView
         post={makePost({ heroImage: '/hero.jpg' })}
         position={0}
       />,
     )
-    const img = screen.getByRole('img')
-    expect(img).toHaveAttribute('src', '/hero.jpg')
+    const hero = container.querySelector('.article-detail-hero') as HTMLImageElement
+    expect(hero).not.toBeNull()
+    expect(hero.getAttribute('src')).toBe('/hero.jpg')
+  })
+
+  it('renders the tag pills in the footer', () => {
+    const { container } = render(<WorkPostView post={makePost()} position={0} />)
+    const tags = Array.from(
+      container.querySelectorAll('.article-detail-tag'),
+    ).map((el) => el.textContent)
+    expect(tags).toEqual(['ml', 'signal-processing'])
+  })
+
+  it('renders share links to X, LinkedIn, and Facebook', () => {
+    render(<WorkPostView post={makePost()} position={0} />)
+    expect(screen.getByRole('link', { name: /Share on X/ })).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: /Share on LinkedIn/ }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: /Share on Facebook/ }),
+    ).toBeInTheDocument()
   })
 })

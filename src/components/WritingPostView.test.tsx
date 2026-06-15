@@ -10,7 +10,7 @@ function makeEssay(overrides: Partial<Essay> = {}): Essay {
     title: 'A Test Essay',
     date: '2025-10-08',
     excerpt: 'A short excerpt.',
-    tags: ['biomechanics'],
+    tags: ['code'],
     readTime: 4,
     Body,
     ...overrides,
@@ -21,6 +21,11 @@ describe('WritingPostView', () => {
   it('renders the essay title', () => {
     render(<WritingPostView essay={makeEssay()} essayNumber={1} />)
     expect(screen.getByText('A Test Essay')).toBeInTheDocument()
+  })
+
+  it('renders the essay excerpt as the subtitle', () => {
+    render(<WritingPostView essay={makeEssay()} essayNumber={1} />)
+    expect(screen.getByText(/A short excerpt/)).toBeInTheDocument()
   })
 
   it('renders the MDX body content', () => {
@@ -34,7 +39,7 @@ describe('WritingPostView', () => {
     const { container } = render(
       <WritingPostView essay={makeEssay({ readTime: 5 })} essayNumber={1} />,
     )
-    const meta = container.querySelector('.writing-post-meta')!
+    const meta = container.querySelector('.article-detail-meta')!
     expect(meta.textContent).toMatch(/October \d+, 2025/)
     expect(meta.textContent).toMatch(/5 min read/)
   })
@@ -47,5 +52,29 @@ describe('WritingPostView', () => {
       />,
     )
     expect(screen.queryByText(/min read/)).toBeNull()
+  })
+
+  it('renders the tag pills in the footer', () => {
+    const { container } = render(
+      <WritingPostView
+        essay={makeEssay({ tags: ['code', 'notes'] })}
+        essayNumber={1}
+      />,
+    )
+    const tags = Array.from(
+      container.querySelectorAll('.article-detail-tag'),
+    ).map((el) => el.textContent)
+    expect(tags).toEqual(['code', 'notes'])
+  })
+
+  it('renders share links to X, LinkedIn, and Facebook', () => {
+    render(<WritingPostView essay={makeEssay()} essayNumber={1} />)
+    expect(screen.getByRole('link', { name: /Share on X/ })).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: /Share on LinkedIn/ }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('link', { name: /Share on Facebook/ }),
+    ).toBeInTheDocument()
   })
 })
