@@ -1,18 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { CONTACT_EMAIL } from '~/lib/site/socials'
 import { ContactForm } from '~/components/ContactForm'
+import { contactHead } from '~/lib/seo/contactHead'
 
 export const Route = createFileRoute('/contact')({
-  head: () => ({
-    meta: [
-      { title: 'Contact — Melvin Onyia' },
-      {
-        name: 'description',
-        content: 'Get in touch with Melvin Onyia.',
-      },
-    ],
-    links: [{ rel: 'canonical', href: 'https://melvinonyia.com/contact' }],
-  }),
+  head: contactHead,
   component: ContactPage,
 })
 

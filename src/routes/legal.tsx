@@ -1,13 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { legalHead } from '~/lib/seo/legalHead'
 
 export const Route = createFileRoute('/legal')({
-  head: () => ({
-    meta: [
-      { title: 'Legal — Melvin Onyia' },
-      { name: 'description', content: 'Legal notices for melvinonyia.com.' },
-    ],
-    links: [{ rel: 'canonical', href: 'https://melvinonyia.com/legal' }],
-  }),
+  head: legalHead,
   component: LegalPage,
 })
 

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /legal/
+Disallow: /api/
+
+Sitemap: https://melvinonyia.com/sitemap.xml
