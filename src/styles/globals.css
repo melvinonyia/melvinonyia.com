@@ -635,9 +635,10 @@ a {
 }
 
 .site-logo {
+  position: relative;
   width: 2rem;
   cursor: pointer;
-  z-index: 10;
+  z-index: 12;
   display: block;
 }
 
