@@ -9,6 +9,8 @@ tags:
 heroImage: /og/work-movement-fingerprint.png
 ---
 
+import { Demo } from '~/components/Demo'
+
 ## The problem
 
 Standard return-to-play protocols treat athletes as if they share a single
@@ -27,3 +29,9 @@ performance staff. The detection threshold is calibrated per-joint, per-task.
 In a six-week pilot with one collegiate squad the system caught two early
 hamstring-load anomalies that the performance staff later confirmed in the
 training-room screen. The pipeline is now driving a longer follow-up study.
+
+<Demo
+  load={() => import('~/components/demos/MovementCounter')}
+  placeholderHeight={220}
+  caption="Tap to log reps"
+/>
