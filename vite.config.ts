@@ -10,11 +10,9 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import path from 'node:path'
 import { readdirSync } from 'node:fs'
 
-const WORK_CONTENT_DIR = path.resolve(__dirname, './content/work')
-
-function discoverWorkSlugs(): string[] {
+function discoverContentSlugs(dir: string): string[] {
   try {
-    return readdirSync(WORK_CONTENT_DIR)
+    return readdirSync(dir)
       .filter((f) => f.endsWith('.mdx'))
       .map((f) => f.replace(/\.mdx$/, ''))
   } catch {
@@ -22,8 +20,17 @@ function discoverWorkSlugs(): string[] {
   }
 }
 
-const workPrerenderPages = discoverWorkSlugs().map((slug) => ({
+const workPrerenderPages = discoverContentSlugs(
+  path.resolve(__dirname, './content/work'),
+).map((slug) => ({
   path: `/work/${slug}`,
+  prerender: { enabled: true },
+}))
+
+const writingPrerenderPages = discoverContentSlugs(
+  path.resolve(__dirname, './content/writing'),
+).map((slug) => ({
+  path: `/writing/${slug}`,
   prerender: { enabled: true },
 }))
 
@@ -59,6 +66,7 @@ export default defineConfig({
         { path: '/legal', prerender: { enabled: true } },
         { path: '/work', prerender: { enabled: true } },
         ...workPrerenderPages,
+        ...writingPrerenderPages,
       ],
     }),
     react(),
