@@ -3,10 +3,20 @@ import { describe, it, expect } from 'vitest'
 import { Hero } from './Hero'
 
 describe('Hero', () => {
-  it('renders the name and pitch', () => {
-    render(<Hero name="Melvin Onyia" pitch="Toolchain online." />)
-
+  it('renders the name as the page heading', () => {
+    render(<Hero name="Melvin Onyia" role="Staff Software Engineer" pitch="Building things." />)
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Melvin Onyia')
-    expect(screen.getByText('Toolchain online.')).toBeInTheDocument()
+  })
+
+  it('renders the role and pitch as adjacent paragraphs', () => {
+    render(
+      <Hero
+        name="Melvin Onyia"
+        role="Staff Software Engineer"
+        pitch="Building software at the intersection of biomechanics and engineering."
+      />,
+    )
+    expect(screen.getByText('Staff Software Engineer')).toBeInTheDocument()
+    expect(screen.getByText(/biomechanics and engineering/)).toBeInTheDocument()
   })
 })
