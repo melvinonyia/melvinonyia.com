@@ -25,7 +25,7 @@ test.describe('reduced-motion sweep', () => {
     await expect(page.getByPlaceholder(/search/i)).toHaveCount(0)
   })
 
-  test('view-transition links navigate (browser falls back to plain navigation)', async ({
+  test('view-transition links from /work navigate with no morph (plain navigation)', async ({
     page,
   }) => {
     await page.goto('/work')
@@ -35,6 +35,25 @@ test.describe('reduced-motion sweep', () => {
     await firstCard.click()
     await expect(page).toHaveURL(new RegExp(href!.replace(/[/]/g, '\\/') + '$'))
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    // No palette wipe marker should ever attach under reduced-motion.
+    await expect(page.locator('html')).not.toHaveAttribute('data-palette-transition', 'true')
+  })
+
+  test('serif morph from home → /work/$slug runs instant under reduced-motion', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    await expect(page.locator('html')).toHaveAttribute('data-palette', 'dark')
+    // Home renders the numbered case-study index inside [data-work-cards];
+    // each row is a ViewTransitionLink. Click the first.
+    const firstRow = page.locator('[data-work-cards] a').first()
+    const href = await firstRow.getAttribute('href')
+    expect(href).toMatch(/^\/work\//)
+    await firstRow.click()
+    await expect(page).toHaveURL(new RegExp(href!.replace(/[/]/g, '\\/') + '$'))
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    // Same palette → no palette wipe marker; reduced-motion → no serif morph.
+    await expect(page.locator('html')).not.toHaveAttribute('data-palette-transition', 'true')
   })
 
   test('dark→paper palette change on / → /writing is instant (no wipe runs)', async ({ page }) => {

@@ -5,6 +5,7 @@ dist
 .vercel
 .cache
 .tanstack
+.lighthouseci
 coverage
 playwright-report
 test-results
