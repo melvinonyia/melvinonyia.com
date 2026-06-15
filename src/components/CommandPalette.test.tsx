@@ -162,34 +162,24 @@ describe('CommandPalette', () => {
     expect(screen.getByRole('listbox')).toBeInTheDocument()
   })
 
-  it('marks the active row with a brick left-edge rule (no background fill)', () => {
+  it('marks the active row with the is-selected class', () => {
     render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
     const items = screen.getAllByRole('option')
-    // Selected row resolves the rule color via --hover-rule-color.
-    expect(items[0]!.className).toMatch(/border-l-\[color:var\(--hover-rule-color\)\]/)
-    // Inactive rows keep a transparent left border so layout doesn't shift.
-    expect(items[1]!.className).toMatch(/border-l-transparent/)
-    // No background fill on the active row.
-    expect(items[0]!.className).not.toMatch(/bg-(accent|surface|fg|muted)/)
+    expect(items[0]!.className).toMatch(/is-selected/)
+    expect(items[1]!.className).not.toMatch(/is-selected/)
   })
 
-  it('moves the brick left-edge rule when ArrowDown changes selection', () => {
+  it('moves the is-selected class when ArrowDown changes selection', () => {
     render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
     fireEvent.keyDown(screen.getByPlaceholderText(/search/i), { key: 'ArrowDown' })
     const items = screen.getAllByRole('option')
-    expect(items[0]!.className).toMatch(/border-l-transparent/)
-    expect(items[1]!.className).toMatch(/border-l-\[color:var\(--hover-rule-color\)\]/)
+    expect(items[0]!.className).not.toMatch(/is-selected/)
+    expect(items[1]!.className).toMatch(/is-selected/)
   })
 
-  it('input wires the caret-color to --hover-rule-color (brick on dark, fg on paper)', () => {
-    render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
-    const input = screen.getByPlaceholderText(/search/i) as HTMLInputElement
-    expect(input.style.caretColor).toBe('var(--hover-rule-color)')
-  })
-
-  it('input is mono-styled (font-mono utility on the element)', () => {
+  it('renders the input with the palette-input class', () => {
     render(<CommandPalette entries={FIXTURE} onClose={vi.fn()} />)
     const input = screen.getByPlaceholderText(/search/i)
-    expect(input.className).toMatch(/font-mono/)
+    expect(input.className).toMatch(/palette-input/)
   })
 })

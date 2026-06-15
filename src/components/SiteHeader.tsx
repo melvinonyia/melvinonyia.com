@@ -35,6 +35,19 @@ export function SiteHeader() {
     return () => document.removeEventListener('keydown', onKey)
   }, [open])
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    if (!open) return
+    const previousBody = document.body.style.overflow
+    const previousHtml = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previousBody
+      document.documentElement.style.overflow = previousHtml
+    }
+  }, [open])
+
   return (
     <header className="site-header">
       <Link to="/" className="site-logo" aria-label="Home">

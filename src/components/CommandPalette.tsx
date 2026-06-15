@@ -33,14 +33,8 @@ function kindLabel(kind: SearchEntry['kind']): string {
   }
 }
 
-const ROW_BASE =
-  'flex w-full items-center justify-between gap-4 border-l-2 px-4 py-3 text-left cursor-pointer'
-
 function rowClass(isSelected: boolean): string {
-  const state = isSelected
-    ? 'border-l-[color:var(--hover-rule-color)] text-fg'
-    : 'border-l-transparent text-fg/85 hover:text-fg'
-  return `${ROW_BASE} ${state}`
+  return `palette-row${isSelected ? ' is-selected' : ''}`
 }
 
 export function CommandPalette({ entries, onClose }: CommandPaletteProps) {
@@ -142,14 +136,14 @@ export function CommandPalette({ entries, onClose }: CommandPaletteProps) {
     <div
       data-palette-backdrop
       onClick={handleBackdropClick}
-      className="fixed inset-0 z-50 flex items-start justify-center bg-bg/70 pt-[12vh] backdrop-blur-md"
+      className="palette-backdrop"
       role="presentation"
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
-        className="w-full max-w-[640px] mx-4 border border-border bg-surface"
+        className="palette-dialog"
       >
         <input
           ref={inputRef}
@@ -158,23 +152,20 @@ export function CommandPalette({ entries, onClose }: CommandPaletteProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
-          style={{ caretColor: 'var(--hover-rule-color)' }}
-          className="w-full bg-transparent px-4 py-4 font-mono text-xs uppercase tracking-wider text-fg placeholder:text-muted outline-none border-b border-border"
+          className="palette-input"
           aria-controls="command-palette-listbox"
           aria-activedescendant={
             results[selected] ? `palette-item-${selected}` : undefined
           }
         />
         {results.length === 0 ? (
-          <div className="px-4 py-10 text-center font-mono text-xs uppercase tracking-wider text-muted">
-            No results
-          </div>
+          <div className="palette-empty">No results</div>
         ) : (
           <ul
             id="command-palette-listbox"
             role="listbox"
             ref={listRef}
-            className="max-h-96 overflow-y-auto py-2"
+            className="palette-list"
           >
             {results.map((entry, i) => {
               const isSelected = i === selected
@@ -182,17 +173,10 @@ export function CommandPalette({ entries, onClose }: CommandPaletteProps) {
               const itemClass = rowClass(isSelected)
               const itemContent = (
                 <>
-                  <span className="flex-1 truncate font-serif text-lg leading-tight">
-                    {entry.title}
-                  </span>
-                  <span className="font-mono text-[0.65rem] uppercase tracking-wider text-muted">
-                    {kindLabel(entry.kind)}
-                  </span>
+                  <span className="palette-row-title">{entry.title}</span>
+                  <span className="palette-row-kind">{kindLabel(entry.kind)}</span>
                   {isSelected && (
-                    <span
-                      aria-hidden="true"
-                      className="font-mono text-[0.65rem] uppercase tracking-wider text-muted"
-                    >
+                    <span aria-hidden="true" className="palette-row-return">
                       ↵
                     </span>
                   )}

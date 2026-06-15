@@ -1,17 +1,21 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-
-const navigateMock = vi.fn()
+import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => navigateMock,
+  Link: ({
+    to,
+    children,
+    ...rest
+  }: { to: string; children: React.ReactNode } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+    <a href={to} {...rest}>
+      {children}
+    </a>
+  ),
 }))
 
 import { ServerErrorView } from './ServerErrorView'
 
 describe('ServerErrorView', () => {
-  beforeEach(() => navigateMock.mockReset())
-
   it('renders the Sorry! heading', () => {
     render(<ServerErrorView />)
     expect(screen.getByText('Sorry!')).toBeInTheDocument()
@@ -22,9 +26,10 @@ describe('ServerErrorView', () => {
     expect(screen.getByText(/Something went wrong/)).toBeInTheDocument()
   })
 
-  it('clicks the Try again button to navigate home', () => {
+  it('renders a Try again link to home in the hero-button style', () => {
     render(<ServerErrorView />)
-    fireEvent.click(screen.getByRole('button', { name: /try again/i }))
-    expect(navigateMock).toHaveBeenCalledWith({ to: '/' })
+    const link = screen.getByRole('link', { name: 'Try again' })
+    expect(link).toHaveAttribute('href', '/')
+    expect(link.className).toMatch(/hero-button/)
   })
 })
