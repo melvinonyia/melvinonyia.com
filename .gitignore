@@ -4,6 +4,7 @@ dist
 .vinxi
 .vercel
 .cache
+.tanstack
 coverage
 playwright-report
 test-results
