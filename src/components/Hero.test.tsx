@@ -23,7 +23,7 @@ describe('Hero', () => {
     expect(screen.getByText(/biomechanics and engineering/)).toBeInTheDocument()
   })
 
-  it('does not render a CursorSpotlight wrapper (retired in the redesign)', () => {
+  it('does not render a cursor-driven spotlight wrapper (the redesign retired it)', () => {
     const { container } = render(
       <Hero name="Melvin Onyia" role="Staff Software Engineer" pitch="x" />,
     )

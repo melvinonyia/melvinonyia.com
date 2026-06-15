@@ -1,5 +1,11 @@
 # PRD — melvinonyia.com v2
 
+> **v2.1 amendments** (applied by the editorial-typographic redesign — see `prd/prd-site-redesign.md`):
+>
+> - **Theme**: dark-only is replaced by a per-route palette — dark for `/`, `/work`, `/work/$slug`, `/contact`, error pages; warm cream paper for `/writing`, `/writing/$slug`, `/about`. Both palettes declared as parallel CSS custom property blocks keyed by `data-palette` on `<html>`. Switched per route in `__root.tsx`; cross-palette navigation runs a top-to-bottom wipe via the View Transitions API.
+> - **Type stack**: gains **Editorial New** as the display serif (hero name, page titles, essay titles, pull-quotes). Söhne stays for body; Berkeley Mono stays for labels/datelines.
+> - **Interaction primitives**: `<MagneticLink>` and `<CursorSpotlight>` retired. `<HoverLift>` retuned as a typographic rule reveal. `<ViewTransitionLink>` and `<CmdK>` continue. The signature gesture is the serif-title morph from the home index to `/work/$slug` page header.
+
 ## Problem Statement
 
 A recruiter or hiring manager evaluating Melvin for a senior/staff IC role lands on melvinonyia.com today and sees a competent-but-generic Next.js portfolio. There is no signal in the first 30 seconds that distinguishes him from any other engineer with a personal site: the homepage does not assert a current role or a pitch, the work is buried behind navigation, and nothing about the interaction model communicates craft. A peer engineer landing on the site to read his writing has to dig past nav and category pages before reading anything. Both audiences leave without a strong impression.
@@ -81,23 +87,23 @@ Five routes, all live at launch:
 
 ### Design system
 
-- **Theme**: dark only. CSS custom properties for tokens (color, spacing, type, motion easings/durations), declared at `:root`. No light theme, no theme switcher.
-- **Type**: Söhne (sans) and Berkeley Mono (mono), both self-hosted and preloaded. Font weights restricted to what's actually used (likely Buch + Halbfett for sans, Regular for mono) to keep payload small.
+- **Theme**: ~~dark only.~~ ([amended in v2.1](#) — per-route palette: dark for work surfaces, paper for `/writing` + `/about`.) CSS custom properties for tokens (color, spacing, type, motion easings/durations), declared at `:root`; paper palette declared under `[data-palette="paper"]`. No user-toggled theme switcher.
+- **Type**: Söhne (sans), Berkeley Mono (mono), and ~~_no display serif in v1_~~ **Editorial New** (display serif, [added in v2.1](#)), all self-hosted and preloaded. Font weights restricted to what's actually used (Buch + Halbfett for sans, Regular for mono, Regular for serif) to keep payload small.
 - **Tailwind v4** with the CSS-first `@theme` directive, tokens mirrored from the CSS custom properties. Used in markup; raw CSS still allowed for component-level micro-state work.
 
 ### Interaction primitives
 
 Implemented as a small set of reusable wrappers (treated as the "alive" component library):
 
-- **`<MagneticLink>`** — wraps `<a>` or `<button>`. Listens for `mousemove` within an opt-in radius (default 40px), translates the child with a spring-damped offset, releases on `mouseleave`. Disables on touch and `prefers-reduced-motion`.
-- **`<HoverLift>`** — applies a small Y translation + shadow change on `:hover` and `:focus-visible`. CSS-only when reduced-motion is set, otherwise spring-damped via Motion.
-- **`<CursorSpotlight>`** — used on the home hero. A radial gradient driven by two CSS custom properties (`--mx`, `--my`) updated by a throttled (rAF) `mousemove` handler scoped to the hero element. No global pointer tracking. Disabled on touch and reduced-motion.
+- ~~**`<MagneticLink>`** — wraps `<a>` or `<button>`. Listens for `mousemove` within an opt-in radius (default 40px), translates the child with a spring-damped offset, releases on `mouseleave`. Disables on touch and `prefers-reduced-motion`.~~ ([retired in v2.1](#) — every callsite migrated away; component + tests deleted.)
+- **`<HoverLift>`** — ~~applies a small Y translation + shadow change on `:hover` and `:focus-visible`.~~ ([retuned in v2.1](#) — now a typographic rule reveal: a 1px rule fades in on hover/focus + a 2px Y shift via spring.) CSS-only when reduced-motion is set, otherwise spring-damped via Motion.
+- ~~**`<CursorSpotlight>`** — used on the home hero. A radial gradient driven by two CSS custom properties (`--mx`, `--my`) updated by a throttled (rAF) `mousemove` handler scoped to the hero element. No global pointer tracking. Disabled on touch and reduced-motion.~~ ([retired in v2.1](#) — replaced by the serif-title morph as the signature gesture; component + tests deleted.)
 - **`<ViewTransitionLink>`** — a Link wrapper that uses the View Transitions API to morph the source element into the destination route's hero. Falls back to a normal navigation when the API is absent or reduced-motion is set.
 - **`<CmdK>`** — a global command palette. Bound to ⌘K / Ctrl-K. Loads the search index lazily on first open. Items: routes, case studies, essays, external links, contact actions. Keyboard-first; mouse supported.
 
 **Motion stack**: Motion (the Framer Motion successor) for layout and spring physics; raw CSS transitions for the ~90% of micro-state changes that do not need a physics engine.
 
-**Custom cursor is explicitly out** of v1. Cursor spotlight stays.
+~~**Custom cursor is explicitly out** of v1. Cursor spotlight stays.~~ ([amended in v2.1](#) — both retired; the serif morph is the signature.)
 
 ### Search / Cmd-K indexer
 
@@ -144,8 +150,8 @@ Seven seams:
 1. **Content collection seam** — the MDX loader / collection module. Test by placing fixture `.mdx` files under a test content root and asserting the parsed shape (frontmatter fields, slug derivation, date sorting, excerpt fallback when frontmatter omits it). Pure function tests, no React.
 2. **Route loader seam** — TanStack Start route loaders (e.g. the `/work/$slug` loader) called directly with a stub content layer. Asserts that the loader returns the expected post or throws a typed not-found that the route can render as a 404.
 3. **Cmd-K indexer seam** — the build-time indexer function. Fixture content collection in, asserted search hits out for a set of representative queries (exact match, fuzzy near-match, miss). Indexer is a pure function.
-4. **Interaction primitive seam** — `<MagneticLink>`, `<HoverLift>`, `<ViewTransitionLink>`, `<CmdK>` tested with React Testing Library. Assertions: renders children, correct ARIA roles/labels/keyboard handlers, honors a mocked `matchMedia('(prefers-reduced-motion: reduce)')` by becoming a no-op wrapper. We do NOT assert easings, pixel positions, or that a spring "feels right".
-5. **Playwright smoke for the alive loop** — a thin end-to-end pass covering: home loads with content above the fold, Cmd-K opens on `Meta+K`, fuzzy search returns hits, Enter navigates to the selected route, navigating between home and a case study does not break (with or without view transitions), magnetic link click targets the correct route under a synthetic offset. Runs against the production build.
+4. **Interaction primitive seam** — ~~`<MagneticLink>`,~~ `<HoverLift>`, `<ViewTransitionLink>`, `<CmdK>` ([+ `<RoutePaletteSync>` in v2.1](#)) tested with React Testing Library. Assertions: renders children, correct ARIA roles/labels/keyboard handlers, honors a mocked `matchMedia('(prefers-reduced-motion: reduce)')` by becoming a no-op wrapper. We do NOT assert easings, pixel positions, or that a spring "feels right".
+5. **Playwright smoke for the alive loop** — a thin end-to-end pass covering: home loads with content above the fold, Cmd-K opens on `Meta+K`, fuzzy search returns hits, Enter navigates to the selected route, navigating between home and a case study does not break (with or without view transitions)~~, magnetic link click targets the correct route under a synthetic offset~~. Runs against the production build.
 6. **SSR head snapshot seam** — per-route, render the page to string and snapshot the `<head>`. Asserts title, canonical, OG tags, sitemap link. Catches regressions when route metadata drifts.
 7. **Contact form route handler seam** — the `/api/contact` function tested with request fixtures: valid submission succeeds, honeypot-filled submission silently 200s, oversized body rejects, rate limit triggers after N attempts. Email provider is mocked at the boundary.
 
