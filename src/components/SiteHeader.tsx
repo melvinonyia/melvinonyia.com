@@ -9,7 +9,7 @@ interface NavItem {
 
 const NAV_ITEMS: readonly NavItem[] = [
   { label: 'About', to: '/about' },
-  { label: 'Writing', to: '/writing' },
+  { label: 'Blog', to: '/writing' },
   { label: 'Work', to: '/work' },
   { label: 'Contact', to: '/contact' },
 ] as const
@@ -50,7 +50,12 @@ export function SiteHeader() {
 
   return (
     <header className="site-header">
-      <Link to="/" className="site-logo" aria-label="Home">
+      <Link
+        to="/"
+        className="site-logo"
+        aria-label="Home"
+        onClick={() => setOpen(false)}
+      >
         <Logo />
       </Link>
 

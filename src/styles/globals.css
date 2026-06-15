@@ -689,14 +689,16 @@ a {
   pointer-events: auto;
 }
 
+/* Desktop: horizontal row of nav items, centered vertically, social bottom-right. */
 .site-drawer-nav {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 2.5rem;
 }
 
 .site-drawer-item {
-  font-size: 4rem;
+  font-size: 3rem;
   cursor: pointer;
   transition: color 0.3s linear;
   background: none;
@@ -705,6 +707,7 @@ a {
   padding: 0;
   font-family: inherit;
   color: var(--color-fg);
+  line-height: 1.1;
 }
 
 .site-drawer-item:hover { color: rgb(53 68 120); }
@@ -712,12 +715,34 @@ a {
 .site-drawer-social {
   position: absolute;
   bottom: 5rem;
-  left: 5rem;
+  right: 5rem;
+  left: auto;
+}
+
+/* Tablet & below: stack the nav vertically near the top-left below the logo,
+   move social to bottom-left to match main's drawer layout. */
+@media (max-width: 768px) {
+  .site-drawer {
+    padding: 5rem 2rem 2rem;
+    justify-content: flex-start;
+  }
+  .site-drawer-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-top: 6rem;
+  }
+  .site-drawer-item { font-size: 1.25rem; }
+  .site-drawer-social {
+    bottom: 2rem;
+    left: 2rem;
+    right: auto;
+  }
 }
 
 @media (max-width: 576px) {
-  .site-drawer { padding: 1.5rem; }
-  .site-drawer-item { font-size: 2.1rem; }
+  .site-drawer { padding: 5rem 1.5rem 1.5rem; }
+  .site-drawer-nav { margin-top: 4rem; }
   .site-drawer-social { bottom: 1.5rem; left: 1.5rem; }
 }
 
