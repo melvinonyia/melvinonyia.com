@@ -259,6 +259,68 @@ a {
 }
 
 /* ----------------------------------------------------------------------------
+ * Technology grid — flat row of monochrome tech name pills, similar to main's
+ * TechnologyIcons but using text rather than icon dependencies.
+ * ------------------------------------------------------------------------- */
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0 5rem;
+  list-style: none;
+  padding: 0;
+}
+
+@media (max-width: 992px) {
+  .tech-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  .tech-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 576px) {
+  .tech-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+}
+
+.tech-item {
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  background-color: rgb(40 40 40);
+  border-radius: 0.375rem;
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.tech-item:hover {
+  color: var(--color-fg);
+  background-color: rgb(48 48 48);
+}
+
+/* ----------------------------------------------------------------------------
+ * Recent articles strip on Home — borrows the writing-list bones but tunes
+ * spacing for a section inside the home page rather than a standalone index.
+ * ------------------------------------------------------------------------- */
+
+.home-articles {
+  margin-top: 5rem;
+}
+
+.home-articles-header {
+  font-size: 2rem;
+  font-weight: 400;
+  margin: 0 0 2rem 0;
+}
+
+.home-articles-cta {
+  text-align: right;
+  margin-top: 2rem;
+  font-size: 1.5rem;
+}
+
+/* ----------------------------------------------------------------------------
  * About — main's two-column body + experience grid + ghost headline.
  * ------------------------------------------------------------------------- */
 
