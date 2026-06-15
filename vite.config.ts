@@ -19,7 +19,9 @@ export default defineConfig({
       routesDirectory: './src/routes',
       generatedRouteTree: './src/routeTree.gen.ts',
     }),
-    tanstackStart(),
+    tanstackStart({
+      pages: [{ path: '/', prerender: { enabled: true } }],
+    }),
     react(),
     tailwindcss(),
   ],

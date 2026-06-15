@@ -3,13 +3,5 @@
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "dist/client",
-  "installCommand": "npm install",
-  "functions": {
-    "api/index.mjs": {
-      "includeFiles": "dist/server/**"
-    }
-  },
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/index" }
-  ]
+  "installCommand": "npm install"
 }
