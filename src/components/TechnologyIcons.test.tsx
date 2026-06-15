@@ -2,6 +2,12 @@ import { render, screen, act } from '@testing-library/react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { TechnologyIcons } from './TechnologyIcons'
 
+function hrefSnapshot() {
+  return Array.from(
+    screen.getByLabelText('Technologies').querySelectorAll('a'),
+  ).map((a) => a.getAttribute('href'))
+}
+
 describe('TechnologyIcons', () => {
   beforeEach(() => {
     vi.useFakeTimers()
@@ -29,17 +35,13 @@ describe('TechnologyIcons', () => {
 
   it('swaps an icon after the rotation interval fires', () => {
     render(<TechnologyIcons />)
-    const initial = Array.from(
-      screen.getByLabelText('Technologies').querySelectorAll('title'),
-    ).map((t) => t.textContent)
+    const initial = hrefSnapshot()
     act(() => {
       vi.advanceTimersByTime(5_000)
       vi.advanceTimersByTime(1_000)
     })
-    const next = Array.from(
-      screen.getByLabelText('Technologies').querySelectorAll('title'),
-    ).map((t) => t.textContent)
-    const changed = initial.some((name, i) => name !== next[i])
+    const next = hrefSnapshot()
+    const changed = initial.some((href, i) => href !== next[i])
     expect(changed).toBe(true)
   })
 })

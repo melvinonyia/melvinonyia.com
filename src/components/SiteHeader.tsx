@@ -4,12 +4,13 @@ import { SocialLinks } from './SocialLinks'
 
 interface NavItem {
   label: string
-  to: '/about' | '/writing' | '/contact'
+  to: '/about' | '/writing' | '/work' | '/contact'
 }
 
 const NAV_ITEMS: readonly NavItem[] = [
   { label: 'About', to: '/about' },
   { label: 'Writing', to: '/writing' },
+  { label: 'Work', to: '/work' },
   { label: 'Contact', to: '/contact' },
 ] as const
 

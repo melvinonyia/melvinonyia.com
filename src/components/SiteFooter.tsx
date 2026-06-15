@@ -7,7 +7,7 @@ interface SiteFooterProps {
 
 interface FooterNavColumn {
   title: string
-  links: { to: '/about' | '/writing' | '/contact'; text: string }[]
+  links: { to: '/about' | '/writing' | '/work' | '/contact'; text: string }[]
 }
 
 const FOOTER_NAV: readonly FooterNavColumn[] = [
@@ -17,7 +17,10 @@ const FOOTER_NAV: readonly FooterNavColumn[] = [
   },
   {
     title: 'Resources',
-    links: [{ to: '/writing', text: 'Writing' }],
+    links: [
+      { to: '/writing', text: 'Writing' },
+      { to: '/work', text: 'Work' },
+    ],
   },
   {
     title: 'Connect',
