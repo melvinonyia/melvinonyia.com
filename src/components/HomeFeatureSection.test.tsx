@@ -1,7 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { WorkPostSummary } from '~/lib/content/work'
-import type { EssaySummary } from '~/lib/content/writing'
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
@@ -59,80 +58,62 @@ function makePost(overrides: Partial<WorkPostSummary>): WorkPostSummary {
   }
 }
 
-function makeEssay(overrides: Partial<EssaySummary>): EssaySummary {
-  return {
-    slug: 'placeholder-essay',
-    title: 'Placeholder essay',
-    date: '2025-01-01',
-    excerpt: '',
-    tags: [],
-    ...overrides,
-  }
-}
-
 describe('HomeFeatureSection', () => {
-  it('renders the work posts it receives as cards linking to detail', () => {
+  it('renders a numbered editorial index of the work posts', () => {
     const posts = [
-      makePost({ slug: 'a', title: 'Alpha', date: '2025-11-12' }),
-      makePost({ slug: 'b', title: 'Beta', date: '2025-08-04' }),
+      makePost({ slug: 'alpha', title: 'Alpha', date: '2025-11-12' }),
+      makePost({ slug: 'beta', title: 'Beta', date: '2024-08-04' }),
     ]
-    const { container } = render(
-      <HomeFeatureSection workPosts={posts} latestEssay={null} />,
-    )
-    const cardList = container.querySelector('[data-work-cards]') as HTMLElement
-    expect(cardList).not.toBeNull()
-    expect(within(cardList).getAllByRole('link')).toHaveLength(2)
-    expect(within(cardList).getByRole('link', { name: /Alpha/ })).toHaveAttribute(
-      'href',
-      '/work/a',
-    )
-    expect(within(cardList).getByRole('link', { name: /Beta/ })).toHaveAttribute(
-      'href',
-      '/work/b',
-    )
+    const { container } = render(<HomeFeatureSection workPosts={posts} />)
+    const list = container.querySelector('[data-work-cards]') as HTMLElement
+    expect(list).not.toBeNull()
+    expect(list.tagName).toBe('OL')
+    const rows = within(list).getAllByRole('listitem')
+    expect(rows).toHaveLength(2)
+    const first = rows[0]!
+    const second = rows[1]!
+    expect(within(first).getByText('01')).toBeInTheDocument()
+    expect(within(first).getByRole('heading', { level: 3 })).toHaveTextContent('Alpha')
+    expect(within(first).getByText('2025')).toBeInTheDocument()
+    expect(within(second).getByText('02')).toBeInTheDocument()
+    expect(within(second).getByText('2024')).toBeInTheDocument()
+  })
+
+  it('wraps each row in a HoverLift and links it via the case-study path', () => {
+    const posts = [makePost({ slug: 'alpha', title: 'Alpha' })]
+    const { container } = render(<HomeFeatureSection workPosts={posts} />)
+    const lifts = container.querySelectorAll('[data-hover-lift]')
+    expect(lifts).toHaveLength(1)
+    expect(screen.getByRole('link', { name: /Alpha/ })).toHaveAttribute('href', '/work/alpha')
+  })
+
+  it('marks each row title with a stable view-transition target name', () => {
+    const posts = [
+      makePost({ slug: 'alpha', title: 'Alpha' }),
+      makePost({ slug: 'beta', title: 'Beta' }),
+    ]
+    const { container } = render(<HomeFeatureSection workPosts={posts} />)
+    const titles = container.querySelectorAll('[data-view-transition-name]')
+    expect(titles).toHaveLength(2)
+    expect(titles[0]!.getAttribute('data-view-transition-name')).toBe('work-title-alpha')
+    expect(titles[1]!.getAttribute('data-view-transition-name')).toBe('work-title-beta')
   })
 
   it('renders an "All work →" link to the index', () => {
-    render(<HomeFeatureSection workPosts={[]} latestEssay={null} />)
+    render(<HomeFeatureSection workPosts={[]} />)
     expect(screen.getByRole('link', { name: /All work/ })).toHaveAttribute('href', '/work')
   })
 
-  it('renders the latest-essay preview when an essay is provided', () => {
-    render(
-      <HomeFeatureSection
-        workPosts={[]}
-        latestEssay={makeEssay({
-          slug: 'leg',
-          title: 'The leg between lab and field',
-          date: '2025-10-08',
-        })}
-      />,
-    )
-    expect(screen.getByText('Latest essay')).toBeInTheDocument()
-    const essayLink = screen.getByRole('link', {
-      name: /The leg between lab and field/,
-    })
-    expect(essayLink).toHaveAttribute('href', '/writing/leg')
-    expect(screen.getByRole('link', { name: /All writing/ })).toHaveAttribute(
-      'href',
-      '/writing',
-    )
+  it('renders an empty index when no posts are passed (still readable layout)', () => {
+    const { container } = render(<HomeFeatureSection workPosts={[]} />)
+    const list = container.querySelector('[data-work-cards]') as HTMLElement
+    expect(list).not.toBeNull()
+    expect(within(list).queryAllByRole('listitem')).toHaveLength(0)
   })
 
-  it('omits the essay preview block gracefully when latestEssay is null', () => {
-    render(<HomeFeatureSection workPosts={[]} latestEssay={null} />)
-    expect(screen.queryByText('Latest essay')).toBeNull()
+  it('no longer renders the latest-essay preview (dropped from home in the redesign)', () => {
+    render(<HomeFeatureSection workPosts={[]} />)
+    expect(screen.queryByText(/Latest essay/i)).toBeNull()
     expect(screen.queryByRole('link', { name: /All writing/ })).toBeNull()
-  })
-
-  it('wraps each card and the essay preview in a HoverLift', () => {
-    const { container } = render(
-      <HomeFeatureSection
-        workPosts={[makePost({ slug: 'a', title: 'Alpha' })]}
-        latestEssay={makeEssay({ slug: 'e', title: 'Essay' })}
-      />,
-    )
-    const hovers = container.querySelectorAll('[data-hover-lift]')
-    expect(hovers.length).toBe(2)
   })
 })

@@ -1,133 +1,74 @@
 import { Link } from '@tanstack/react-router'
 import type { WorkPostSummary } from '~/lib/content/work'
-import type { EssaySummary } from '~/lib/content/writing'
 import { HoverLift } from './HoverLift'
 import { ViewTransitionLink } from './ViewTransitionLink'
 
 interface HomeFeatureSectionProps {
   workPosts: WorkPostSummary[]
-  latestEssay: EssaySummary | null
 }
 
-const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'short',
-})
+function indexLabel(i: number): string {
+  return (i + 1).toString().padStart(2, '0')
+}
 
-function formatDate(iso: string): string {
+function year(iso: string): number | string {
   const d = new Date(iso)
-  if (Number.isNaN(d.getTime())) return iso
-  return DATE_FORMATTER.format(d)
+  return Number.isNaN(d.getTime()) ? iso : d.getFullYear()
 }
 
-function CaseStudyCard({ post }: { post: WorkPostSummary }) {
+function morphNameFor(slug: string): string {
+  return `work-title-${slug}`
+}
+
+const monoLabel = 'font-mono text-xs uppercase tracking-wider text-muted'
+
+function IndexRow({ post, position }: { post: WorkPostSummary; position: number }) {
+  const morphName = morphNameFor(post.slug)
   return (
-    <HoverLift className="h-full">
-      <ViewTransitionLink
-        to="/work/$slug"
-        params={{ slug: post.slug }}
-        name={`work-card-${post.slug}`}
-        className="group block h-full rounded-md border border-border/40 bg-surface/40 p-6 transition-colors hover:bg-surface/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-      >
-        <time
-          dateTime={post.date}
-          className="font-mono text-xs uppercase tracking-wide text-muted"
+    <li className="border-b border-border/40 last:border-b-0">
+      <HoverLift>
+        <ViewTransitionLink
+          to="/work/$slug"
+          params={{ slug: post.slug }}
+          className="grid grid-cols-[2.5rem_1fr_4rem] sm:grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1.4fr)_5rem] items-baseline gap-4 sm:gap-6 py-6 sm:py-8 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
-          {formatDate(post.date)}
-        </time>
-        <h3 className="mt-3 font-sans font-halbfett text-xl sm:text-2xl text-fg">
-          {post.title}
-        </h3>
-        {post.excerpt && (
-          <p className="mt-3 font-sans font-buch text-sm text-muted max-w-prose">
-            {post.excerpt}
-          </p>
-        )}
-      </ViewTransitionLink>
-    </HoverLift>
-  )
-}
-
-function EssayPreview({ essay }: { essay: EssaySummary }) {
-  return (
-    <HoverLift>
-      <Link
-        to="/writing/$slug"
-        params={{ slug: essay.slug }}
-        className="group block rounded-md border border-border/40 bg-surface/40 p-6 transition-colors hover:bg-surface/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-      >
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-xs uppercase tracking-wide text-accent">
-            Latest essay
-          </span>
-          <time
-            dateTime={essay.date}
-            className="font-mono text-xs uppercase tracking-wide text-muted"
+          <span className={monoLabel}>{indexLabel(position)}</span>
+          <h3
+            className="font-serif text-fg text-2xl sm:text-3xl lg:text-4xl tracking-tight"
+            style={{ viewTransitionName: morphName }}
+            data-view-transition-name={morphName}
           >
-            {formatDate(essay.date)}
-          </time>
-        </div>
-        <h3 className="mt-3 font-sans font-halbfett text-xl sm:text-2xl text-fg">
-          {essay.title}
-        </h3>
-        {essay.excerpt && (
-          <p className="mt-3 font-sans font-buch text-sm text-muted max-w-prose">
-            {essay.excerpt}
-          </p>
-        )}
-      </Link>
-    </HoverLift>
+            {post.title}
+          </h3>
+          {post.excerpt && (
+            <p className={`hidden sm:block ${monoLabel} truncate normal-case tracking-wide`}>
+              {post.excerpt}
+            </p>
+          )}
+          <span className={`${monoLabel} text-right`}>{year(post.date)}</span>
+        </ViewTransitionLink>
+      </HoverLift>
+    </li>
   )
 }
 
-export function HomeFeatureSection({
-  workPosts,
-  latestEssay,
-}: HomeFeatureSectionProps) {
+export function HomeFeatureSection({ workPosts }: HomeFeatureSectionProps) {
   return (
     <section
-      aria-label="Selected work and recent writing"
-      className="mx-auto mt-12 max-w-5xl pb-32"
+      aria-label="Selected work"
+      className="mx-auto max-w-6xl pb-32"
     >
-      <header className="mb-8 flex items-baseline justify-between">
-        <h2 className="font-mono text-xs uppercase tracking-wide text-muted">
-          Selected work
-        </h2>
-        <Link
-          to="/work"
-          className="font-mono text-xs uppercase tracking-wide text-muted transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-        >
+      <header className="mb-2 flex items-baseline justify-between border-b border-border/40 pb-3">
+        <h2 className={monoLabel}>Selected work</h2>
+        <Link to="/work" className={`${monoLabel} transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent`}>
           All work →
         </Link>
       </header>
-
-      <ul
-        data-work-cards
-        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {workPosts.map((post) => (
-          <li key={post.slug} className="h-full">
-            <CaseStudyCard post={post} />
-          </li>
+      <ol data-work-cards className="list-none">
+        {workPosts.map((post, i) => (
+          <IndexRow key={post.slug} post={post} position={i} />
         ))}
-      </ul>
-
-      {latestEssay && (
-        <div className="mt-16">
-          <header className="mb-8 flex items-baseline justify-between">
-            <h2 className="font-mono text-xs uppercase tracking-wide text-muted">
-              From the writing
-            </h2>
-            <Link
-              to="/writing"
-              className="font-mono text-xs uppercase tracking-wide text-muted transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-            >
-              All writing →
-            </Link>
-          </header>
-          <EssayPreview essay={latestEssay} />
-        </div>
-      )}
+      </ol>
     </section>
   )
 }

@@ -1,40 +1,14 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { forwardRef } from 'react'
-
-vi.mock('@tanstack/react-router', () => ({
-  Link: forwardRef<
-    HTMLAnchorElement,
-    { to: string; children: React.ReactNode } & React.AnchorHTMLAttributes<HTMLAnchorElement>
-  >(({ to, children, ...rest }, ref) => (
-    <a ref={ref} href={to} {...rest}>
-      {children}
-    </a>
-  )),
-}))
-
-beforeEach(() => {
-  ;(window as Window & { matchMedia: typeof window.matchMedia }).matchMedia = vi.fn(
-    (query: string) =>
-      ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        addListener: () => {},
-        removeListener: () => {},
-        dispatchEvent: () => true,
-      }) as unknown as MediaQueryList,
-  )
-})
+import { describe, it, expect } from 'vitest'
 
 import { Hero } from './Hero'
 
 describe('Hero', () => {
-  it('renders the name as the page heading', () => {
+  it('renders the name as the page heading in the display serif', () => {
     render(<Hero name="Melvin Onyia" role="Staff Software Engineer" pitch="Building things." />)
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Melvin Onyia')
+    const h1 = screen.getByRole('heading', { level: 1 })
+    expect(h1).toHaveTextContent('Melvin Onyia')
+    expect(h1.className).toMatch(/font-serif/)
   })
 
   it('renders the role and pitch as adjacent paragraphs', () => {
@@ -49,14 +23,16 @@ describe('Hero', () => {
     expect(screen.getByText(/biomechanics and engineering/)).toBeInTheDocument()
   })
 
-  it('renders the See work and Get in touch CTAs as links', () => {
-    render(
+  it('does not render a CursorSpotlight wrapper (retired in the redesign)', () => {
+    const { container } = render(
       <Hero name="Melvin Onyia" role="Staff Software Engineer" pitch="x" />,
     )
-    expect(screen.getByRole('link', { name: /See work/ })).toHaveAttribute('href', '/work')
-    expect(screen.getByRole('link', { name: /Get in touch/ })).toHaveAttribute(
-      'href',
-      '/contact',
-    )
+    expect(container.querySelector('[data-cursor-spotlight]')).toBeNull()
+  })
+
+  it('does not render hero CTAs (the index is now the work entry point)', () => {
+    render(<Hero name="Melvin Onyia" role="Staff Software Engineer" pitch="x" />)
+    expect(screen.queryByRole('link', { name: /See work/ })).toBeNull()
+    expect(screen.queryByRole('link', { name: /Get in touch/ })).toBeNull()
   })
 })

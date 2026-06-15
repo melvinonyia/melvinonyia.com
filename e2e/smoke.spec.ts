@@ -1,18 +1,16 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('home', () => {
-  test('renders the hero above the fold and the case-study grid', async ({ page }) => {
+  test('renders the hero above the fold and the numbered case-study index', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('heading', { level: 1, name: 'Melvin Onyia' })).toBeVisible()
     await expect(
       page.getByText('Building software at the intersection of biomechanics and engineering.'),
     ).toBeVisible()
-    await expect(page.locator('[data-work-cards] [data-magnetic], [data-work-cards] a')).toHaveCount(
-      // Two case studies today: movement-fingerprint and gait-lab-toolkit.
-      // Each card renders inside a HoverLift and a ViewTransitionLink; the
-      // ViewTransitionLink ends up as an <a>. Match by anchor count.
-      2,
-    )
+    // Two case studies today: movement-fingerprint and gait-lab-toolkit.
+    // The redesign's home renders them as an editorial index — each row is
+    // a ViewTransitionLink rendered as an <a> inside [data-work-cards].
+    await expect(page.locator('[data-work-cards] a')).toHaveCount(2)
   })
 })
 
@@ -54,23 +52,6 @@ test.describe('navigation', () => {
     await card.click()
     await expect(page).toHaveURL(new RegExp(href!.replace(/[/]/g, '\\/') + '$'))
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-  })
-})
-
-test.describe('magnetic-link click accuracy', () => {
-  test('clicking with the cursor offset inside the radius still navigates', async ({ page }) => {
-    await page.goto('/')
-    // The hero "See work →" CTA uses MagneticLink with default radius=40, maxOffset=8.
-    const cta = page.getByRole('link', { name: /See work/ })
-    await expect(cta).toBeVisible()
-    const box = await cta.boundingBox()
-    expect(box).not.toBeNull()
-    // Click ~5px right and ~3px down from the anchor's top-left corner —
-    // a point that is inside the underlying <a> hitbox but offset from
-    // the visual center, so any "click moves with the magnet" bug would
-    // miss. Playwright clicks relative to top-left when position is set.
-    await cta.click({ position: { x: 5, y: 3 } })
-    await expect(page).toHaveURL(/\/work$/)
   })
 })
 
