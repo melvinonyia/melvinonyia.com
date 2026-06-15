@@ -3,9 +3,10 @@
 /* ----------------------------------------------------------------------------
  * Self-hosted fonts.
  *
- * Söhne (sans) and Berkeley Mono (mono) are licensed; the actual .woff2 files
- * are NOT committed. Drop them into /public/fonts/ before shipping. See
- * /public/fonts/README.md for the expected filenames.
+ * Söhne (sans), Berkeley Mono (mono), and Editorial New (display serif) are
+ * licensed; the actual .woff2 files are NOT committed. Drop them into
+ * /public/fonts/ before shipping. See /public/fonts/README.md for the
+ * expected filenames.
  *
  * If a file is missing, the @font-face block falls back to system fonts via
  * the `local(...)` fallback chain and the `font-display: swap` directive.
@@ -44,26 +45,44 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Editorial New";
+  src:
+    url("/fonts/editorial-new-regular.woff2") format("woff2"),
+    local("PP Editorial New"),
+    local("Times New Roman"),
+    local("serif");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ----------------------------------------------------------------------------
  * Design tokens. CSS custom properties are the single source of truth — the
  * Tailwind @theme block below mirrors these so utilities (`bg-bg`, `text-fg`,
  * etc.) read the same values raw CSS does.
+ *
+ * Palette is per-route. `:root` declares the default `dark` palette;
+ * `[data-palette="paper"]` overrides the color tokens for paper routes.
+ * Type, motion, spacing, and sizing tokens are palette-agnostic.
  * ------------------------------------------------------------------------- */
 
 :root {
-  /* Dark-only palette. */
-  --color-bg: oklch(15% 0.005 270);
-  --color-surface: oklch(20% 0.005 270);
-  --color-surface-elevated: oklch(24% 0.006 270);
-  --color-border: oklch(30% 0.006 270);
-  --color-fg: oklch(96% 0.005 270);
-  --color-muted: oklch(70% 0.01 270);
-  --color-accent: oklch(78% 0.18 70);
+  /* Dark palette — work surface (/, /work, /work/$slug, /contact, error pages).
+     Warm-tinted near-black background, warm off-white foreground, brick accent. */
+  --color-bg: oklch(8.5% 0.003 60);
+  --color-surface: oklch(12% 0.004 60);
+  --color-surface-elevated: oklch(16% 0.005 60);
+  --color-border: oklch(25% 0.005 60);
+  --color-fg: oklch(96% 0.008 80);
+  --color-muted: oklch(70% 0.012 80);
+  --color-accent: #d87c4a;
   --color-danger: oklch(65% 0.2 25);
 
   /* Type. */
   --font-sans: "Soehne", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Berkeley Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-serif: "Editorial New", "PP Editorial New", "Times New Roman", Times, serif;
 
   --font-weight-buch: 400;
   --font-weight-halbfett: 600;
@@ -95,6 +114,28 @@
   color-scheme: dark;
 }
 
+[data-palette="paper"] {
+  /* Paper palette — voice surface (/writing, /writing/$slug, /about).
+     Warm cream background, near-black foreground, same brick accent.
+
+     CONTRAST NOTE: brick #d87c4a contrast on paper bg is ~2.47:1, failing
+     WCAG AA for both normal text (4.5:1) and UI/large (3.0:1). Per the
+     redesign PRD, this means brick is NOT usable on paper as a hover rule,
+     active-row marker, focus ring, or accent text. Use --color-fg for those
+     affordances on paper; reserve --color-accent for non-meaning decorative
+     moments only (it stays defined for token parity with the dark palette). */
+  --color-bg: oklch(94% 0.022 85);
+  --color-surface: oklch(91% 0.022 85);
+  --color-surface-elevated: oklch(96% 0.018 85);
+  --color-border: oklch(80% 0.020 85);
+  --color-fg: oklch(15% 0.005 60);
+  --color-muted: oklch(45% 0.015 60);
+  --color-accent: #d87c4a;
+  --color-danger: oklch(50% 0.2 25);
+
+  color-scheme: light;
+}
+
 /* ----------------------------------------------------------------------------
  * Tailwind v4 @theme — mirrors the tokens above into Tailwind's utility
  * generator. Keep these in sync with `:root` by reading from the same
@@ -113,6 +154,7 @@
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
 
   --font-weight-buch: 400;
   --font-weight-halbfett: 600;

@@ -45,6 +45,13 @@ export const Route = createRootRoute({
         type: 'font/woff2',
         crossOrigin: 'anonymous',
       },
+      {
+        rel: 'preload',
+        href: '/fonts/editorial-new-regular.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossOrigin: 'anonymous',
+      },
     ],
   }),
   component: RootComponent,
