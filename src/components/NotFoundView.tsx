@@ -13,7 +13,7 @@ export function NotFoundView() {
         </div>
       </div>
       <div className="error-illustration" aria-hidden="true">
-        <img src="/images/error-404.svg" alt="" />
+        <img src="/images/error-404.png" alt="" />
       </div>
     </div>
   )
