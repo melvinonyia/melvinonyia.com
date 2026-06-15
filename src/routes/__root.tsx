@@ -1,4 +1,4 @@
-import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router'
+import { createRootRoute, HeadContent, Outlet, Scripts, useRouterState } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
@@ -8,6 +8,8 @@ import { SiteFooter } from '~/components/SiteFooter'
 import { CommandPaletteController } from '~/components/CommandPaletteController'
 import { NotFoundView } from '~/components/NotFoundView'
 import { ServerErrorView } from '~/components/ServerErrorView'
+import { RoutePaletteSync } from '~/components/RoutePaletteSync'
+import { getPaletteForPath } from '~/lib/site/palette'
 
 const COPYRIGHT_YEAR = 2026
 
@@ -60,8 +62,11 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const palette = getPaletteForPath(pathname)
   return (
-    <RootDocument>
+    <RootDocument palette={palette}>
+      <RoutePaletteSync />
       <CommandPaletteController>
         <SiteHeader />
         <Outlet />
@@ -73,9 +78,9 @@ function RootComponent() {
   )
 }
 
-function RootDocument({ children }: { children: ReactNode }) {
+function RootDocument({ children, palette }: { children: ReactNode; palette: 'dark' | 'paper' }) {
   return (
-    <html lang="en">
+    <html lang="en" data-palette={palette}>
       <head>
         <HeadContent />
       </head>

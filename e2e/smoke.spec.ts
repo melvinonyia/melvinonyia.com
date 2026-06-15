@@ -119,3 +119,21 @@ test.describe('404', () => {
     await expect(page.getByRole('link', { name: /Take me home/ })).toHaveAttribute('href', '/')
   })
 })
+
+test.describe('per-route palette', () => {
+  const cases: Array<{ path: string; palette: 'dark' | 'paper' }> = [
+    { path: '/', palette: 'dark' },
+    { path: '/work', palette: 'dark' },
+    { path: '/work/movement-fingerprint', palette: 'dark' },
+    { path: '/contact', palette: 'dark' },
+    { path: '/writing', palette: 'paper' },
+    { path: '/writing/the-leg-between-lab-and-field', palette: 'paper' },
+    { path: '/about', palette: 'paper' },
+  ]
+  for (const { path, palette } of cases) {
+    test(`${path} renders with data-palette="${palette}"`, async ({ page }) => {
+      await page.goto(path)
+      await expect(page.locator('html')).toHaveAttribute('data-palette', palette)
+    })
+  }
+})

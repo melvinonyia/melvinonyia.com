@@ -55,4 +55,14 @@ test.describe('reduced-motion sweep', () => {
     await expect(page).toHaveURL(new RegExp(href!.replace(/[/]/g, '\\/') + '$'))
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
   })
+
+  test('dark→paper palette change on / → /writing is instant (no wipe runs)', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('html')).toHaveAttribute('data-palette', 'dark')
+    await page.getByRole('link', { name: /Writing/i }).first().click()
+    await expect(page).toHaveURL(/\/writing$/)
+    await expect(page.locator('html')).toHaveAttribute('data-palette', 'paper')
+    // The wipe marker should never have been set under reduced-motion.
+    await expect(page.locator('html')).not.toHaveAttribute('data-palette-transition', 'true')
+  })
 })

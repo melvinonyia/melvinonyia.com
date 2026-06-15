@@ -174,3 +174,32 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+/* ----------------------------------------------------------------------------
+ * Dark↔paper palette wipe (View Transitions API). Only fires when the
+ * RoutePaletteSync controller has set `data-palette-transition` on <html>,
+ * so unrelated view transitions (e.g. the serif morph from ViewTransitionLink)
+ * are not affected. Guarded by `prefers-reduced-motion: no-preference` as
+ * defense-in-depth — the controller already bails on reduced-motion before
+ * invoking startViewTransition.
+ * ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-palette-transition] ::view-transition-old(root) {
+    /* Old palette stays in place while the new one wipes down on top. */
+    animation: none;
+  }
+
+  html[data-palette-transition] ::view-transition-new(root) {
+    animation: palette-wipe-in 280ms var(--ease-standard) both;
+  }
+
+  @keyframes palette-wipe-in {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+}
