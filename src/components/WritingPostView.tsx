@@ -1,7 +1,9 @@
 import type { Essay } from '~/lib/content/writing'
+import { Pullquote, Aside } from './mdx'
 
 interface WritingPostViewProps {
   essay: Essay
+  essayNumber: number
 }
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
@@ -16,41 +18,52 @@ function formatDate(iso: string): string {
   return DATE_FORMATTER.format(d)
 }
 
-export function WritingPostView({ essay }: WritingPostViewProps) {
+const mdxComponents = { Pullquote, Aside }
+
+export function WritingPostView({ essay, essayNumber }: WritingPostViewProps) {
   const { Body } = essay
+  const indexLabel = `No. ${String(essayNumber).padStart(2, '0')}`
+  const topic = essay.tags[0]?.toUpperCase() ?? null
+  const datelineParts = [
+    formatDate(essay.date).toUpperCase(),
+    essay.readTime ? `${essay.readTime} MIN` : null,
+    topic,
+  ].filter(Boolean) as string[]
+
   return (
     <article className="mx-auto max-w-3xl pt-24 pb-32 sm:pt-32 lg:pt-40">
-      <header className="mb-10">
-        <time
-          dateTime={essay.date}
-          className="font-mono text-xs uppercase tracking-wide text-muted"
+      <header className="mb-16">
+        <p
+          data-essay-number
+          className="font-mono text-xs uppercase tracking-wider text-muted"
         >
-          {formatDate(essay.date)}
-        </time>
-        <h1 className="mt-3 font-sans font-halbfett tracking-tight text-fg text-4xl sm:text-5xl lg:text-6xl">
+          {indexLabel}
+        </p>
+        <h1
+          className="mt-4 font-serif text-fg leading-[1.05] tracking-tight"
+          style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)' }}
+        >
           {essay.title}
         </h1>
-        {essay.excerpt && (
-          <p className="mt-4 font-sans font-buch text-lg sm:text-xl text-muted max-w-prose">
-            {essay.excerpt}
-          </p>
-        )}
-        {essay.tags.length > 0 && (
-          <ul className="mt-6 flex flex-wrap gap-2">
-            {essay.tags.map((tag) => (
-              <li
-                key={tag}
-                className="font-mono text-xs uppercase tracking-wide text-muted border border-muted/30 rounded-full px-2 py-0.5"
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
-        )}
+        <p
+          data-dateline
+          className="mt-6 font-mono text-xs uppercase tracking-wider text-muted"
+        >
+          <time dateTime={essay.date}>{formatDate(essay.date).toUpperCase()}</time>
+          {datelineParts.slice(1).map((part) => (
+            <span key={part}>
+              <span aria-hidden="true"> — </span>
+              {part}
+            </span>
+          ))}
+        </p>
       </header>
 
-      <div className="prose-body font-sans font-buch text-fg max-w-prose [&_h2]:font-halbfett [&_h2]:text-2xl [&_h2]:mt-12 [&_h2]:mb-4 [&_p]:mt-4 [&_p]:leading-relaxed">
-        <Body />
+      <div
+        data-essay-body
+        className="font-sans font-buch text-fg max-w-[68ch] text-lg leading-[1.6] [&_h2]:font-serif [&_h2]:text-3xl [&_h2]:mt-16 [&_h2]:mb-4 [&_h2]:leading-tight [&_p]:mt-6 [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-fg"
+      >
+        <Body components={mdxComponents} />
       </div>
     </article>
   )

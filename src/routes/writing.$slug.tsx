@@ -1,6 +1,7 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import {
   getEssay,
+  getEssays,
   resolveEssay,
   EssayNotFoundError,
 } from '~/lib/content/writing'
@@ -13,7 +14,16 @@ export const Route = createFileRoute('/writing/$slug')({
       const essay = resolveEssay(params.slug)
       const { Body: _Body, ...summary } = essay
       void _Body
-      return { summary }
+      const essays = getEssays()
+      // Chronological 1-based index: newest essay is No. 01 if you read
+      // top-down on /writing, but the editorial "No. NN" reads as a
+      // publication sequence — oldest = No. 01, newest gets the highest
+      // number. getEssays() returns newest-first; flip to oldest-first
+      // before indexing.
+      const oldestFirst = [...essays].reverse()
+      const essayNumber =
+        oldestFirst.findIndex((e) => e.slug === essay.slug) + 1
+      return { summary, essayNumber }
     } catch (err) {
       if (err instanceof EssayNotFoundError) throw notFound()
       throw err
@@ -25,12 +35,12 @@ export const Route = createFileRoute('/writing/$slug')({
 })
 
 function WritingPostPage() {
-  const { summary } = Route.useLoaderData()
+  const { summary, essayNumber } = Route.useLoaderData()
   const essay = getEssay(summary.slug)
   if (!essay) throw notFound()
   return (
     <main className="min-h-screen bg-bg text-fg px-6">
-      <WritingPostView essay={essay} />
+      <WritingPostView essay={essay} essayNumber={essayNumber} />
     </main>
   )
 }

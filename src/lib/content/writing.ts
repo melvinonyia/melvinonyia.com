@@ -5,6 +5,7 @@ export interface EssayFrontmatter {
   date: string
   excerpt?: string
   tags?: string[]
+  readTime?: number
 }
 
 export interface EssaySummary {
@@ -13,15 +14,16 @@ export interface EssaySummary {
   date: string
   excerpt: string
   tags: string[]
+  readTime?: number
 }
 
 export interface Essay extends EssaySummary {
-  Body: ComponentType
+  Body: ComponentType<{ components?: Record<string, ComponentType<any>> }>
 }
 
 interface MdxModule {
   frontmatter: EssayFrontmatter
-  default: ComponentType
+  default: ComponentType<{ components?: Record<string, ComponentType<any>> }>
 }
 
 const modules = import.meta.glob<MdxModule>('/content/writing/*.mdx', { eager: true })
@@ -39,6 +41,7 @@ function toEssay(filePath: string, mod: MdxModule): Essay {
     date: mod.frontmatter.date,
     excerpt: mod.frontmatter.excerpt ?? '',
     tags: mod.frontmatter.tags ?? [],
+    readTime: mod.frontmatter.readTime,
     Body: mod.default,
   }
 }
