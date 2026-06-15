@@ -1,0 +1,29 @@
+---
+title: Movement fingerprint engine
+date: 2025-11-12
+excerpt: Modeling per-athlete kinematic signatures from sparse IMU streams to flag deviation before injury risk compounds.
+tags:
+  - biomechanics
+  - signal processing
+  - engineering
+heroImage: /og/work-movement-fingerprint.png
+---
+
+## The problem
+
+Standard return-to-play protocols treat athletes as if they share a single
+reference kinematic template. They don't. A useful model has to start from each
+athlete's own movement signature and reason about deviation from that baseline,
+not from a population mean.
+
+## What I built
+
+A streaming pipeline that ingests sparse IMU windows, projects them into a
+per-athlete latent space, and surfaces drift in near-real-time to the
+performance staff. The detection threshold is calibrated per-joint, per-task.
+
+## Outcome
+
+In a six-week pilot with one collegiate squad the system caught two early
+hamstring-load anomalies that the performance staff later confirmed in the
+training-room screen. The pipeline is now driving a longer follow-up study.
