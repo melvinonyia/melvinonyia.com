@@ -79,6 +79,10 @@
   --color-accent: #d87c4a;
   --color-danger: oklch(65% 0.2 25);
 
+  /* Hover rule color — defaults to brick on dark; overridden to fg on paper
+     since brick fails AA on paper backgrounds (see paper palette note below). */
+  --hover-rule-color: var(--color-accent);
+
   /* Type. */
   --font-sans: "Soehne", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Berkeley Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -132,6 +136,7 @@
   --color-muted: oklch(45% 0.015 60);
   --color-accent: #d87c4a;
   --color-danger: oklch(50% 0.2 25);
+  --hover-rule-color: var(--color-fg);
 
   color-scheme: light;
 }
@@ -202,4 +207,32 @@ body {
       clip-path: inset(0 0 0 0);
     }
   }
+}
+
+/* ----------------------------------------------------------------------------
+ * HoverLift rule reveal — a 1px rule pinned to the bottom edge that fades
+ * in on hover/focus. The Motion path animates [data-hover-rule] via Motion
+ * variants; the reduced-motion / touch-only path renders a plain wrapper and
+ * lets CSS toggle the rule's opacity instantly via :hover / :focus-within.
+ * ------------------------------------------------------------------------- */
+
+[data-hover-rule] {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: var(--hover-rule-color);
+  pointer-events: none;
+}
+
+[data-hover-lift][data-reduced-motion="true"] [data-hover-rule],
+[data-hover-lift][data-touch-only="true"] [data-hover-rule] {
+  opacity: 0;
+  transition: none;
+}
+
+[data-hover-lift][data-reduced-motion="true"]:hover [data-hover-rule],
+[data-hover-lift][data-reduced-motion="true"]:focus-within [data-hover-rule],
+[data-hover-lift][data-touch-only="true"]:hover [data-hover-rule],
+[data-hover-lift][data-touch-only="true"]:focus-within [data-hover-rule] {
+  opacity: 1;
 }

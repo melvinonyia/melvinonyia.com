@@ -10,35 +10,60 @@ interface HoverLiftProps {
   className?: string
 }
 
-const LIFT_AMOUNT = -4
-const LIFTED_SHADOW = '0 10px 30px -10px rgba(0, 0, 0, 0.55)'
-const PRESSED_SCALE = 0.985
+const LIFT_AMOUNT = -2
 
 const SPRING: Transition = { type: 'spring', stiffness: 320, damping: 26 }
-const INSTANT: Transition = { duration: 0 }
+
+const variants = {
+  rest: { y: 0 },
+  hover: { y: LIFT_AMOUNT },
+}
+
+const ruleVariants = {
+  rest: { opacity: 0 },
+  hover: { opacity: 1 },
+}
 
 export function HoverLift({ children, className }: HoverLiftProps) {
   const reducedMotion = useReducedMotionPreferred()
   const isTouchOnly = useTouchOnly()
 
-  const hoverState = isTouchOnly
-    ? undefined
-    : { y: LIFT_AMOUNT, boxShadow: LIFTED_SHADOW }
-  const tapState = isTouchOnly ? { scale: PRESSED_SCALE } : undefined
-  const transition = reducedMotion ? INSTANT : SPRING
+  const wrapperClass = `relative ${className ?? ''}`.trim()
+
+  if (reducedMotion || isTouchOnly) {
+    return (
+      <div
+        className={wrapperClass}
+        data-hover-lift
+        data-reduced-motion={reducedMotion ? 'true' : 'false'}
+        data-touch-only={isTouchOnly ? 'true' : 'false'}
+      >
+        {children}
+        <span data-hover-rule aria-hidden="true" />
+      </div>
+    )
+  }
 
   return (
     <motion.div
-      whileHover={hoverState}
-      whileFocus={hoverState}
-      whileTap={tapState}
-      transition={transition}
-      className={className}
+      className={wrapperClass}
       data-hover-lift
-      data-reduced-motion={reducedMotion ? 'true' : 'false'}
-      data-touch-only={isTouchOnly ? 'true' : 'false'}
+      data-reduced-motion="false"
+      data-touch-only="false"
+      initial="rest"
+      animate="rest"
+      whileHover="hover"
+      whileFocus="hover"
+      variants={variants}
+      transition={SPRING}
     >
       {children}
+      <motion.span
+        data-hover-rule
+        aria-hidden="true"
+        variants={ruleVariants}
+        transition={SPRING}
+      />
     </motion.div>
   )
 }

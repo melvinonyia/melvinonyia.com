@@ -45,6 +45,30 @@ describe('HoverLift', () => {
     expect(screen.getByRole('button', { name: 'open card' })).toBeInTheDocument()
   })
 
+  it('renders an aria-hidden rule element inside the wrapper', () => {
+    installMatchMedia(() => false)
+    const { container } = render(
+      <HoverLift>
+        <span>content</span>
+      </HoverLift>,
+    )
+    const wrapper = container.querySelector('[data-hover-lift]')!
+    const rule = wrapper.querySelector('[data-hover-rule]')
+    expect(rule).not.toBeNull()
+    expect(rule).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('also renders the rule element under reduced-motion (CSS path)', () => {
+    installMatchMedia((q) => q === '(prefers-reduced-motion: reduce)')
+    const { container } = render(
+      <HoverLift>
+        <span>content</span>
+      </HoverLift>,
+    )
+    const wrapper = container.querySelector('[data-hover-lift]')!
+    expect(wrapper.querySelector('[data-hover-rule]')).not.toBeNull()
+  })
+
   it('marks the wrapper with reduced-motion when prefers-reduced-motion matches', () => {
     installMatchMedia((q) => q === '(prefers-reduced-motion: reduce)')
     const { container } = render(
@@ -78,5 +102,17 @@ describe('HoverLift', () => {
     const wrapper = container.querySelector('[data-hover-lift]')!
     expect(wrapper.getAttribute('data-reduced-motion')).toBe('false')
     expect(wrapper.getAttribute('data-touch-only')).toBe('false')
+  })
+
+  it('forwards an optional className to the wrapper', () => {
+    installMatchMedia(() => false)
+    const { container } = render(
+      <HoverLift className="h-full">
+        <span>content</span>
+      </HoverLift>,
+    )
+    const wrapper = container.querySelector('[data-hover-lift]')!
+    expect(wrapper.className).toMatch(/relative/)
+    expect(wrapper.className).toMatch(/h-full/)
   })
 })
