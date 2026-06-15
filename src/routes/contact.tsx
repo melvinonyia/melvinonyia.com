@@ -11,21 +11,28 @@ export const Route = createFileRoute('/contact')({
 function ContactPage() {
   return (
     <main className="min-h-screen bg-bg text-fg px-6">
-      <section className="mx-auto max-w-3xl pt-24 pb-32 sm:pt-32 lg:pt-40">
-        <h1 className="font-sans font-halbfett tracking-tight text-fg text-4xl sm:text-5xl">
-          Contact
-        </h1>
-        <p className="mt-6 font-sans font-buch text-base sm:text-lg text-muted max-w-prose leading-relaxed">
-          Drop a line below, or email{' '}
+      <section className="mx-auto max-w-2xl pt-24 pb-32 sm:pt-32 lg:pt-40">
+        <header>
+          <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl text-fg leading-none">
+            Contact
+          </h1>
+          <p className="mt-6 font-mono text-xs uppercase tracking-wider text-muted">
+            Drop a line — usually replies inside a day
+          </p>
+        </header>
+
+        <p className="mt-12 font-sans text-base sm:text-lg text-fg max-w-prose leading-relaxed">
+          Use the form below, or email{' '}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="text-accent underline underline-offset-4 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            className="underline underline-offset-4 decoration-muted hover:decoration-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
           >
             {CONTACT_EMAIL}
           </a>{' '}
           directly.
         </p>
-        <div className="mt-10">
+
+        <div className="mt-12">
           <ContactForm endpoint="/api/contact" />
         </div>
       </section>

@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import type { ContactResult } from '~/lib/contact/types'
+import { HoverLift } from './HoverLift'
+import { CONTACT_EMAIL } from '~/lib/site/socials'
 
 interface ContactFormProps {
   endpoint: string
@@ -24,6 +26,10 @@ const ERROR_COPY = {
   network:
     "Network hiccup — couldn't reach the server. Try again or email me directly.",
 } as const
+
+const labelClass = 'font-mono text-xs uppercase tracking-wider text-muted'
+const inputClass =
+  'block w-full mt-2 border-b border-border bg-transparent px-0 py-2 font-sans text-base text-fg outline-none transition-colors placeholder:text-muted/40 focus-visible:border-accent'
 
 export function ContactForm({ endpoint }: ContactFormProps) {
   const [state, setState] = useState<FormState>({ kind: 'idle' })
@@ -69,13 +75,15 @@ export function ContactForm({ endpoint }: ContactFormProps) {
 
   if (state.kind === 'success') {
     return (
-      <div
-        role="status"
-        aria-live="polite"
-        className="rounded-md border border-accent/40 bg-accent/5 p-6 font-sans font-buch text-base text-fg"
-      >
-        Thank you — your message is on its way. I'll respond from{' '}
-        <span className="font-halbfett">melvin.onyia@gmail.com</span>.
+      <div role="status" aria-live="polite" className="border-t border-border pt-8">
+        <p className={labelClass}>Message sent</p>
+        <p className="mt-3 font-serif text-3xl sm:text-4xl text-fg leading-tight">
+          Thank you.
+        </p>
+        <p className="mt-4 font-sans text-base text-muted max-w-prose">
+          I'll respond from{' '}
+          <span className="text-fg">{CONTACT_EMAIL}</span>.
+        </p>
       </div>
     )
   }
@@ -87,11 +95,11 @@ export function ContactForm({ endpoint }: ContactFormProps) {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-8"
       aria-busy={submitting}
     >
-      <div className="flex flex-col gap-2">
-        <label htmlFor="contact-name" className="font-sans font-buch text-sm text-fg">
+      <div>
+        <label htmlFor="contact-name" className={labelClass}>
           Name
         </label>
         <input
@@ -102,12 +110,12 @@ export function ContactForm({ endpoint }: ContactFormProps) {
           autoComplete="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-sm border border-border/60 bg-surface/40 px-3 py-2 font-sans font-buch text-base text-fg outline-none transition-colors focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className={inputClass}
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label htmlFor="contact-email" className="font-sans font-buch text-sm text-fg">
+      <div>
+        <label htmlFor="contact-email" className={labelClass}>
           Email
         </label>
         <input
@@ -118,12 +126,12 @@ export function ContactForm({ endpoint }: ContactFormProps) {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-sm border border-border/60 bg-surface/40 px-3 py-2 font-sans font-buch text-base text-fg outline-none transition-colors focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className={inputClass}
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label htmlFor="contact-message" className="font-sans font-buch text-sm text-fg">
+      <div>
+        <label htmlFor="contact-message" className={labelClass}>
           Message
         </label>
         <textarea
@@ -133,7 +141,7 @@ export function ContactForm({ endpoint }: ContactFormProps) {
           rows={6}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="w-full rounded-sm border border-border/60 bg-surface/40 px-3 py-2 font-sans font-buch text-base text-fg outline-none transition-colors resize-y focus-visible:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className={`${inputClass} resize-y`}
         />
       </div>
 
@@ -161,20 +169,26 @@ export function ContactForm({ endpoint }: ContactFormProps) {
         />
       </div>
 
-      <div className="flex items-center justify-between gap-4">
-        <button
-          type="submit"
-          disabled={submitting}
-          className="inline-flex items-center gap-2 rounded-sm border border-accent/60 px-4 py-2 font-sans font-buch text-sm text-accent transition-colors hover:bg-accent/10 focus-visible:bg-accent/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {submitting ? 'Sending…' : 'Send message'}
-        </button>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <HoverLift className="w-fit">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="inline-flex items-baseline gap-2 py-2 font-mono text-xs uppercase tracking-wider text-fg transition-opacity focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span>{submitting ? 'Sending' : 'Send message'}</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </HoverLift>
         {error && (
           <p
             role="alert"
-            className="font-sans font-buch text-sm text-red-400 max-w-prose"
+            className="font-mono text-xs uppercase tracking-wider text-danger max-w-prose normal-case sm:text-right"
           >
-            {ERROR_COPY[error]}
+            <span className="block uppercase tracking-wider">Error</span>
+            <span className="mt-1 block font-sans text-sm normal-case tracking-normal">
+              {ERROR_COPY[error]}
+            </span>
           </p>
         )}
         {submitting && (

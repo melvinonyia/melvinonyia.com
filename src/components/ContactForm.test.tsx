@@ -170,4 +170,32 @@ describe('ContactForm', () => {
     fireEvent.click(screen.getByRole('button', { name: /send/i }))
     expect(fetchMock).not.toHaveBeenCalled()
   })
+
+  it('renders labels in mono and inputs with a hairline bottom border', () => {
+    render(<ContactForm endpoint="/api/contact" />)
+    const nameLabel = screen.getByText('Name')
+    expect(nameLabel.className).toMatch(/font-mono/)
+    expect(nameLabel.className).toMatch(/uppercase/)
+    const nameInput = screen.getByLabelText(/name/i) as HTMLInputElement
+    expect(nameInput.className).toMatch(/border-b/)
+    // No boxed border — the redesign uses only the bottom hairline.
+    expect(nameInput.className).not.toMatch(/rounded/)
+  })
+
+  it('renders the success state with a serif `Thank you.` headline', async () => {
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      }),
+    )
+    render(<ContactForm endpoint="/api/contact" />)
+    fillForm()
+    fireEvent.click(screen.getByRole('button', { name: /send/i }))
+    await waitFor(() => {
+      expect(screen.getByText('Thank you.')).toBeInTheDocument()
+    })
+    const headline = screen.getByText('Thank you.')
+    expect(headline.className).toMatch(/font-serif/)
+  })
 })
