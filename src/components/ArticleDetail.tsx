@@ -43,11 +43,6 @@ function buildShareLinks(url: string, title: string): ShareLink[] {
   const encodedTitle = encodeURIComponent(title)
   return [
     {
-      name: 'Facebook',
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      Icon: SiFacebook,
-    },
-    {
       name: 'X',
       href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
       Icon: SiX,
@@ -56,6 +51,11 @@ function buildShareLinks(url: string, title: string): ShareLink[] {
       name: 'LinkedIn',
       href: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}`,
       Icon: FaLinkedinIn,
+    },
+    {
+      name: 'Facebook',
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      Icon: SiFacebook,
     },
   ]
 }

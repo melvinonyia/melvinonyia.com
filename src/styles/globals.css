@@ -968,13 +968,15 @@ a {
 }
 
 .article-detail-share {
-  position: absolute;
-  top: 5rem;
-  left: -3rem;
+  position: fixed;
+  top: 50%;
+  left: 2rem;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  z-index: 5;
 }
 
 @media (max-width: 992px) { .article-detail-share { display: none; } }
