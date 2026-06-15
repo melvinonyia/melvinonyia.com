@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { ComponentProps } from 'react'
+import { MagneticLink } from './MagneticLink'
 
 interface NavItem {
   label: string
@@ -29,14 +30,16 @@ export function SiteHeader() {
           <ul className="flex items-center gap-1 sm:gap-2">
             {NAV_ITEMS.map((item) => (
               <li key={item.to}>
-                <Link
+                <MagneticLink
                   to={item.to}
                   activeOptions={{ exact: item.to === '/' }}
                   className="font-sans font-buch text-sm text-muted px-2 py-1 rounded-sm transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-[current=page]:text-fg aria-[current=page]:underline aria-[current=page]:underline-offset-4"
                   activeProps={{ 'aria-current': 'page' }}
+                  radius={32}
+                  maxOffset={6}
                 >
                   {item.label}
-                </Link>
+                </MagneticLink>
               </li>
             ))}
           </ul>
