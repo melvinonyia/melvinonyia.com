@@ -1,28 +1,14 @@
-// Vercel serverless function entry. Delegates to the TanStack Start SSR
-// handler produced at dist/server/server.js by `vite build`. The bundle
-// is loaded lazily so any import-time failure surfaces in the response
-// body — Vercel's default error UI swallows otherwise.
-
-let cached
-
-async function getServer() {
-  if (!cached) {
-    const mod = await import('../dist/server/server.js')
-    cached = mod.default
-  }
-  return cached
-}
+// SMOKE TEST — temporary diagnostic. Returns immediately to verify
+// Vercel function wiring works in isolation. Restore SSR delegation
+// once we confirm 200 here.
 
 export default async function handler(request) {
-  try {
-    const server = await getServer()
-    return await server.fetch(request)
-  } catch (err) {
-    const msg = err && (err.stack || err.message) ? `${err.message}\n${err.stack}` : String(err)
-    console.error('SSR handler error:', msg)
-    return new Response('SSR handler error\n\n' + msg, {
-      status: 500,
+  const url = request && request.url ? request.url : '(no request.url)'
+  return new Response(
+    `smoke ok\nrequest.url=${url}\nnode=${process.version}\n`,
+    {
+      status: 200,
       headers: { 'content-type': 'text/plain; charset=utf-8' },
-    })
-  }
+    },
+  )
 }
