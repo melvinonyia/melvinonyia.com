@@ -1,5 +1,7 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import appCss from '~/styles/globals.css?url'
 import { SiteHeader } from '~/components/SiteHeader'
 import { SiteFooter } from '~/components/SiteFooter'
@@ -58,6 +60,8 @@ function RootComponent() {
         <Outlet />
         <SiteFooter year={COPYRIGHT_YEAR} />
       </CommandPaletteController>
+      <Analytics />
+      <SpeedInsights />
     </RootDocument>
   )
 }
