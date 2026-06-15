@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { WorkPostSummary } from '~/lib/content/work'
 
 vi.mock('@tanstack/react-router', () => ({
@@ -25,7 +25,24 @@ vi.mock('@tanstack/react-router', () => ({
       </a>
     )
   },
+  useNavigate: () => vi.fn(),
 }))
+
+beforeEach(() => {
+  ;(window as Window & { matchMedia: typeof window.matchMedia }).matchMedia = vi.fn(
+    (query: string) =>
+      ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        addListener: () => {},
+        removeListener: () => {},
+        dispatchEvent: () => true,
+      }) as unknown as MediaQueryList,
+  )
+})
 
 import { WorkIndexView } from './WorkIndexView'
 

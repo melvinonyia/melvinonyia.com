@@ -20,7 +20,10 @@ export function WorkPostView({ post }: WorkPostViewProps) {
   const { Body } = post
   return (
     <article className="mx-auto max-w-3xl pt-24 pb-32 sm:pt-32 lg:pt-40">
-      <header className="mb-10">
+      <header
+        className="mb-10"
+        style={{ viewTransitionName: `work-card-${post.slug}` }}
+      >
         <time
           dateTime={post.date}
           className="font-mono text-xs uppercase tracking-wide text-muted"

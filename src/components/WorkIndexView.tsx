@@ -1,5 +1,5 @@
 import type { WorkPostSummary } from '~/lib/content/work'
-import { Link } from '@tanstack/react-router'
+import { ViewTransitionLink } from './ViewTransitionLink'
 
 interface WorkIndexViewProps {
   posts: WorkPostSummary[]
@@ -33,9 +33,10 @@ export function WorkIndexView({ posts }: WorkIndexViewProps) {
         {posts.map((post) => (
           <li key={post.slug}>
             <article>
-              <Link
+              <ViewTransitionLink
                 to="/work/$slug"
                 params={{ slug: post.slug }}
+                name={`work-card-${post.slug}`}
                 className="group block focus:outline-none"
               >
                 <time
@@ -52,7 +53,7 @@ export function WorkIndexView({ posts }: WorkIndexViewProps) {
                     {post.excerpt}
                   </p>
                 )}
-              </Link>
+              </ViewTransitionLink>
             </article>
           </li>
         ))}

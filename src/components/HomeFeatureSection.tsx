@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import type { WorkPostSummary } from '~/lib/content/work'
 import type { EssaySummary } from '~/lib/content/writing'
 import { HoverLift } from './HoverLift'
+import { ViewTransitionLink } from './ViewTransitionLink'
 
 interface HomeFeatureSectionProps {
   workPosts: WorkPostSummary[]
@@ -22,9 +23,10 @@ function formatDate(iso: string): string {
 function CaseStudyCard({ post }: { post: WorkPostSummary }) {
   return (
     <HoverLift className="h-full">
-      <Link
+      <ViewTransitionLink
         to="/work/$slug"
         params={{ slug: post.slug }}
+        name={`work-card-${post.slug}`}
         className="group block h-full rounded-md border border-border/40 bg-surface/40 p-6 transition-colors hover:bg-surface/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         <time
@@ -41,7 +43,7 @@ function CaseStudyCard({ post }: { post: WorkPostSummary }) {
             {post.excerpt}
           </p>
         )}
-      </Link>
+      </ViewTransitionLink>
     </HoverLift>
   )
 }

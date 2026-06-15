@@ -26,6 +26,7 @@ vi.mock('@tanstack/react-router', () => ({
       </a>
     )
   },
+  useNavigate: () => vi.fn(),
 }))
 
 beforeEach(() => {
