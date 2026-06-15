@@ -11,9 +11,5 @@ export const Route = createFileRoute('/writing/')({
 
 function WritingIndexPage() {
   const { essays } = Route.useLoaderData()
-  return (
-    <main className="min-h-screen bg-bg text-fg px-6">
-      <WritingIndexView essays={essays} />
-    </main>
-  )
+  return <WritingIndexView essays={essays} />
 }

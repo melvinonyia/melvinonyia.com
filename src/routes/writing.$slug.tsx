@@ -38,9 +38,5 @@ function WritingPostPage() {
   const { summary, essayNumber } = Route.useLoaderData()
   const essay = getEssay(summary.slug)
   if (!essay) throw notFound()
-  return (
-    <main className="min-h-screen bg-bg text-fg px-6">
-      <WritingPostView essay={essay} essayNumber={essayNumber} />
-    </main>
-  )
+  return <WritingPostView essay={essay} essayNumber={essayNumber} />
 }

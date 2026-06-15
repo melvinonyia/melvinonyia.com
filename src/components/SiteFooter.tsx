@@ -1,37 +1,75 @@
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { SocialLinks } from './SocialLinks'
-import { useOpenCommandPalette } from './CommandPaletteController'
 
 interface SiteFooterProps {
   year: number
 }
 
-const monoLabel =
-  'font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent'
+interface FooterNavColumn {
+  title: string
+  links: { to: '/about' | '/writing' | '/contact'; text: string }[]
+}
+
+const FOOTER_NAV: readonly FooterNavColumn[] = [
+  {
+    title: 'Profile',
+    links: [{ to: '/about', text: 'About' }],
+  },
+  {
+    title: 'Resources',
+    links: [{ to: '/writing', text: 'Writing' }],
+  },
+  {
+    title: 'Connect',
+    links: [{ to: '/contact', text: 'Contact' }],
+  },
+]
+
+const TAGLINE = 'Build things, solve problems'
+const TITLE = 'Melvin Onyia'
 
 export function SiteFooter({ year }: SiteFooterProps) {
-  const openPalette = useOpenCommandPalette()
+  const navigate = useNavigate()
   return (
-    <footer className="border-t border-border/40 mt-24">
-      <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-6 py-6 sm:flex-row sm:items-center sm:gap-6">
-        <span className={`${monoLabel} text-fg`}>© {year} Melvin Onyia</span>
-
-        <div className="flex items-center gap-6">
-          <SocialLinks />
-          <Link to="/legal" className={monoLabel}>
-            Legal
-          </Link>
-          <button
-            type="button"
-            onClick={() => openPalette?.()}
-            aria-label="Open command palette"
-            aria-keyshortcuts="Meta+K"
-            data-palette-trigger
-            className={`hidden sm:inline-flex ${monoLabel}`}
-          >
-            <span aria-hidden="true">⌘K</span>
-          </button>
+    <footer className="site-footer">
+      <div className="site-footer-wrapper">
+        <div>
+          <h4 className="site-footer-tagline">{TAGLINE}</h4>
+          <SocialLinks className="site-social" />
         </div>
+        <ul className="site-footer-nav">
+          {FOOTER_NAV.map(({ title, links }) => (
+            <li key={title} className="site-footer-list">
+              <span className="site-footer-list-header">{title}</span>
+              {links.map(({ to, text }) => (
+                <button
+                  key={text}
+                  type="button"
+                  className="site-footer-link"
+                  onClick={() => navigate({ to })}
+                  aria-label={text}
+                >
+                  {text}
+                </button>
+              ))}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="site-footer-credit">
+        {year} {TITLE} &copy; Copyright -{' '}
+        <span
+          role="button"
+          tabIndex={0}
+          className="site-footer-credit-link"
+          onClick={() => navigate({ to: '/legal' })}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') navigate({ to: '/legal' })
+          }}
+          aria-label="Privacy & Terms"
+        >
+          Privacy & Terms
+        </span>
       </div>
     </footer>
   )

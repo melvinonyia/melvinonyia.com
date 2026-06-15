@@ -1,59 +1,47 @@
-import { render, screen, within } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { render, screen, within, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+const navigateMock = vi.fn()
 
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({
-    to,
-    children,
-    ...rest
-  }: {
-    to: string
-    children: React.ReactNode
-  } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
-    <a href={to} {...rest}>
-      {children}
-    </a>
-  ),
+  useNavigate: () => navigateMock,
 }))
 
 import { SiteFooter } from './SiteFooter'
 
 describe('SiteFooter', () => {
-  it('renders GitHub, LinkedIn, and X social links', () => {
+  beforeEach(() => navigateMock.mockReset())
+
+  it('renders the Build things, solve problems tagline', () => {
     render(<SiteFooter year={2026} />)
-    const footer = screen.getByRole('contentinfo')
-    expect(within(footer).getByRole('link', { name: 'GitHub' })).toBeInTheDocument()
-    expect(within(footer).getByRole('link', { name: 'LinkedIn' })).toBeInTheDocument()
-    expect(within(footer).getByRole('link', { name: 'X' })).toBeInTheDocument()
+    expect(screen.getByText('Build things, solve problems')).toBeInTheDocument()
   })
 
-  it('opens social links in a new tab with safe rel', () => {
+  it('renders the three nav column headers', () => {
     render(<SiteFooter year={2026} />)
-    const github = screen.getByRole('link', { name: 'GitHub' })
-    expect(github).toHaveAttribute('target', '_blank')
-    expect(github.getAttribute('rel')).toMatch(/noreferrer/)
-    expect(github.getAttribute('rel')).toMatch(/noopener/)
+    expect(screen.getByText('Profile')).toBeInTheDocument()
+    expect(screen.getByText('Resources')).toBeInTheDocument()
+    expect(screen.getByText('Connect')).toBeInTheDocument()
   })
 
-  it('renders the copyright wordmark with the passed-in year', () => {
+  it('renders About / Writing / Contact navigation buttons', () => {
     render(<SiteFooter year={2026} />)
-    expect(screen.getByText(/© 2026 Melvin Onyia/)).toBeInTheDocument()
+    const navList = screen.getByText('Profile').closest('ul')!
+    expect(within(navList).getByText('About')).toBeInTheDocument()
+    expect(within(navList).getByText('Writing')).toBeInTheDocument()
+    expect(within(navList).getByText('Contact')).toBeInTheDocument()
   })
 
-  it('renders a legal link stub', () => {
+  it('renders the copyright credit with the year and Privacy & Terms', () => {
     render(<SiteFooter year={2026} />)
-    expect(screen.getByRole('link', { name: 'Legal' })).toHaveAttribute('href', '/legal')
+    expect(screen.getByText(/2026/)).toBeInTheDocument()
+    const privacy = screen.getByRole('button', { name: 'Privacy & Terms' })
+    expect(privacy).toBeInTheDocument()
   })
 
-  it('renders a ⌘K trigger button with the keyboard-shortcut a11y wiring', () => {
-    const { container } = render(<SiteFooter year={2026} />)
-    const trigger = container.querySelector(
-      '[data-palette-trigger]',
-    ) as HTMLButtonElement | null
-    expect(trigger).not.toBeNull()
-    expect(trigger!.tagName).toBe('BUTTON')
-    expect(trigger!.textContent).toMatch(/⌘K/)
-    expect(trigger).toHaveAttribute('aria-label', 'Open command palette')
-    expect(trigger).toHaveAttribute('aria-keyshortcuts', 'Meta+K')
+  it('navigates to /legal when Privacy & Terms is clicked', () => {
+    render(<SiteFooter year={2026} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Privacy & Terms' }))
+    expect(navigateMock).toHaveBeenCalledWith({ to: '/legal' })
   })
 })

@@ -1,92 +1,39 @@
 @import "tailwindcss";
 
 /* ----------------------------------------------------------------------------
- * Self-hosted fonts.
- *
- * Söhne (sans), Berkeley Mono (mono), and Editorial New (display serif) are
- * licensed; the actual .woff2 files are NOT committed. Drop them into
- * /public/fonts/ before shipping. See /public/fonts/README.md for the
- * expected filenames.
- *
- * If a file is missing, the @font-face block falls back to system fonts via
- * the `local(...)` fallback chain and the `font-display: swap` directive.
+ * TT Commons (DemiBold) — match main's type. The .woff2 file isn't committed;
+ * drop it into /public/fonts/tt-commons-demibold.woff2 to enable. Otherwise
+ * the fallback system stack renders.
  * ------------------------------------------------------------------------- */
 
 @font-face {
-  font-family: "Soehne";
-  src:
-    url("/fonts/soehne-buch.woff2") format("woff2"),
-    local("Inter"),
-    local("system-ui");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Soehne";
-  src:
-    url("/fonts/soehne-halbfett.woff2") format("woff2"),
-    local("Inter Semi Bold"),
-    local("system-ui");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Berkeley Mono";
-  src:
-    url("/fonts/berkeley-mono-regular.woff2") format("woff2"),
-    local("JetBrains Mono"),
-    local("ui-monospace");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Editorial New";
-  src:
-    url("/fonts/editorial-new-regular.woff2") format("woff2"),
-    local("PP Editorial New"),
-    local("Times New Roman"),
-    local("serif");
-  font-weight: 400;
+  font-family: "TT Commons";
+  src: url("/fonts/tt-commons-demibold.woff2") format("woff2");
+  font-weight: 500 600;
   font-style: normal;
   font-display: swap;
 }
 
 /* ----------------------------------------------------------------------------
- * Design tokens. CSS custom properties are the single source of truth — the
- * Tailwind @theme block below mirrors these so utilities (`bg-bg`, `text-fg`,
- * etc.) read the same values raw CSS does.
- *
- * Palette is per-route. `:root` declares the default `dark` palette;
- * `[data-palette="paper"]` overrides the color tokens for paper routes.
- * Type, motion, spacing, and sizing tokens are palette-agnostic.
+ * Design tokens — main's palette: warm darkBlack body, darkWhite text,
+ * warm-gray muted, burntOrange link. Single dark surface (no paper palette).
  * ------------------------------------------------------------------------- */
 
 :root {
-  /* Dark palette — work surface (/, /work, /work/$slug, /contact, error pages).
-     Warm-tinted near-black background, warm off-white foreground, brick accent. */
-  --color-bg: oklch(8.5% 0.003 60);
-  --color-surface: oklch(12% 0.004 60);
-  --color-surface-elevated: oklch(16% 0.005 60);
-  --color-border: oklch(25% 0.005 60);
-  --color-fg: oklch(96% 0.008 80);
-  --color-muted: oklch(70% 0.012 80);
-  --color-accent: #d87c4a;
-  --color-danger: oklch(65% 0.2 25);
+  --color-bg: rgb(37 37 37);
+  --color-surface: rgb(40 40 40);
+  --color-surface-elevated: rgb(43 43 43);
+  --color-border: rgb(64 64 64);
+  --color-fg: rgb(194 194 194);
+  --color-muted: rgb(123 122 116);
+  --color-accent: rgb(100 50 36);
+  --color-danger: rgb(118 38 38);
 
-  /* Hover rule color — defaults to brick on dark; overridden to fg on paper
-     since brick fails AA on paper backgrounds (see paper palette note below). */
   --hover-rule-color: var(--color-accent);
 
-  /* Type. */
-  --font-sans: "Soehne", Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "Berkeley Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --font-serif: "Editorial New", "PP Editorial New", "Times New Roman", Times, serif;
+  --font-sans: "TT Commons", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-sans);
+  --font-serif: var(--font-sans);
 
   --font-weight-buch: 400;
   --font-weight-halbfett: 600;
@@ -102,10 +49,8 @@
   --text-5xl: 3rem;
   --text-6xl: 3.75rem;
 
-  /* Spacing scale anchor (Tailwind's `--spacing` controls the whole 0.25rem ramp). */
   --spacing: 0.25rem;
 
-  /* Motion. */
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -118,34 +63,11 @@
   color-scheme: dark;
 }
 
+/* Paper palette neutralized — full revert is dark-only; the override block
+   stays so RoutePaletteSync is a no-op rather than a runtime error. */
 [data-palette="paper"] {
-  /* Paper palette — voice surface (/writing, /writing/$slug, /about).
-     Warm cream background, near-black foreground, same brick accent.
-
-     CONTRAST NOTE: brick #d87c4a contrast on paper bg is ~2.47:1, failing
-     WCAG AA for both normal text (4.5:1) and UI/large (3.0:1). Per the
-     redesign PRD, this means brick is NOT usable on paper as a hover rule,
-     active-row marker, focus ring, or accent text. Use --color-fg for those
-     affordances on paper; reserve --color-accent for non-meaning decorative
-     moments only (it stays defined for token parity with the dark palette). */
-  --color-bg: oklch(94% 0.022 85);
-  --color-surface: oklch(91% 0.022 85);
-  --color-surface-elevated: oklch(96% 0.018 85);
-  --color-border: oklch(80% 0.020 85);
-  --color-fg: oklch(15% 0.005 60);
-  --color-muted: oklch(45% 0.015 60);
-  --color-accent: #d87c4a;
-  --color-danger: oklch(50% 0.2 25);
-  --hover-rule-color: var(--color-fg);
-
-  color-scheme: light;
+  color-scheme: dark;
 }
-
-/* ----------------------------------------------------------------------------
- * Tailwind v4 @theme — mirrors the tokens above into Tailwind's utility
- * generator. Keep these in sync with `:root` by reading from the same
- * custom properties.
- * ------------------------------------------------------------------------- */
 
 @theme {
   --color-bg: var(--color-bg);
@@ -169,7 +91,10 @@
   --ease-bounce: var(--ease-bounce);
 }
 
-/* Base body styling that reads the tokens directly. */
+/* ----------------------------------------------------------------------------
+ * Base body and type ramp — mirrors main's globalStyles.ts.
+ * ------------------------------------------------------------------------- */
+
 html,
 body {
   background: var(--color-bg);
@@ -178,42 +103,755 @@ body {
   font-weight: var(--font-weight-buch);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  line-height: 1.3;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 120%;
+  font-weight: 400;
+  margin: 0;
+}
+
+h1 {
+  font-size: 6rem;
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 4rem;
+}
+
+h3 {
+  font-size: 2.5rem;
+}
+
+h4 {
+  font-size: 1.75rem;
+}
+
+p {
+  line-height: 1.75rem;
+  font-size: 1.2rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+@media (max-width: 992px) {
+  h3 { font-size: 2rem; }
+  h4 { font-size: 1.5rem; }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 5rem; }
+  h2 { font-size: 3rem; }
+}
+
+@media (max-width: 576px) {
+  h1 { font-size: 3.4rem; }
+  h2 { font-size: 2.1rem; }
 }
 
 /* ----------------------------------------------------------------------------
- * Dark↔paper palette wipe (View Transitions API). Only fires when the
- * RoutePaletteSync controller has set `data-palette-transition` on <html>,
- * so unrelated view transitions (e.g. the serif morph from ViewTransitionLink)
- * are not affected. Guarded by `prefers-reduced-motion: no-preference` as
- * defense-in-depth — the controller already bails on reduced-motion before
- * invoking startViewTransition.
+ * Hero marquee — two stacked rows scrolling in opposite directions across the
+ * full viewport width. Mirrors main's homeStyles.ts.
  * ------------------------------------------------------------------------- */
 
-@media (prefers-reduced-motion: no-preference) {
-  html[data-palette-transition] ::view-transition-old(root) {
-    /* Old palette stays in place while the new one wipes down on top. */
-    animation: none;
-  }
+.hero-headline {
+  position: relative;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-bottom: 2rem;
+  width: 100vw;
+  height: 35rem;
+  overflow: hidden;
+  white-space: nowrap;
+}
 
-  html[data-palette-transition] ::view-transition-new(root) {
-    animation: palette-wipe-in 280ms var(--ease-standard) both;
-  }
+.hero-scroll {
+  position: absolute;
+  padding-top: 3rem;
+  padding-left: 10rem;
+  color: #d5cdc4;
+  font-size: 25rem;
+  font-weight: 500;
+  line-height: 30rem;
+  white-space: nowrap;
+  animation-duration: 80s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
 
-  @keyframes palette-wipe-in {
-    from {
-      clip-path: inset(0 0 100% 0);
-    }
-    to {
-      clip-path: inset(0 0 0 0);
-    }
+.hero-scroll--first { animation-name: hero-scroll-first; }
+.hero-scroll--second { animation-name: hero-scroll-second; }
+
+@keyframes hero-scroll-first {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes hero-scroll-second {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(0); }
+}
+
+@media (max-width: 992px) {
+  .hero-scroll { font-size: 20rem; padding-left: 5rem; }
+}
+
+@media (max-width: 768px) {
+  .hero-headline { margin-top: 8rem; }
+}
+
+@media (max-width: 576px) {
+  .hero-headline {
+    margin-top: 5rem;
+    height: 20rem;
+  }
+  .hero-scroll {
+    font-size: 18rem;
+    line-height: 20rem;
+    padding-top: 1rem;
+    padding-left: 5rem;
+  }
+}
+
+.hero-text {
+  color: var(--color-muted);
+  max-width: 90%;
+  line-height: 140%;
+}
+
+@media (max-width: 768px) {
+  .hero-text { max-width: 100%; padding-bottom: 4rem; }
+}
+
+@media (max-width: 576px) {
+  .hero-text { line-height: 160%; padding-bottom: 3rem; }
+}
+
+.hero-cta {
+  margin-bottom: 10rem;
+  text-align: right;
+  width: 100%;
+  font-size: 1.5rem;
+}
+
+@media (max-width: 576px) {
+  .hero-cta { margin-bottom: 8rem; }
+}
+
+.hero-button {
+  border-bottom: 0.125rem solid #ccc;
+  cursor: pointer;
+  display: inline-block;
+  padding-bottom: 0.25rem;
+  transition: border-bottom 0.3s ease-in-out;
+}
+
+.hero-button:hover {
+  border-bottom: 0.125rem solid var(--color-muted);
+}
+
+/* ----------------------------------------------------------------------------
+ * About — main's two-column body + experience grid + ghost headline.
+ * ------------------------------------------------------------------------- */
+
+.about-section {
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.about-headline {
+  margin-top: 10rem;
+  font-weight: 400;
+  color: var(--color-fg);
+  font-size: 4rem;
+  line-height: 120%;
+}
+
+@media (max-width: 768px) {
+  .about-headline { margin-top: 8rem; font-size: 3rem; }
+}
+
+@media (max-width: 576px) {
+  .about-headline { font-size: 2.1rem; }
+}
+
+.about-body {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  line-height: 1.5;
+  column-count: 2;
+  column-gap: 4rem;
+  font-size: 1.5rem;
+  color: dimgrey;
+}
+
+.about-body p:first-child { margin-top: 0; }
+
+@media (max-width: 576px) {
+  .about-body { column-count: 1; column-gap: 0; }
+}
+
+.about-experience {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10rem;
+}
+
+@media (max-width: 768px) {
+  .about-experience { margin-bottom: 8rem; }
+}
+
+@media (max-width: 576px) {
+  .about-experience { margin-bottom: 3rem; }
+}
+
+.about-experience-headline {
+  margin-bottom: 2rem;
+  font-weight: 400;
+  color: var(--color-fg);
+  font-size: 2.5rem;
+}
+
+.about-experience-list {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.about-experience-item {
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  grid-gap: 1rem;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgb(64 64 64);
+  font-weight: 400;
+  color: var(--color-fg);
+}
+
+.about-experience-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.about-experience-item p { margin: 0; }
+
+@media (max-width: 576px) {
+  .about-experience-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    padding-bottom: 2rem;
+    grid-gap: 0;
+  }
+  .about-experience-item p:first-child {
+    font-size: 1rem;
+    color: var(--color-muted);
+  }
+  .about-experience-item p:nth-child(2) {
+    font-size: 1.5rem;
+  }
+  .about-experience-item p:last-child {
+    color: var(--color-muted);
   }
 }
 
 /* ----------------------------------------------------------------------------
- * HoverLift rule reveal — a 1px rule pinned to the bottom edge that fades
- * in on hover/focus. The Motion path animates [data-hover-rule] via Motion
- * variants; the reduced-motion / touch-only path renders a plain wrapper and
- * lets CSS toggle the rule's opacity instantly via :hover / :focus-within.
+ * Contact — main's two-column layout with icon link cards.
+ * ------------------------------------------------------------------------- */
+
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  padding: 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.contact-header {
+  text-transform: none;
+  margin: 0;
+  font-size: 4rem;
+}
+
+@media (max-width: 768px) {
+  .contact-header { font-size: 3rem; }
+}
+
+@media (max-width: 576px) {
+  .contact-header { font-size: 2.1rem; }
+}
+
+.contact-text {
+  margin: 1rem 0 2rem;
+  color: var(--color-muted);
+  font-size: 1.75rem;
+  line-height: 120%;
+}
+
+@media (max-width: 992px) {
+  .contact-text { font-size: 1.5rem; }
+}
+
+.contact-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.contact-link {
+  font-size: 1.5rem;
+  color: var(--color-fg);
+  background-color: rgb(40 40 40);
+  padding: 1rem 1.5rem;
+  display: inline-flex;
+  margin: 0.75rem 1rem 0.75rem 0;
+  border-radius: 0.5rem;
+  width: 100%;
+  justify-content: center;
+  transition: background-color 0.3s;
+}
+
+.contact-link:hover {
+  background-color: rgb(36 36 36);
+}
+
+/* ----------------------------------------------------------------------------
+ * Layout container — main's 5rem outer padding.
+ * ------------------------------------------------------------------------- */
+
+.site-container {
+  padding: 5rem;
+}
+
+@media (max-width: 768px) {
+  .site-container { padding: 3rem; }
+}
+
+@media (max-width: 576px) {
+  .site-container { padding: 2rem; }
+}
+
+/* ----------------------------------------------------------------------------
+ * Site header — M logo + animated hamburger that toggles a fullscreen drawer.
+ * ------------------------------------------------------------------------- */
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 10;
+}
+
+.site-logo {
+  width: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  display: block;
+}
+
+.site-logo svg { fill: var(--color-fg); width: 100%; height: auto; }
+
+.site-icon {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  align-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+}
+
+.site-icon-line {
+  width: 2rem;
+  height: 0.12rem;
+  background: var(--color-fg);
+  transition: transform 0.3s linear;
+  transform-origin: 0.3rem;
+}
+
+.site-icon[aria-expanded="true"] .site-icon-line.first { transform: rotate(45deg); }
+.site-icon[aria-expanded="true"] .site-icon-line.second { transform: rotate(-45deg); }
+
+.site-drawer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--color-bg);
+  padding: 5rem;
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+.site-drawer.is-open {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.site-drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.site-drawer-item {
+  font-size: 4rem;
+  cursor: pointer;
+  transition: color 0.3s linear;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0;
+  font-family: inherit;
+  color: var(--color-fg);
+}
+
+.site-drawer-item:hover { color: rgb(53 68 120); }
+
+.site-drawer-social {
+  position: absolute;
+  bottom: 5rem;
+  left: 5rem;
+}
+
+@media (max-width: 576px) {
+  .site-drawer { padding: 1.5rem; }
+  .site-drawer-item { font-size: 2.1rem; }
+  .site-drawer-social { bottom: 1.5rem; left: 1.5rem; }
+}
+
+/* ----------------------------------------------------------------------------
+ * Site footer — tagline + social on the left, 3-col nav on the right.
+ * ------------------------------------------------------------------------- */
+
+.site-footer {
+  margin-top: 15rem;
+}
+
+@media (max-width: 992px) { .site-footer { margin-top: 7rem; } }
+@media (max-width: 576px) { .site-footer { margin-top: 3rem; } }
+
+.site-footer-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 4rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+  .site-footer-wrapper {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 0;
+  }
+}
+
+.site-footer-tagline {
+  margin: 0 0 1rem 0;
+  font-size: 1.75rem;
+}
+
+@media (max-width: 992px) { .site-footer-tagline { font-size: 1.5rem; } }
+
+.site-footer-nav {
+  display: flex;
+  justify-content: space-around;
+  gap: 4rem;
+}
+
+@media (max-width: 768px) {
+  .site-footer-nav { justify-content: unset; gap: 6rem; }
+}
+
+.site-footer-list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media (max-width: 768px) { .site-footer-list { margin-top: 2rem; } }
+
+.site-footer-list-header {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.site-footer-link {
+  font-size: 1rem;
+  line-height: 1.75rem;
+  padding-bottom: 0.25rem;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: color 0.3s;
+  background: none;
+  border: none;
+  text-align: left;
+  padding-left: 0;
+  font-family: inherit;
+}
+
+.site-footer-link:hover { color: var(--color-fg); }
+
+.site-footer-credit {
+  margin-top: 1.5rem;
+  margin-bottom: 3rem;
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  line-height: 2rem;
+}
+
+.site-footer-credit-link {
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.site-footer-credit-link:hover { color: var(--color-fg); }
+
+.site-social {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.site-social a {
+  display: inline-flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-fg);
+  transition: color 0.3s;
+}
+
+.site-social a:hover { color: rgb(53 68 120); }
+.site-social svg { height: 1.5rem; width: 1.5rem; fill: currentColor; }
+
+/* ----------------------------------------------------------------------------
+ * Writing — index list + post detail.
+ * ------------------------------------------------------------------------- */
+
+.writing-header {
+  font-size: 2rem;
+  padding-top: 7rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+@media (max-width: 576px) { .writing-header { padding-top: 4rem; } }
+
+.writing-meta {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  font-size: 1.5rem;
+  color: var(--color-fg);
+}
+
+.writing-list { list-style: none; padding: 0; margin: 0; }
+
+.writing-list-item {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgb(64 64 64);
+  color: var(--color-fg);
+}
+
+@media (max-width: 576px) {
+  .writing-list-item { grid-template-columns: 1fr; gap: 0.5rem; }
+}
+
+.writing-list-item time { color: var(--color-muted); font-size: 1rem; }
+.writing-list-item h3 { font-size: 1.75rem; margin: 0; font-weight: 400; }
+.writing-list-item p { font-size: 1rem; color: var(--color-muted); margin-top: 0.5rem; }
+
+.writing-post-meta {
+  color: var(--color-muted);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.writing-post-title {
+  font-size: 4rem;
+  font-weight: 600;
+  margin: 0 0 2rem 0;
+  line-height: 110%;
+}
+
+@media (max-width: 768px) { .writing-post-title { font-size: 3rem; } }
+@media (max-width: 576px) { .writing-post-title { font-size: 2.1rem; } }
+
+.writing-post-body {
+  font-size: 1.2rem;
+  line-height: 1.75rem;
+  color: var(--color-fg);
+  max-width: 70ch;
+}
+
+.writing-post-body p { margin: 1.5rem 0; }
+.writing-post-body h2 { font-size: 2.5rem; margin: 3rem 0 1rem 0; font-weight: 400; }
+.writing-post-body h3 { font-size: 1.75rem; margin: 2rem 0 1rem 0; font-weight: 400; }
+.writing-post-body a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 4px; }
+
+/* ----------------------------------------------------------------------------
+ * Error pages — main's "Sorry!" layout.
+ * ------------------------------------------------------------------------- */
+
+.error-container {
+  padding: 5vh 5rem;
+}
+
+@media (max-width: 992px) { .error-container { padding-left: 0; padding-right: 0; } }
+
+.error-container h2 { font-weight: 400; margin: 0; }
+.error-container h3 { font-weight: 400; margin: 0; max-width: 75%; margin-bottom: 2rem; }
+
+.error-button {
+  background-color: rgb(115 98 47);
+  color: var(--color-fg);
+  border: none;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s;
+}
+
+.error-button:hover { background-color: rgb(135 116 56); }
+
+/* ----------------------------------------------------------------------------
+ * Legal — main's two-column reference layout.
+ * ------------------------------------------------------------------------- */
+
+.legal-container p {
+  font-size: 1rem;
+  line-height: 130%;
+  color: var(--color-muted);
+}
+
+.legal-headline {
+  margin-top: 10rem;
+  font-weight: 400;
+  color: var(--color-fg);
+}
+
+@media (max-width: 768px) {
+  .legal-headline { margin-top: 8rem; margin-bottom: 8rem; }
+}
+
+.legal-group {
+  column-count: 2;
+  column-gap: 3rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+@media (max-width: 768px) { .legal-group { column-count: 1; } }
+.legal-group p:first-child { margin-top: 0; }
+
+/* Contact form — dark surface card with simple inputs + forest-green Send. */
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(40 40 40);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  gap: 1rem;
+}
+
+.contact-form-field { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.contact-form-label {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.contact-form-input,
+.contact-form-textarea {
+  background-color: rgb(43 43 43);
+  border: 1px solid rgb(64 64 64);
+  border-radius: 0.375rem;
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.contact-form-input:focus,
+.contact-form-textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.contact-form-textarea { resize: vertical; min-height: 12rem; }
+
+.contact-form-submit {
+  background-color: rgb(38 53 52);
+  color: var(--color-fg);
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.875rem 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 0.5rem;
+}
+
+.contact-form-submit:hover { background-color: rgb(48 66 65); }
+.contact-form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.contact-form-error {
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.contact-form-success {
+  background-color: rgb(40 40 40);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  color: var(--color-fg);
+}
+
+/* ----------------------------------------------------------------------------
+ * HoverLift wiring — preserved so unrelated components don't break during
+ * the revert. The visible affordance now uses burntOrange.
  * ------------------------------------------------------------------------- */
 
 [data-hover-rule] {

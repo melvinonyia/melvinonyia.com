@@ -1,67 +1,53 @@
-import { render, screen, within } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+
+const navigateMock = vi.fn()
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
     to,
     children,
-    activeProps,
-    activeOptions: _activeOptions,
     ...rest
-  }: {
-    to: string
-    children: React.ReactNode
-    activeProps?: Record<string, string>
-    activeOptions?: unknown
-  } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
-    void _activeOptions
-    const ariaCurrent =
-      typeof window !== 'undefined' && window.location?.pathname === to
-        ? activeProps?.['aria-current']
-        : undefined
-    return (
-      <a href={to} aria-current={ariaCurrent as 'page' | undefined} {...rest}>
-        {children}
-      </a>
-    )
-  },
+  }: { to: string; children: React.ReactNode } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+    <a href={to} {...rest}>
+      {children}
+    </a>
+  ),
+  useNavigate: () => navigateMock,
 }))
 
 import { SiteHeader } from './SiteHeader'
 
 describe('SiteHeader', () => {
-  it('renders the four primary nav items (Home is implicit via the wordmark)', () => {
-    render(<SiteHeader />)
-    const nav = screen.getByRole('navigation', { name: 'Primary' })
-    const links = within(nav).getAllByRole('link')
-    const labels = links.map((l) => l.textContent)
-    expect(labels).toEqual(['Work', 'Writing', 'About', 'Contact'])
-  })
+  beforeEach(() => navigateMock.mockReset())
 
-  it('renders nav items as anchors pointing at their routes', () => {
+  it('renders the M logo as a link back to home', () => {
     render(<SiteHeader />)
-    const nav = screen.getByRole('navigation', { name: 'Primary' })
-    expect(within(nav).getByRole('link', { name: 'Work' })).toHaveAttribute('href', '/work')
-    expect(within(nav).getByRole('link', { name: 'Writing' })).toHaveAttribute('href', '/writing')
-    expect(within(nav).getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
-    expect(within(nav).getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '/contact')
-  })
-
-  it('renders a ⌘K trigger button that opens the command palette', () => {
-    const { container } = render(<SiteHeader />)
-    const trigger = container.querySelector(
-      '[data-palette-trigger]',
-    ) as HTMLButtonElement | null
-    expect(trigger).not.toBeNull()
-    expect(trigger!.tagName).toBe('BUTTON')
-    expect(trigger!.textContent).toMatch(/⌘K/)
-    expect(trigger).toHaveAttribute('aria-label', 'Open command palette')
-    expect(trigger).toHaveAttribute('aria-keyshortcuts', 'Meta+K')
-  })
-
-  it('renders the wordmark as a link back to home', () => {
-    render(<SiteHeader />)
-    const brand = screen.getByRole('link', { name: 'Melvin Onyia' })
+    const brand = screen.getByRole('link', { name: 'Home' })
     expect(brand).toHaveAttribute('href', '/')
+  })
+
+  it('renders a hamburger button that toggles aria-expanded', () => {
+    render(<SiteHeader />)
+    const button = screen.getByRole('button', { name: 'menu-icon' })
+    expect(button).toHaveAttribute('aria-expanded', 'false')
+    fireEvent.click(button)
+    expect(button).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('renders About, Writing, Contact in the drawer', () => {
+    const { container } = render(<SiteHeader />)
+    const items = container.querySelectorAll('.site-drawer-item')
+    const labels = Array.from(items).map((b) => b.textContent)
+    expect(labels).toEqual(['About', 'Writing', 'Contact'])
+  })
+
+  it('navigates when a drawer item is clicked', () => {
+    const { container } = render(<SiteHeader />)
+    const about = Array.from(
+      container.querySelectorAll<HTMLButtonElement>('.site-drawer-item'),
+    ).find((b) => b.textContent === 'About')!
+    fireEvent.click(about)
+    expect(navigateMock).toHaveBeenCalledWith({ to: '/about' })
   })
 })

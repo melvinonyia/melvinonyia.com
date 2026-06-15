@@ -10,32 +10,26 @@ export const Route = createFileRoute('/contact')({
 
 function ContactPage() {
   return (
-    <main className="min-h-screen bg-bg text-fg px-6">
-      <section className="mx-auto max-w-2xl pt-24 pb-32 sm:pt-32 lg:pt-40">
-        <header>
-          <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl text-fg leading-none">
-            Contact
-          </h1>
-          <p className="mt-6 font-mono text-xs uppercase tracking-wider text-muted">
-            Drop a line — usually replies inside a day
-          </p>
-        </header>
-
-        <p className="mt-12 font-sans text-base sm:text-lg text-fg max-w-prose leading-relaxed">
-          Use the form below, or email{' '}
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="underline underline-offset-4 decoration-muted hover:decoration-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-          >
-            {CONTACT_EMAIL}
-          </a>{' '}
-          directly.
-        </p>
-
-        <div className="mt-12">
+    <div className="contact-container">
+        <section>
+          <h2 className="contact-header">Get in touch</h2>
+          <h4 className="contact-text">
+            Like what you see? Have a project you would like to talk about? Want
+            to ask me a personal question? Fill in the form or drop me an
+            email.
+          </h4>
+          <div className="contact-links">
+            <a className="contact-link" href={`mailto:${CONTACT_EMAIL}`}>
+              <span>📬</span>
+            </a>
+            <a className="contact-link" href={`mailto:${CONTACT_EMAIL}`}>
+              <span>📞</span>
+            </a>
+          </div>
+        </section>
+        <section>
           <ContactForm endpoint="/api/contact" />
-        </div>
-      </section>
-    </main>
+        </section>
+      </div>
   )
 }

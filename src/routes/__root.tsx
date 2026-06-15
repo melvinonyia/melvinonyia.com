@@ -1,4 +1,4 @@
-import { createRootRoute, HeadContent, Outlet, Scripts, useRouterState } from '@tanstack/react-router'
+import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
@@ -8,8 +8,6 @@ import { SiteFooter } from '~/components/SiteFooter'
 import { CommandPaletteController } from '~/components/CommandPaletteController'
 import { NotFoundView } from '~/components/NotFoundView'
 import { ServerErrorView } from '~/components/ServerErrorView'
-import { RoutePaletteSync } from '~/components/RoutePaletteSync'
-import { getPaletteForPath } from '~/lib/site/palette'
 
 const COPYRIGHT_YEAR = 2026
 
@@ -21,40 +19,10 @@ export const Route = createRootRoute({
       { title: 'Melvin Onyia' },
       {
         name: 'description',
-        content: 'Melvin Onyia — engineer. Personal site.',
+        content: 'Melvin Onyia — software engineer. Build things, solve problems.',
       },
     ],
-    links: [
-      { rel: 'stylesheet', href: appCss },
-      {
-        rel: 'preload',
-        href: '/fonts/soehne-buch.woff2',
-        as: 'font',
-        type: 'font/woff2',
-        crossOrigin: 'anonymous',
-      },
-      {
-        rel: 'preload',
-        href: '/fonts/soehne-halbfett.woff2',
-        as: 'font',
-        type: 'font/woff2',
-        crossOrigin: 'anonymous',
-      },
-      {
-        rel: 'preload',
-        href: '/fonts/berkeley-mono-regular.woff2',
-        as: 'font',
-        type: 'font/woff2',
-        crossOrigin: 'anonymous',
-      },
-      {
-        rel: 'preload',
-        href: '/fonts/editorial-new-regular.woff2',
-        as: 'font',
-        type: 'font/woff2',
-        crossOrigin: 'anonymous',
-      },
-    ],
+    links: [{ rel: 'stylesheet', href: appCss }],
   }),
   component: RootComponent,
   notFoundComponent: NotFoundView,
@@ -62,15 +30,16 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname })
-  const palette = getPaletteForPath(pathname)
   return (
-    <RootDocument palette={palette}>
-      <RoutePaletteSync />
+    <RootDocument>
       <CommandPaletteController>
-        <SiteHeader />
-        <Outlet />
-        <SiteFooter year={COPYRIGHT_YEAR} />
+        <div className="site-container">
+          <SiteHeader />
+          <main>
+            <Outlet />
+          </main>
+          <SiteFooter year={COPYRIGHT_YEAR} />
+        </div>
       </CommandPaletteController>
       <Analytics />
       <SpeedInsights />
@@ -78,9 +47,9 @@ function RootComponent() {
   )
 }
 
-function RootDocument({ children, palette }: { children: ReactNode; palette: 'dark' | 'paper' }) {
+function RootDocument({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" data-palette={palette}>
+    <html lang="en">
       <head>
         <HeadContent />
       </head>

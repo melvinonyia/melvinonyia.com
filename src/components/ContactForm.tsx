@@ -1,6 +1,5 @@
 import { useState, type FormEvent } from 'react'
 import type { ContactResult } from '~/lib/contact/types'
-import { HoverLift } from './HoverLift'
 import { CONTACT_EMAIL } from '~/lib/site/socials'
 
 interface ContactFormProps {
@@ -17,19 +16,12 @@ type FormState =
     }
 
 const ERROR_COPY = {
-  validation:
-    "Couldn't read those fields — check the fields and try again.",
-  'rate-limit':
-    'Too many requests from this network. Try again in a minute.',
-  'send-failed':
-    "Couldn't send right now. Try again, or email me directly.",
+  validation: "Couldn't read those fields — check the fields and try again.",
+  'rate-limit': 'Too many requests from this network. Try again in a minute.',
+  'send-failed': "Couldn't send right now. Try again, or email me directly.",
   network:
     "Network hiccup — couldn't reach the server. Try again or email me directly.",
 } as const
-
-const labelClass = 'font-mono text-xs uppercase tracking-wider text-muted'
-const inputClass =
-  'block w-full mt-2 border-b border-border bg-transparent px-0 py-2 font-sans text-base text-fg outline-none transition-colors placeholder:text-muted/40 focus-visible:border-accent'
 
 export function ContactForm({ endpoint }: ContactFormProps) {
   const [state, setState] = useState<FormState>({ kind: 'idle' })
@@ -75,14 +67,10 @@ export function ContactForm({ endpoint }: ContactFormProps) {
 
   if (state.kind === 'success') {
     return (
-      <div role="status" aria-live="polite" className="border-t border-border pt-8">
-        <p className={labelClass}>Message sent</p>
-        <p className="mt-3 font-serif text-3xl sm:text-4xl text-fg leading-tight">
-          Thank you.
-        </p>
-        <p className="mt-4 font-sans text-base text-muted max-w-prose">
-          I'll respond from{' '}
-          <span className="text-fg">{CONTACT_EMAIL}</span>.
+      <div role="status" aria-live="polite" className="contact-form-success">
+        <h4>Thank you.</h4>
+        <p>
+          I&apos;ll respond from <span>{CONTACT_EMAIL}</span>.
         </p>
       </div>
     )
@@ -95,11 +83,11 @@ export function ContactForm({ endpoint }: ContactFormProps) {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="flex flex-col gap-8"
+      className="contact-form"
       aria-busy={submitting}
     >
-      <div>
-        <label htmlFor="contact-name" className={labelClass}>
+      <div className="contact-form-field">
+        <label htmlFor="contact-name" className="contact-form-label">
           Name
         </label>
         <input
@@ -110,12 +98,12 @@ export function ContactForm({ endpoint }: ContactFormProps) {
           autoComplete="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className={inputClass}
+          className="contact-form-input"
         />
       </div>
 
-      <div>
-        <label htmlFor="contact-email" className={labelClass}>
+      <div className="contact-form-field">
+        <label htmlFor="contact-email" className="contact-form-label">
           Email
         </label>
         <input
@@ -126,12 +114,12 @@ export function ContactForm({ endpoint }: ContactFormProps) {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className={inputClass}
+          className="contact-form-input"
         />
       </div>
 
-      <div>
-        <label htmlFor="contact-message" className={labelClass}>
+      <div className="contact-form-field">
+        <label htmlFor="contact-message" className="contact-form-label">
           Message
         </label>
         <textarea
@@ -141,7 +129,7 @@ export function ContactForm({ endpoint }: ContactFormProps) {
           rows={6}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className={`${inputClass} resize-y`}
+          className="contact-form-textarea"
         />
       </div>
 
@@ -169,34 +157,25 @@ export function ContactForm({ endpoint }: ContactFormProps) {
         />
       </div>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <HoverLift className="w-fit">
-          <button
-            type="submit"
-            disabled={submitting}
-            className="inline-flex items-baseline gap-2 py-2 font-mono text-xs uppercase tracking-wider text-fg transition-opacity focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <span>{submitting ? 'Sending' : 'Send message'}</span>
-            <span aria-hidden="true">→</span>
-          </button>
-        </HoverLift>
-        {error && (
-          <p
-            role="alert"
-            className="font-mono text-xs uppercase tracking-wider text-danger max-w-prose normal-case sm:text-right"
-          >
-            <span className="block uppercase tracking-wider">Error</span>
-            <span className="mt-1 block font-sans text-sm normal-case tracking-normal">
-              {ERROR_COPY[error]}
-            </span>
-          </p>
-        )}
-        {submitting && (
-          <span aria-live="polite" className="sr-only">
-            Sending your message…
-          </span>
-        )}
-      </div>
+      <button
+        type="submit"
+        disabled={submitting}
+        className="contact-form-submit"
+      >
+        {submitting ? 'Sending…' : 'Send'}
+      </button>
+
+      {error && (
+        <p role="alert" className="contact-form-error">
+          {ERROR_COPY[error]}
+        </p>
+      )}
+
+      {submitting && (
+        <span aria-live="polite" className="sr-only">
+          Sending your message…
+        </span>
+      )}
     </form>
   )
 }

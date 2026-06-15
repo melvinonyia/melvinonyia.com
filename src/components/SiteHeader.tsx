@@ -1,54 +1,80 @@
-import { Link } from '@tanstack/react-router'
-import type { ComponentProps } from 'react'
-import { useOpenCommandPalette } from './CommandPaletteController'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { SocialLinks } from './SocialLinks'
 
 interface NavItem {
   label: string
-  to: ComponentProps<typeof Link>['to']
+  to: '/about' | '/writing' | '/contact'
 }
 
 const NAV_ITEMS: readonly NavItem[] = [
-  { label: 'Work', to: '/work' },
-  { label: 'Writing', to: '/writing' },
   { label: 'About', to: '/about' },
+  { label: 'Writing', to: '/writing' },
   { label: 'Contact', to: '/contact' },
 ] as const
 
-const monoLabel =
-  'font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent aria-[current=page]:text-fg'
+function Logo() {
+  return (
+    <svg viewBox="0 0 850 966" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M848-1v969H683.68V183.57L848-1zM472.39 394.67 350.4 514.8 166.56 284.55v682.29l-164.32-.05V1.42h163.42l306.73 393.25z" />
+    </svg>
+  )
+}
 
 export function SiteHeader() {
-  const openPalette = useOpenCommandPalette()
+  const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [open])
+
   return (
-    <header className="sticky top-0 z-20 border-b border-border/40 bg-bg/80 backdrop-blur supports-[backdrop-filter]:bg-bg/60">
-      <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-6 px-6">
-        <Link to="/" className={`${monoLabel} text-fg`}>
-          Melvin Onyia
-        </Link>
+    <header className="site-header">
+      <Link to="/" className="site-logo" aria-label="Home">
+        <Logo />
+      </Link>
 
-        <nav aria-label="Primary">
-          <ul className="flex items-center gap-4 sm:gap-6">
-            {NAV_ITEMS.map((item) => (
-              <li key={item.to}>
-                <Link to={item.to} className={monoLabel} activeProps={{ 'aria-current': 'page' }}>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      <button
+        type="button"
+        className="site-icon"
+        aria-expanded={open}
+        aria-label="menu-icon"
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className="site-icon-line first" />
+        <span className="site-icon-line second" />
+      </button>
 
-        <button
-          type="button"
-          onClick={() => openPalette?.()}
-          aria-label="Open command palette"
-          aria-keyshortcuts="Meta+K"
-          data-palette-trigger
-          className="hidden sm:inline-flex font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-        >
-          <span aria-hidden="true">⌘K</span>
-        </button>
-      </div>
+      <nav
+        className={open ? 'site-drawer is-open' : 'site-drawer'}
+        aria-hidden={!open}
+        aria-label="Primary"
+      >
+        <div className="site-drawer-nav">
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.to}
+              type="button"
+              className="site-drawer-item"
+              onClick={() => {
+                setOpen(false)
+                navigate({ to: item.to })
+              }}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+        <div className="site-drawer-social">
+          <SocialLinks />
+        </div>
+      </nav>
     </header>
   )
 }

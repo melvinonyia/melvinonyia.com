@@ -11,9 +11,5 @@ export const Route = createFileRoute('/work/')({
 
 function WorkIndexPage() {
   const { posts } = Route.useLoaderData()
-  return (
-    <main className="min-h-screen px-6">
-      <WorkIndexView posts={posts} />
-    </main>
-  )
+  return <WorkIndexView posts={posts} />
 }

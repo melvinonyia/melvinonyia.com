@@ -1,27 +1,38 @@
+import { Link } from '@tanstack/react-router'
+
 interface HeroProps {
-  name: string
-  role: string
-  pitch: string
+  headlineText?: string
+  heroText?: string
+  ctaLabel?: string
+  ctaTo?: string
 }
 
-export function Hero({ name, role, pitch }: HeroProps) {
+const DEFAULT_HEADLINE = 'Melvin Chinedu Onyia'
+const DEFAULT_HERO_TEXT =
+  'Crafting highly-performant, secure software solutions engineered for scalability and maintainability.'
+
+export function Hero({
+  headlineText = DEFAULT_HEADLINE,
+  heroText = DEFAULT_HERO_TEXT,
+  ctaLabel = 'About Melvin',
+  ctaTo = '/about',
+}: HeroProps) {
   return (
-    <section
-      data-hero
-      className="mx-auto max-w-6xl pt-20 pb-24 sm:pt-28 sm:pb-32 lg:pt-32 lg:pb-40"
-    >
-      <h1
-        className="font-serif text-fg leading-[0.92] tracking-tight"
-        style={{ fontSize: 'clamp(4rem, 14vw, 12.5rem)' }}
-      >
-        {name}
-      </h1>
-      <p className="mt-10 font-mono text-xs uppercase tracking-wider text-fg">
-        {role}
-      </p>
-      <p className="mt-2 font-sans font-buch text-base sm:text-lg text-muted max-w-prose">
-        {pitch}
-      </p>
+    <section data-hero>
+      <div className="hero-headline" aria-label={headlineText}>
+        <h1 className="hero-scroll hero-scroll--first" aria-hidden="true">
+          {headlineText}
+        </h1>
+        <h1 className="hero-scroll hero-scroll--second" aria-hidden="true">
+          {headlineText}
+        </h1>
+      </div>
+      <h2 className="hero-text">{heroText}</h2>
+      <div className="hero-cta">
+        <Link to={ctaTo} className="hero-button" aria-label={ctaLabel}>
+          {ctaLabel}
+        </Link>
+      </div>
     </section>
   )
 }

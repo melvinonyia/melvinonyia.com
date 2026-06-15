@@ -8,9 +8,5 @@ export const Route = createFileRoute('/about')({
 })
 
 function AboutPage() {
-  return (
-    <main className="min-h-screen bg-bg text-fg px-6">
-      <AboutView />
-    </main>
-  )
+  return <AboutView />
 }

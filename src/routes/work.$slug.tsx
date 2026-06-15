@@ -29,9 +29,5 @@ function WorkPostPage() {
   const { summary, position } = Route.useLoaderData()
   const post = getWorkPost(summary.slug)
   if (!post) throw notFound()
-  return (
-    <main className="min-h-screen px-6">
-      <WorkPostView post={post} position={position} />
-    </main>
-  )
+  return <WorkPostView post={post} position={position} />
 }
