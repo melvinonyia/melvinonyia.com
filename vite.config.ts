@@ -53,6 +53,10 @@ export default defineConfig({
     tanstackStart({
       pages: [
         { path: '/', prerender: { enabled: true } },
+        { path: '/about', prerender: { enabled: true } },
+        { path: '/contact', prerender: { enabled: true } },
+        { path: '/writing', prerender: { enabled: true } },
+        { path: '/legal', prerender: { enabled: true } },
         { path: '/work', prerender: { enabled: true } },
         ...workPrerenderPages,
       ],

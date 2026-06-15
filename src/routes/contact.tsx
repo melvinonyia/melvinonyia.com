@@ -1,0 +1,38 @@
+import { createFileRoute } from '@tanstack/react-router'
+import { CONTACT_EMAIL } from '~/lib/site/socials'
+
+export const Route = createFileRoute('/contact')({
+  head: () => ({
+    meta: [
+      { title: 'Contact — Melvin Onyia' },
+      {
+        name: 'description',
+        content: 'Get in touch with Melvin Onyia.',
+      },
+    ],
+    links: [{ rel: 'canonical', href: 'https://melvinonyia.com/contact' }],
+  }),
+  component: ContactPage,
+})
+
+function ContactPage() {
+  return (
+    <main className="min-h-screen bg-bg text-fg px-6">
+      <section className="mx-auto max-w-3xl pt-24 pb-32 sm:pt-32 lg:pt-40">
+        <h1 className="font-sans font-halbfett tracking-tight text-fg text-4xl sm:text-5xl">
+          Contact
+        </h1>
+        <p className="mt-6 font-sans font-buch text-base sm:text-lg text-fg max-w-prose leading-relaxed">
+          Form going up here soon. In the meantime, email is the fastest path —{' '}
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="text-accent underline underline-offset-4 hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            {CONTACT_EMAIL}
+          </a>
+          .
+        </p>
+      </section>
+    </main>
+  )
+}
