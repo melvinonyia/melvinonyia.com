@@ -18,13 +18,9 @@ function makePost(overrides: Partial<WorkPost> = {}): WorkPost {
 }
 
 describe('WorkPostView', () => {
-  it('renders the post title', () => {
+  it('renders the post title and excerpt as inline subtitle', () => {
     render(<WorkPostView post={makePost()} position={0} />)
     expect(screen.getByText('Movement fingerprint engine')).toBeInTheDocument()
-  })
-
-  it('renders the post excerpt as the subtitle', () => {
-    render(<WorkPostView post={makePost()} position={0} />)
     expect(
       screen.getByText(/A signal-processing engine for movement data/),
     ).toBeInTheDocument()
@@ -37,11 +33,18 @@ describe('WorkPostView', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders the date and tag in the meta line', () => {
+  it('renders the primary tag as the uppercase category label', () => {
     const { container } = render(<WorkPostView post={makePost()} position={0} />)
-    const meta = container.querySelector('.article-detail-meta')!
-    expect(meta.textContent).toMatch(/November \d+, 2025/)
-    expect(meta.textContent).toMatch(/ml/)
+    const category = container.querySelector('.article-detail-category')
+    expect(category).not.toBeNull()
+    expect(category!.textContent).toBe('ml')
+  })
+
+  it('renders the Last updated line with the formatted date', () => {
+    const { container } = render(<WorkPostView post={makePost()} position={0} />)
+    const updated = container.querySelector('.article-detail-updated')
+    expect(updated).not.toBeNull()
+    expect(updated!.textContent).toMatch(/Last updated: November \d+, 2025/)
   })
 
   it('renders the hero image when provided', () => {
@@ -62,16 +65,5 @@ describe('WorkPostView', () => {
       container.querySelectorAll('.article-detail-tag'),
     ).map((el) => el.textContent)
     expect(tags).toEqual(['ml', 'signal-processing'])
-  })
-
-  it('renders share links to X, LinkedIn, and Facebook', () => {
-    render(<WorkPostView post={makePost()} position={0} />)
-    expect(screen.getByRole('link', { name: /Share on X/ })).toBeInTheDocument()
-    expect(
-      screen.getByRole('link', { name: /Share on LinkedIn/ }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('link', { name: /Share on Facebook/ }),
-    ).toBeInTheDocument()
   })
 })

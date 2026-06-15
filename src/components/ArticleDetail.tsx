@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react'
+import type { ComponentType } from 'react'
 import { SiX, SiFacebook } from 'react-icons/si'
 import { FaLinkedinIn } from 'react-icons/fa'
 import { SITE_URL } from '~/lib/seo/homeHead'
@@ -9,7 +9,6 @@ export interface ArticleDetailData {
   subtitle?: string
   date: string
   category?: string
-  readTime?: number
   tags: string[]
   coverImage?: string | null
   Body: ComponentType<{ components?: Record<string, ComponentType<any>> }>
@@ -19,7 +18,6 @@ interface ArticleDetailProps {
   data: ArticleDetailData
   basePath: '/writing' | '/work'
   mdxComponents?: Record<string, ComponentType<any>>
-  share?: boolean
 }
 
 const DATE_FORMATTER = new Intl.DateTimeFormat('en-US', {
@@ -34,14 +32,21 @@ function formatDate(iso: string): string {
   return DATE_FORMATTER.format(d)
 }
 
-function MetaDot() {
-  return <span className="article-detail-meta-dot" aria-hidden="true">•</span>
+interface ShareLink {
+  name: string
+  href: string
+  Icon: ComponentType
 }
 
-function ShareIcons({ url, title }: { url: string; title: string }) {
+function buildShareLinks(url: string, title: string): ShareLink[] {
   const encodedUrl = encodeURIComponent(url)
   const encodedTitle = encodeURIComponent(title)
-  const links: { name: string; href: string; Icon: ComponentType }[] = [
+  return [
+    {
+      name: 'Facebook',
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      Icon: SiFacebook,
+    },
     {
       name: 'X',
       href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
@@ -52,25 +57,25 @@ function ShareIcons({ url, title }: { url: string; title: string }) {
       href: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}`,
       Icon: FaLinkedinIn,
     },
-    {
-      name: 'Facebook',
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      Icon: SiFacebook,
-    },
   ]
+}
+
+function ShareList({ links }: { links: ShareLink[] }) {
   return (
-    <div className="article-detail-share">
-      <p className="article-detail-share-label">Share</p>
-      <ul className="article-detail-share-icons">
-        {links.map(({ name, href, Icon }) => (
-          <li key={name}>
-            <a href={href} target="_blank" rel="noreferrer noopener" aria-label={`Share on ${name}`}>
-              <Icon />
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul>
+      {links.map(({ name, href, Icon }) => (
+        <li key={name}>
+          <a
+            href={href}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label={`Share on ${name}`}
+          >
+            <Icon />
+          </a>
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -78,31 +83,28 @@ export function ArticleDetail({
   data,
   basePath,
   mdxComponents,
-  share = true,
 }: ArticleDetailProps) {
   const { Body } = data
   const url = `${SITE_URL}${basePath}/${data.slug}`
-
-  const metaParts: ReactNode[] = []
-  metaParts.push(<p key="date">{formatDate(data.date)}</p>)
-  if (data.category) {
-    metaParts.push(<MetaDot key="dot-cat" />)
-    metaParts.push(<p key="cat">{data.category}</p>)
-  }
-  if (data.readTime) {
-    metaParts.push(<MetaDot key="dot-rt" />)
-    metaParts.push(<p key="rt">{data.readTime} min read</p>)
-  }
+  const shareLinks = buildShareLinks(url, data.title)
 
   return (
     <article className="article-detail">
-      {share && <ShareIcons url={url} title={data.title} />}
+      <div className="article-detail-share" aria-label="Share on social">
+        <p className="article-detail-share-label">Share</p>
+        <div className="article-detail-share-icons">
+          <ShareList links={shareLinks} />
+        </div>
+      </div>
+
       <header className="article-detail-header">
         <h2 className="article-detail-title">{data.title}</h2>
         {data.subtitle && (
           <h2 className="article-detail-subtitle"> {data.subtitle}</h2>
         )}
-        <div className="article-detail-meta">{metaParts}</div>
+        {data.category && (
+          <p className="article-detail-category">{data.category}</p>
+        )}
         {data.coverImage && (
           <img
             className="article-detail-hero"
@@ -111,9 +113,20 @@ export function ArticleDetail({
           />
         )}
       </header>
+
       <div className="article-detail-body">
         <Body components={mdxComponents} />
       </div>
+
+      <div className="article-detail-share-mobile article-detail-share-icons">
+        <span>Share</span>
+        <ShareList links={shareLinks} />
+      </div>
+
+      <p className="article-detail-updated">
+        Last updated: {formatDate(data.date)}
+      </p>
+
       {data.tags.length > 0 && (
         <footer className="article-detail-footer">
           <ul className="article-detail-tags">

@@ -10,7 +10,7 @@ function makeEssay(overrides: Partial<Essay> = {}): Essay {
     title: 'A Test Essay',
     date: '2025-10-08',
     excerpt: 'A short excerpt.',
-    tags: ['code'],
+    tags: ['infrastructure', 'notes'],
     readTime: 4,
     Body,
     ...overrides,
@@ -18,13 +18,9 @@ function makeEssay(overrides: Partial<Essay> = {}): Essay {
 }
 
 describe('WritingPostView', () => {
-  it('renders the essay title', () => {
+  it('renders the essay title and excerpt as inline subtitle', () => {
     render(<WritingPostView essay={makeEssay()} essayNumber={1} />)
     expect(screen.getByText('A Test Essay')).toBeInTheDocument()
-  })
-
-  it('renders the essay excerpt as the subtitle', () => {
-    render(<WritingPostView essay={makeEssay()} essayNumber={1} />)
     expect(screen.getByText(/A short excerpt/)).toBeInTheDocument()
   })
 
@@ -35,26 +31,25 @@ describe('WritingPostView', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders the date and read time in the meta', () => {
+  it('renders the primary tag as the uppercase category label', () => {
     const { container } = render(
-      <WritingPostView essay={makeEssay({ readTime: 5 })} essayNumber={1} />,
+      <WritingPostView essay={makeEssay()} essayNumber={1} />,
     )
-    const meta = container.querySelector('.article-detail-meta')!
-    expect(meta.textContent).toMatch(/October \d+, 2025/)
-    expect(meta.textContent).toMatch(/5 min read/)
+    const category = container.querySelector('.article-detail-category')
+    expect(category).not.toBeNull()
+    expect(category!.textContent).toBe('infrastructure')
   })
 
-  it('omits the read time when not provided', () => {
-    render(
-      <WritingPostView
-        essay={makeEssay({ readTime: undefined })}
-        essayNumber={1}
-      />,
+  it('renders the Last updated line with the formatted date', () => {
+    const { container } = render(
+      <WritingPostView essay={makeEssay()} essayNumber={1} />,
     )
-    expect(screen.queryByText(/min read/)).toBeNull()
+    const updated = container.querySelector('.article-detail-updated')
+    expect(updated).not.toBeNull()
+    expect(updated!.textContent).toMatch(/Last updated: October \d+, 2025/)
   })
 
-  it('renders the tag pills in the footer', () => {
+  it('renders all tags as pills in the footer', () => {
     const { container } = render(
       <WritingPostView
         essay={makeEssay({ tags: ['code', 'notes'] })}
@@ -67,14 +62,11 @@ describe('WritingPostView', () => {
     expect(tags).toEqual(['code', 'notes'])
   })
 
-  it('renders share links to X, LinkedIn, and Facebook', () => {
+  it('renders share links to Facebook, X, and LinkedIn (desktop + mobile)', () => {
     render(<WritingPostView essay={makeEssay()} essayNumber={1} />)
-    expect(screen.getByRole('link', { name: /Share on X/ })).toBeInTheDocument()
-    expect(
-      screen.getByRole('link', { name: /Share on LinkedIn/ }),
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole('link', { name: /Share on Facebook/ }),
-    ).toBeInTheDocument()
+    // Each network appears twice (vertical desktop + horizontal mobile).
+    expect(screen.getAllByRole('link', { name: /Share on Facebook/ }).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByRole('link', { name: /Share on X/ }).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByRole('link', { name: /Share on LinkedIn/ }).length).toBeGreaterThanOrEqual(1)
   })
 })

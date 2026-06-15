@@ -68,6 +68,18 @@
   color-scheme: dark;
 }
 
+/* Paper palette — applied on individual article detail routes
+   (/writing/$slug, /work/$slug). Light cream bg, near-black foreground.
+   Chrome and footer adapt automatically through the tokens. */
+[data-palette="paper"] {
+  --color-bg: rgb(245 245 243);
+  --color-surface: rgb(232 232 229);
+  --color-border: rgb(200 200 197);
+  --color-fg: rgb(40 40 40);
+  --color-muted: rgb(120 120 117);
+  --color-accent: rgb(100 50 36);
+  color-scheme: light;
+}
 
 @theme {
   --color-bg: var(--color-bg);
@@ -901,9 +913,10 @@ a {
 .writing-list-item p { font-size: 1rem; color: var(--color-muted); margin-top: 0.5rem; }
 
 /* ----------------------------------------------------------------------------
- * Article detail (writing post + work post) — mirrors main's ArticleDetails:
- * inline Title + Subtitle, meta row with dot separators, vertical SHARE column
- * on the left, cover image, body with code blocks, tag pills footer.
+ * Article detail (writing post + work post) — mirrors main's blog post:
+ * inline Title + Subtitle, uppercase category label, vertical SHARE column on
+ * the left (desktop) or horizontal at the bottom (mobile), cover image, body,
+ * last-updated line, soft pill tags. Renders on the paper palette.
  * ------------------------------------------------------------------------- */
 
 .article-detail {
@@ -921,47 +934,37 @@ a {
 
 .article-detail-title {
   display: inline;
-  font-size: 4rem;
-  font-weight: 500;
+  font-size: 2.5rem;
+  font-weight: 600;
   color: var(--color-fg);
   text-transform: none;
   padding-right: 0.5rem;
-  line-height: 1;
+  line-height: 1.1;
   margin: 0;
 }
 
-@media (max-width: 992px) { .article-detail-title { font-size: 3rem; line-height: 1.05; } }
-@media (max-width: 768px) { .article-detail-title { font-size: 2.5rem; } }
-@media (max-width: 576px) { .article-detail-title { font-size: 2rem; } }
+@media (max-width: 768px) { .article-detail-title { font-size: 2rem; } }
+@media (max-width: 576px) { .article-detail-title { font-size: 1.5rem; } }
 
 .article-detail-subtitle {
   display: inline;
-  font-size: 4rem;
+  font-size: 2.5rem;
   font-weight: 400;
-  color: rgb(148 148 148);
-  line-height: 1;
+  color: var(--color-muted);
+  line-height: 1.1;
   margin: 0;
 }
 
-@media (max-width: 992px) { .article-detail-subtitle { font-size: 3rem; line-height: 1.05; } }
-@media (max-width: 768px) { .article-detail-subtitle { font-size: 2.5rem; } }
-@media (max-width: 576px) { .article-detail-subtitle { font-size: 2rem; } }
+@media (max-width: 768px) { .article-detail-subtitle { font-size: 2rem; } }
+@media (max-width: 576px) { .article-detail-subtitle { font-size: 1.5rem; } }
 
-.article-detail-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 1rem;
-  padding: 1.5rem 0 1rem;
+.article-detail-category {
+  margin: 1.5rem 0 0;
   color: var(--color-muted);
-  font-size: 1.2rem;
-}
-
-@media (max-width: 576px) { .article-detail-meta { font-size: 1rem; } }
-
-.article-detail-meta-dot {
-  margin: 0;
-  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .article-detail-share {
@@ -974,9 +977,7 @@ a {
   gap: 1rem;
 }
 
-@media (max-width: 992px) {
-  .article-detail-share { display: none; }
-}
+@media (max-width: 992px) { .article-detail-share { display: none; } }
 
 .article-detail-share-label {
   writing-mode: vertical-rl;
@@ -986,7 +987,7 @@ a {
   color: var(--color-muted);
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .article-detail-share-icons {
@@ -1007,57 +1008,86 @@ a {
 .article-detail-share-icons a:hover { color: var(--color-fg); }
 .article-detail-share-icons svg { width: 1.25rem; height: 1.25rem; fill: currentColor; }
 
+/* Mobile share row — horizontal version that sits below the body. */
+.article-detail-share-mobile {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+  color: var(--color-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.article-detail-share-mobile ul {
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media (max-width: 992px) {
+  .article-detail-share-mobile { display: flex; }
+}
+
 .article-detail-hero {
   display: block;
   width: 100%;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   height: auto;
 }
 
 .article-detail-body {
-  margin-top: 1.5rem;
-  font-size: 1.2rem;
+  margin-top: 2rem;
+  font-size: 1.125rem;
   line-height: 1.75rem;
   color: var(--color-fg);
 }
 
 .article-detail-body p { margin: 1.5rem 0; }
 .article-detail-body p:first-of-type { margin-top: 0; }
-.article-detail-body h2 { font-size: 2.5rem; padding-top: 3rem; margin: 0 0 1rem 0; font-weight: 400; }
-.article-detail-body h3 { font-size: 1.75rem; padding-top: 2rem; margin: 0 0 1rem 0; font-weight: 400; }
+.article-detail-body h2 { font-size: 2rem; padding-top: 3rem; margin: 0 0 1rem 0; font-weight: 500; }
+.article-detail-body h3 { font-size: 1.5rem; padding-top: 2rem; margin: 0 0 1rem 0; font-weight: 500; }
 .article-detail-body a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 4px; }
 .article-detail-body img { padding-top: 2rem; width: 100%; height: auto; }
 .article-detail-body figure { margin: 0; }
 .article-detail-body pre {
   padding-top: 1rem;
-  display: inline-grid;
+  display: block;
   width: 100%;
 }
 .article-detail-body pre code {
   display: block;
-  background-color: rgb(32 32 32);
-  color: rgb(197 200 198);
+  background-color: var(--color-surface);
+  color: var(--color-fg);
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: 0.9rem;
   line-height: 1.5;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 0.5rem;
   overflow-x: auto;
 }
 
-.article-detail-footer {
-  margin-top: 5rem;
-  margin-bottom: 10rem;
+.article-detail-updated {
+  margin: 3rem 0 1rem;
+  color: var(--color-muted);
+  font-size: 0.875rem;
 }
 
-@media (max-width: 576px) {
-  .article-detail-footer { margin-bottom: 3rem; }
+.article-detail-footer {
+  margin-bottom: 8rem;
 }
+
+@media (max-width: 576px) { .article-detail-footer { margin-bottom: 3rem; } }
 
 .article-detail-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.75rem;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -1065,15 +1095,15 @@ a {
 
 .article-detail-tag {
   display: inline-block;
-  padding: 0.5rem 1rem 0.4rem;
-  background-color: rgb(40 40 40);
+  padding: 0.4rem 0.9rem 0.35rem;
+  background-color: var(--color-surface);
   color: var(--color-fg);
-  border-radius: 0.8rem;
+  border-radius: 999px;
   font-size: 0.875rem;
   transition: background-color 0.2s;
 }
 
-.article-detail-tag:hover { background-color: rgb(48 48 48); }
+.article-detail-tag:hover { background-color: var(--color-border); }
 
 /* MDX blocks used inside writing-post-body */
 .mdx-pullquote {

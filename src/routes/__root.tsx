@@ -1,4 +1,10 @@
-import { createRootRoute, HeadContent, Outlet, Scripts } from '@tanstack/react-router'
+import {
+  createRootRoute,
+  HeadContent,
+  Outlet,
+  Scripts,
+  useRouterState,
+} from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
@@ -8,6 +14,7 @@ import { SiteFooter } from '~/components/SiteFooter'
 import { CommandPaletteController } from '~/components/CommandPaletteController'
 import { NotFoundView } from '~/components/NotFoundView'
 import { ServerErrorView } from '~/components/ServerErrorView'
+import { paletteForPath } from '~/lib/site/palette'
 
 const COPYRIGHT_YEAR = 2026
 
@@ -19,7 +26,8 @@ export const Route = createRootRoute({
       { title: 'Melvin Onyia' },
       {
         name: 'description',
-        content: 'Melvin Onyia — software engineer. Build things, solve problems.',
+        content:
+          'Melvin Onyia — software engineer. Build things, solve problems.',
       },
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
@@ -30,8 +38,10 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const palette = paletteForPath(pathname)
   return (
-    <RootDocument>
+    <RootDocument palette={palette}>
       <CommandPaletteController>
         <div className="site-container">
           <SiteHeader />
@@ -47,9 +57,15 @@ function RootComponent() {
   )
 }
 
-function RootDocument({ children }: { children: ReactNode }) {
+function RootDocument({
+  children,
+  palette,
+}: {
+  children: ReactNode
+  palette: 'paper' | 'dark'
+}) {
   return (
-    <html lang="en">
+    <html lang="en" data-palette={palette}>
       <head>
         <HeadContent />
       </head>
