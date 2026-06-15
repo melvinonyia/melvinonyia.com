@@ -9,6 +9,8 @@
     "start": "node .output/server/index.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "@mdx-js/rollup": "^3.1.1",
+    "@playwright/test": "^1.61.0",
     "@tailwindcss/vite": "4.3.1",
     "@tanstack/router-plugin": "1.168.18",
     "@testing-library/jest-dom": "^6.6.3",

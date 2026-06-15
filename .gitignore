@@ -5,6 +5,9 @@ dist
 .vercel
 .cache
 coverage
+playwright-report
+test-results
+.playwright
 
 src/routeTree.gen.ts
 

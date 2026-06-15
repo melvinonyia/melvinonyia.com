@@ -1,0 +1,121 @@
+import { test, expect } from '@playwright/test'
+
+test.describe('home', () => {
+  test('renders the hero above the fold and the case-study grid', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('heading', { level: 1, name: 'Melvin Onyia' })).toBeVisible()
+    await expect(
+      page.getByText('Building software at the intersection of biomechanics and engineering.'),
+    ).toBeVisible()
+    await expect(page.locator('[data-work-cards] [data-magnetic], [data-work-cards] a')).toHaveCount(
+      // Two case studies today: movement-fingerprint and gait-lab-toolkit.
+      // Each card renders inside a HoverLift and a ViewTransitionLink; the
+      // ViewTransitionLink ends up as an <a>. Match by anchor count.
+      2,
+    )
+  })
+})
+
+test.describe('command palette', () => {
+  test('Meta+K opens the palette, search filters, Enter navigates', async ({ page }) => {
+    await page.goto('/')
+    await page.keyboard.press('Meta+k')
+    const search = page.getByPlaceholder(/search/i)
+    await expect(search).toBeFocused()
+    await search.fill('fingerprint')
+    const firstHit = page.getByRole('option', { name: /Movement fingerprint/i })
+    await expect(firstHit).toHaveAttribute('aria-selected', 'true')
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/\/work\/movement-fingerprint$/)
+    await expect(page.getByRole('heading', { name: 'Movement fingerprint' })).toBeVisible()
+  })
+
+  test('Esc closes the palette', async ({ page }) => {
+    await page.goto('/')
+    await page.keyboard.press('Meta+k')
+    await expect(page.getByPlaceholder(/search/i)).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(page.getByPlaceholder(/search/i)).toHaveCount(0)
+  })
+
+  test('clicking the header ⌘K chip opens the palette', async ({ page }) => {
+    await page.goto('/')
+    await page.locator('[data-palette-trigger]').first().click()
+    await expect(page.getByPlaceholder(/search/i)).toBeFocused()
+  })
+})
+
+test.describe('navigation', () => {
+  test('clicking a case-study card on home navigates to the detail page', async ({ page }) => {
+    await page.goto('/')
+    const card = page.locator('[data-work-cards] a').first()
+    const href = await card.getAttribute('href')
+    expect(href).toMatch(/^\/work\//)
+    await card.click()
+    await expect(page).toHaveURL(new RegExp(href!.replace(/[/]/g, '\\/') + '$'))
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  })
+})
+
+test.describe('magnetic-link click accuracy', () => {
+  test('clicking with the cursor offset inside the radius still navigates', async ({ page }) => {
+    await page.goto('/')
+    // The hero "See work →" CTA uses MagneticLink with default radius=40, maxOffset=8.
+    const cta = page.getByRole('link', { name: /See work/ })
+    await expect(cta).toBeVisible()
+    const box = await cta.boundingBox()
+    expect(box).not.toBeNull()
+    // Click ~5px right and ~3px down from the anchor's top-left corner —
+    // a point that is inside the underlying <a> hitbox but offset from
+    // the visual center, so any "click moves with the magnet" bug would
+    // miss. Playwright clicks relative to top-left when position is set.
+    await cta.click({ position: { x: 5, y: 3 } })
+    await expect(page).toHaveURL(/\/work$/)
+  })
+})
+
+test.describe('contact form', () => {
+  test('happy path: mocked 200 → inline success', async ({ page }) => {
+    await page.route('**/api/contact', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: true }),
+      })
+    })
+    await page.goto('/contact')
+    await page.getByLabel(/name/i).fill('Sam Tester')
+    await page.getByLabel(/email/i).fill('sam@example.com')
+    await page.getByLabel(/message/i).fill('A short hello from Playwright.')
+    await page.getByRole('button', { name: /Send message/i }).click()
+    await expect(page.getByRole('status')).toContainText(/thank/i)
+    await expect(page.getByLabel(/name/i)).toHaveCount(0)
+  })
+
+  test('rate-limit response → inline error and form stays', async ({ page }) => {
+    await page.route('**/api/contact', async (route) => {
+      await route.fulfill({
+        status: 429,
+        contentType: 'application/json',
+        body: JSON.stringify({ ok: false, error: 'rate-limit' }),
+      })
+    })
+    await page.goto('/contact')
+    await page.getByLabel(/name/i).fill('Sam')
+    await page.getByLabel(/email/i).fill('sam@example.com')
+    await page.getByLabel(/message/i).fill('hello')
+    await page.getByRole('button', { name: /Send message/i }).click()
+    await expect(page.getByRole('alert')).toContainText(/too many/i)
+    await expect(page.getByLabel(/name/i)).toBeVisible()
+  })
+})
+
+test.describe('404', () => {
+  test('an unknown URL renders the on-brand 404 without a hydration flash', async ({ page }) => {
+    await page.goto('/blog/this-does-not-exist')
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Off the map.' }),
+    ).toBeVisible()
+    await expect(page.getByRole('link', { name: /Take me home/ })).toHaveAttribute('href', '/')
+  })
+})
