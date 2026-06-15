@@ -16,21 +16,21 @@ vi.mock('@tanstack/react-router', () => ({
 import { NotFoundView } from './NotFoundView'
 
 describe('NotFoundView', () => {
-  it('renders the Sorry! heading', () => {
+  it('renders the "Sorry, the page is missing" heading', () => {
     render(<NotFoundView />)
-    expect(screen.getByText('Sorry!')).toBeInTheDocument()
+    expect(screen.getByText('Sorry, the page is missing')).toBeInTheDocument()
   })
 
-  it('renders the not-available subtitle', () => {
+  it('renders the not-found subtitle', () => {
     render(<NotFoundView />)
     expect(
-      screen.getByText(/page you are looking for is not available/),
+      screen.getByText(/couldn't find what you were looking for/i),
     ).toBeInTheDocument()
   })
 
-  it('renders a Try again link to home in the hero-button style', () => {
+  it('renders a Return Home link to / in the hero-button style', () => {
     render(<NotFoundView />)
-    const link = screen.getByRole('link', { name: 'Try again' })
+    const link = screen.getByRole('link', { name: 'Return Home' })
     expect(link).toHaveAttribute('href', '/')
     expect(link.className).toMatch(/hero-button/)
   })

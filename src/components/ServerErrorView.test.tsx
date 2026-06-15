@@ -16,19 +16,19 @@ vi.mock('@tanstack/react-router', () => ({
 import { ServerErrorView } from './ServerErrorView'
 
 describe('ServerErrorView', () => {
-  it('renders the Sorry! heading', () => {
+  it('renders the "Sorry, you found a glitch" heading', () => {
     render(<ServerErrorView />)
-    expect(screen.getByText('Sorry!')).toBeInTheDocument()
+    expect(screen.getByText('Sorry, you found a glitch')).toBeInTheDocument()
   })
 
-  it('renders the something went wrong subtitle', () => {
+  it('renders the Something went wrong subtitle', () => {
     render(<ServerErrorView />)
     expect(screen.getByText(/Something went wrong/)).toBeInTheDocument()
   })
 
-  it('renders a Try again link to home in the hero-button style', () => {
+  it('renders a Return Home link to / in the hero-button style', () => {
     render(<ServerErrorView />)
-    const link = screen.getByRole('link', { name: 'Try again' })
+    const link = screen.getByRole('link', { name: 'Return Home' })
     expect(link).toHaveAttribute('href', '/')
     expect(link.className).toMatch(/hero-button/)
   })

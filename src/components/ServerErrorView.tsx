@@ -3,12 +3,17 @@ import { Link } from '@tanstack/react-router'
 export function ServerErrorView() {
   return (
     <div className="error-container">
-      <h2>Sorry!</h2>
-      <h3>Something went wrong.</h3>
-      <div className="error-cta">
-        <Link to="/" className="hero-button" aria-label="Try again">
-          Try again
-        </Link>
+      <div className="error-text">
+        <h2>Sorry, you found a glitch</h2>
+        <h3>Something went wrong.</h3>
+        <div className="error-cta">
+          <Link to="/" className="hero-button" aria-label="Return Home">
+            Return Home
+          </Link>
+        </div>
+      </div>
+      <div className="error-illustration" aria-hidden="true">
+        <img src="/images/error-500.svg" alt="" />
       </div>
     </div>
   )

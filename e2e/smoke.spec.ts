@@ -93,13 +93,13 @@ test.describe('contact form', () => {
 })
 
 test.describe('404', () => {
-  test('an unknown URL renders the Sorry! page with a Try again link', async ({ page }) => {
+  test('an unknown URL renders the "page is missing" view with a Return Home link', async ({ page }) => {
     await page.goto('/this-route-does-not-exist')
-    await expect(page.getByText('Sorry!')).toBeVisible()
+    await expect(page.getByText('Sorry, the page is missing')).toBeVisible()
     await expect(
-      page.getByText(/page you are looking for is not available/),
+      page.getByText(/couldn't find what you were looking for/i),
     ).toBeVisible()
-    await expect(page.getByRole('link', { name: 'Try again' })).toHaveAttribute('href', '/')
+    await expect(page.getByRole('link', { name: 'Return Home' })).toHaveAttribute('href', '/')
   })
 })
 
