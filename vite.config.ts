@@ -129,6 +129,8 @@ export default defineConfig({
         { path: '/writing', prerender: { enabled: true } },
         { path: '/legal', prerender: { enabled: true } },
         { path: '/work', prerender: { enabled: true } },
+        { path: '/404', prerender: { enabled: true } },
+        { path: '/500', prerender: { enabled: true } },
         ...workPrerenderPages,
         ...writingPrerenderPages,
       ],

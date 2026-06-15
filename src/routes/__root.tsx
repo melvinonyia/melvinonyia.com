@@ -4,6 +4,8 @@ import appCss from '~/styles/globals.css?url'
 import { SiteHeader } from '~/components/SiteHeader'
 import { SiteFooter } from '~/components/SiteFooter'
 import { CommandPaletteController } from '~/components/CommandPaletteController'
+import { NotFoundView } from '~/components/NotFoundView'
+import { ServerErrorView } from '~/components/ServerErrorView'
 
 const COPYRIGHT_YEAR = 2026
 
@@ -44,6 +46,8 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
+  notFoundComponent: NotFoundView,
+  errorComponent: ServerErrorView,
 })
 
 function RootComponent() {
