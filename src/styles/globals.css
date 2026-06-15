@@ -969,8 +969,8 @@ a {
 
 .article-detail-share {
   position: absolute;
-  top: 13rem;
-  left: calc(50% - 50vw + 2rem);
+  top: 15rem;
+  left: calc(50% - 50vw + 5rem);
   display: flex;
   flex-direction: column;
   align-items: center;
