@@ -30,18 +30,17 @@ vi.mock('@tanstack/react-router', () => ({
 import { SiteHeader } from './SiteHeader'
 
 describe('SiteHeader', () => {
-  it('renders all five primary nav items', () => {
+  it('renders the four primary nav items (Home is implicit via the wordmark)', () => {
     render(<SiteHeader />)
     const nav = screen.getByRole('navigation', { name: 'Primary' })
     const links = within(nav).getAllByRole('link')
     const labels = links.map((l) => l.textContent)
-    expect(labels).toEqual(['Home', 'Work', 'Writing', 'About', 'Contact'])
+    expect(labels).toEqual(['Work', 'Writing', 'About', 'Contact'])
   })
 
   it('renders nav items as anchors pointing at their routes', () => {
     render(<SiteHeader />)
     const nav = screen.getByRole('navigation', { name: 'Primary' })
-    expect(within(nav).getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/')
     expect(within(nav).getByRole('link', { name: 'Work' })).toHaveAttribute('href', '/work')
     expect(within(nav).getByRole('link', { name: 'Writing' })).toHaveAttribute('href', '/writing')
     expect(within(nav).getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
@@ -55,8 +54,9 @@ describe('SiteHeader', () => {
     ) as HTMLButtonElement | null
     expect(trigger).not.toBeNull()
     expect(trigger!.tagName).toBe('BUTTON')
-    expect(trigger!.textContent).toMatch(/⌘.*K/)
+    expect(trigger!.textContent).toMatch(/⌘K/)
     expect(trigger).toHaveAttribute('aria-label', 'Open command palette')
+    expect(trigger).toHaveAttribute('aria-keyshortcuts', 'Meta+K')
   })
 
   it('renders the wordmark as a link back to home', () => {

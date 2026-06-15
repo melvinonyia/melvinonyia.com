@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router'
 import type { ComponentProps } from 'react'
-import { MagneticLink } from './MagneticLink'
 import { useOpenCommandPalette } from './CommandPaletteController'
 
 interface NavItem {
@@ -9,39 +8,31 @@ interface NavItem {
 }
 
 const NAV_ITEMS: readonly NavItem[] = [
-  { label: 'Home', to: '/' },
   { label: 'Work', to: '/work' },
   { label: 'Writing', to: '/writing' },
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/contact' },
 ] as const
 
+const monoLabel =
+  'font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent aria-[current=page]:text-fg'
+
 export function SiteHeader() {
   const openPalette = useOpenCommandPalette()
   return (
     <header className="sticky top-0 z-20 border-b border-border/40 bg-bg/80 backdrop-blur supports-[backdrop-filter]:bg-bg/60">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-        <Link
-          to="/"
-          className="font-sans font-halbfett text-fg text-base tracking-tight transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-        >
+      <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-6 px-6">
+        <Link to="/" className={`${monoLabel} text-fg`}>
           Melvin Onyia
         </Link>
 
         <nav aria-label="Primary">
-          <ul className="flex items-center gap-1 sm:gap-2">
+          <ul className="flex items-center gap-4 sm:gap-6">
             {NAV_ITEMS.map((item) => (
               <li key={item.to}>
-                <MagneticLink
-                  to={item.to}
-                  activeOptions={{ exact: item.to === '/' }}
-                  className="font-sans font-buch text-sm text-muted px-2 py-1 rounded-sm transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-[current=page]:text-fg aria-[current=page]:underline aria-[current=page]:underline-offset-4"
-                  activeProps={{ 'aria-current': 'page' }}
-                  radius={32}
-                  maxOffset={6}
-                >
+                <Link to={item.to} className={monoLabel} activeProps={{ 'aria-current': 'page' }}>
                   {item.label}
-                </MagneticLink>
+                </Link>
               </li>
             ))}
           </ul>
@@ -51,11 +42,11 @@ export function SiteHeader() {
           type="button"
           onClick={() => openPalette?.()}
           aria-label="Open command palette"
+          aria-keyshortcuts="Meta+K"
           data-palette-trigger
-          className="hidden sm:inline-flex items-center gap-1 rounded-sm border border-border/60 bg-surface/60 px-2 py-1 font-mono text-xs text-muted transition-colors hover:text-fg hover:border-border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="hidden sm:inline-flex font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
         >
-          <span aria-hidden="true">⌘</span>
-          <span aria-hidden="true">K</span>
+          <span aria-hidden="true">⌘K</span>
         </button>
       </div>
     </header>

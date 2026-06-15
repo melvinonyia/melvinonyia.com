@@ -137,3 +137,24 @@ test.describe('per-route palette', () => {
     })
   }
 })
+
+test.describe('masthead present on every route', () => {
+  const paths = [
+    '/',
+    '/work',
+    '/work/movement-fingerprint',
+    '/contact',
+    '/writing',
+    '/writing/the-leg-between-lab-and-field',
+    '/about',
+  ]
+  for (const path of paths) {
+    test(`${path} renders the masthead with wordmark`, async ({ page }) => {
+      await page.goto(path)
+      const banner = page.getByRole('banner')
+      await expect(banner).toBeVisible()
+      await expect(banner.getByRole('link', { name: 'Melvin Onyia' })).toBeVisible()
+      await expect(banner.getByRole('navigation', { name: 'Primary' })).toBeVisible()
+    })
+  }
+})
