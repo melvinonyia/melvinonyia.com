@@ -1150,15 +1150,18 @@ a {
  * ------------------------------------------------------------------------- */
 
 .error-container {
+  padding: 5vh 0;
+}
+
+.error-container:has(.error-illustration) {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
-  padding: 5vh 0;
   align-items: center;
 }
 
 @media (max-width: 992px) {
-  .error-container {
+  .error-container:has(.error-illustration) {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
