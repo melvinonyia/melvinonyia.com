@@ -51,38 +51,12 @@ test.describe('command palette', () => {
   })
 })
 
-test.describe('contact form', () => {
-  test('happy path: mocked 200 → inline Thank you', async ({ page }) => {
-    await page.route('**/api/contact', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ ok: true }),
-      })
-    })
+test.describe('contact page', () => {
+  test('renders the email CTA with a mailto link', async ({ page }) => {
     await page.goto('/contact')
-    await page.getByLabel(/name/i).fill('Sam Tester')
-    await page.getByLabel(/email/i).fill('sam@example.com')
-    await page.getByLabel(/message/i).fill('A short hello from Playwright.')
-    await page.getByRole('button', { name: /Send/i }).click()
-    await expect(page.getByRole('status')).toContainText(/thank/i)
-  })
-
-  test('rate-limit response → inline error and form stays', async ({ page }) => {
-    await page.route('**/api/contact', async (route) => {
-      await route.fulfill({
-        status: 429,
-        contentType: 'application/json',
-        body: JSON.stringify({ ok: false, error: 'rate-limit' }),
-      })
-    })
-    await page.goto('/contact')
-    await page.getByLabel(/name/i).fill('Sam')
-    await page.getByLabel(/email/i).fill('sam@example.com')
-    await page.getByLabel(/message/i).fill('hello')
-    await page.getByRole('button', { name: /Send/i }).click()
-    await expect(page.getByRole('alert')).toContainText(/too many/i)
-    await expect(page.getByLabel(/name/i)).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Get in touch' })).toBeVisible()
+    const email = page.getByRole('link', { name: /melvin\.onyia@gmail\.com/i })
+    await expect(email).toHaveAttribute('href', /^mailto:/)
   })
 })
 

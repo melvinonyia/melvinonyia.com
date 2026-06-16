@@ -858,65 +858,91 @@ a {
 }
 
 /* ----------------------------------------------------------------------------
- * Contact — main's two-column layout with icon link cards.
+ * Contact page — single-column editorial lede: eyebrow, big title, blurb,
+ * "Email" caplabel, large email mailto with diagonal arrow that lifts on
+ * hover, and a secondary availability line with LinkedIn out-link.
  * ------------------------------------------------------------------------- */
 
-.contact-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5rem;
-  padding: 0 1.5rem;
+.contact-page {
+  max-width: 54rem;
+  padding: clamp(3rem, 9vh, 7rem) 0;
 }
 
-@media (max-width: 768px) {
-  .contact-container {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-}
-
-.contact-header {
-  text-transform: none;
-  margin: 0;
-  font-size: var(--text-h2);
-}
-
-@media (max-width: 768px) {
-  .contact-header { font-size: var(--text-h3); }
-}
-
-@media (max-width: 576px) {
-  .contact-header { font-size: var(--text-lede); }
-}
-
-.contact-text {
-  margin: 1rem 0 2rem;
+.contact-page__eyebrow {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--color-muted);
-  font-size: var(--text-lede);
-  line-height: 1.2;
+  margin: 0 0 1.4rem 0;
 }
 
-.contact-links {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+.contact-page__title {
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 0.98;
+  margin: 0 0 1.7rem 0;
 }
 
-.contact-link {
-  font-size: var(--text-lede);
+.contact-page__blurb {
+  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
   color: var(--color-fg);
-  background-color: rgb(40 40 40);
-  padding: 1rem 1.5rem;
-  display: inline-flex;
-  margin: 0.75rem 1rem 0.75rem 0;
-  border-radius: 0.5rem;
-  width: 100%;
-  justify-content: center;
-  transition: background-color 0.3s;
+  line-height: 1.5;
+  max-width: 36ch;
+  margin: 0 0 clamp(2.4rem, 5vh, 3.5rem) 0;
 }
 
-.contact-link:hover {
-  background-color: rgb(36 36 36);
+.contact-page__direct {
+  font-size: 0.8rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 0.8rem 0;
+}
+
+.contact-page__email {
+  display: inline-block;
+  font-size: clamp(1.6rem, 3.4vw, 2.8rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.contact-page__arrow {
+  font-size: 0.7em;
+  margin-left: 0.22em;
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
+.contact-page__email:hover .contact-page__arrow,
+.contact-page__email:focus-visible .contact-page__arrow {
+  transform: translate(4px, -4px);
+}
+
+.contact-page__secondary {
+  font-size: 0.92rem;
+  color: var(--color-muted);
+  margin: clamp(2rem, 4vh, 2.75rem) 0 0 0;
+}
+
+.contact-page__secondary a {
+  color: var(--color-fg);
+  transition: color 0.2s ease;
+}
+
+.contact-page__secondary a:hover,
+.contact-page__secondary a:focus-visible {
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-page__arrow,
+  .contact-page__secondary a {
+    transition: none;
+  }
 }
 
 /* ----------------------------------------------------------------------------
@@ -1599,73 +1625,6 @@ a {
 
 @media (max-width: 768px) { .legal-group { column-count: 1; } }
 .legal-group p:first-child { margin-top: 0; }
-
-/* Contact form — dark surface card with simple inputs + forest-green Send. */
-
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  background-color: rgb(40 40 40);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  gap: 1rem;
-}
-
-.contact-form-field { display: flex; flex-direction: column; gap: 0.25rem; }
-
-.contact-form-label {
-  font-size: var(--text-small);
-  color: var(--color-muted);
-}
-
-.contact-form-input,
-.contact-form-textarea {
-  background-color: rgb(43 43 43);
-  border: 1px solid rgb(64 64 64);
-  border-radius: 0.375rem;
-  color: var(--color-fg);
-  font-family: var(--font-sans);
-  font-size: var(--text-body);
-  padding: 0.75rem 1rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.contact-form-input:focus,
-.contact-form-textarea:focus {
-  border-color: var(--color-accent);
-}
-
-.contact-form-textarea { resize: vertical; min-height: 12rem; }
-
-.contact-form-submit {
-  background-color: rgb(38 53 52);
-  color: var(--color-fg);
-  border: none;
-  border-radius: 0.375rem;
-  padding: 0.875rem 1.25rem;
-  font-family: var(--font-sans);
-  font-size: var(--text-body);
-  cursor: pointer;
-  transition: background-color 0.2s;
-  margin-top: 0.5rem;
-}
-
-.contact-form-submit:hover { background-color: rgb(48 66 65); }
-.contact-form-submit:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.contact-form-error {
-  color: var(--color-danger);
-  font-size: var(--text-small);
-  margin-top: 0.5rem;
-}
-
-.contact-form-success {
-  background-color: rgb(40 40 40);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  color: var(--color-fg);
-}
 
 /* ----------------------------------------------------------------------------
  * Command palette (⌘K) — restyled into main's vocabulary. Mono input, TT
