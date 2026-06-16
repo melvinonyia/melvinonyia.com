@@ -1,21 +1,15 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('home', () => {
-  test('renders the marquee hero, tech icons, and the recent strips', async ({ page }) => {
+  test('renders the editorial hero and the recent strips', async ({ page }) => {
     await page.goto('/')
-    // Marquee renders the headline at least twice (one per track).
+    // Name renders once as the page h1.
+    await expect(page.getByRole('heading', { level: 1, name: 'Melvin Onyia' })).toBeVisible()
+    // Eyebrow and statement copy are present.
+    await expect(page.getByText('Staff Software Engineer')).toBeVisible()
     await expect(
-      page.getByRole('heading', { level: 1, name: /Melvin Chinedu Onyia/ }),
-    ).toHaveCount(2)
-    // Hero text from main's copy is present.
-    await expect(
-      page.getByText(/Crafting highly-performant, secure software solutions/),
+      page.getByText(/Backend and infrastructure engineer who also designs/),
     ).toBeVisible()
-    // About me CTA links to /about.
-    await expect(page.getByRole('link', { name: 'About me' })).toHaveAttribute('href', '/about')
-    // Technology icons row has six visible links.
-    const techList = page.getByLabel('Technologies').locator('ul')
-    await expect(techList.locator('a')).toHaveCount(6)
   })
 })
 

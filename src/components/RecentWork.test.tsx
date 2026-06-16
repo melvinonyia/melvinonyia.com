@@ -29,7 +29,7 @@ const POST: WorkPostSummary = {
   title: 'A Test Project',
   date: '2025-09-01',
   excerpt: 'Short summary.',
-  tags: ['tooling'],
+  tags: ['tooling', 'infra'],
   heroImage: null,
   ogImage: null,
 }
@@ -40,18 +40,27 @@ describe('RecentWork', () => {
     expect(container.firstChild).toBeNull()
   })
 
-  it('renders the Recent Work section with title, subtitle, and uppercase meta', () => {
+  it('renders the Selected work eyebrow + a row per post', () => {
     render(<RecentWork posts={[POST]} />)
-    expect(screen.getByText('Recent Work')).toBeInTheDocument()
+    expect(screen.getByText('Selected work')).toBeInTheDocument()
     expect(screen.getByText('A Test Project')).toBeInTheDocument()
     expect(screen.getByText('Short summary.')).toBeInTheDocument()
-    expect(screen.getByText('TOOLING')).toBeInTheDocument()
   })
 
-  it('links the card to /work/$slug', () => {
+  it('shows the year derived from the post date', () => {
     render(<RecentWork posts={[POST]} />)
-    const card = screen.getByLabelText('A Test Project')
-    expect(card).toHaveAttribute('href', '/work/a-test-project')
+    expect(screen.getByText('2025')).toBeInTheDocument()
+  })
+
+  it('shows the tag list joined as a stack line', () => {
+    render(<RecentWork posts={[POST]} />)
+    expect(screen.getByText('tooling · infra')).toBeInTheDocument()
+  })
+
+  it('links the row to /work/$slug', () => {
+    render(<RecentWork posts={[POST]} />)
+    const row = screen.getByLabelText('A Test Project')
+    expect(row).toHaveAttribute('href', '/work/a-test-project')
   })
 
   it('renders the More Work CTA linking to /work', () => {

@@ -1,78 +1,50 @@
-import { useNavigate } from '@tanstack/react-router'
-import { SocialLinks } from './SocialLinks'
+import { Link } from '@tanstack/react-router'
+import { SOCIAL_LINKS } from '~/lib/site/socials'
 
 interface SiteFooterProps {
   year: number
 }
 
-interface FooterNavColumn {
-  title: string
-  links: { to: '/about' | '/writing' | '/work' | '/contact'; text: string }[]
-}
-
-const FOOTER_NAV: readonly FooterNavColumn[] = [
-  {
-    title: 'Profile',
-    links: [{ to: '/about', text: 'About' }],
-  },
-  {
-    title: 'Resources',
-    links: [
-      { to: '/writing', text: 'Writing' },
-      { to: '/work', text: 'Work' },
-    ],
-  },
-  {
-    title: 'Connect',
-    links: [{ to: '/contact', text: 'Contact' }],
-  },
-]
-
-const TAGLINE = 'Build things, solve problems'
-const TITLE = 'Melvin Onyia'
+const NAV_LINKS = [
+  { to: '/work', label: 'Work' },
+  { to: '/writing', label: 'Writing' },
+  { to: '/about', label: 'About' },
+  { to: '/contact', label: 'Contact' },
+] as const
 
 export function SiteFooter({ year }: SiteFooterProps) {
-  const navigate = useNavigate()
   return (
     <footer className="site-footer">
-      <div className="site-footer-wrapper">
-        <div>
-          <h4 className="site-footer-tagline">{TAGLINE}</h4>
-          <SocialLinks className="site-social" />
+      <div className="site-footer__top">
+        <span className="site-footer__mark">Melvin Onyia</span>
+        <div className="site-footer__links">
+          <nav className="site-footer__nav" aria-label="Footer">
+            {NAV_LINKS.map(({ to, label }) => (
+              <Link key={to} to={to}>
+                {label}
+              </Link>
+            ))}
+          </nav>
+          <nav className="site-footer__social" aria-label="Social">
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.key}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {social.label}
+              </a>
+            ))}
+          </nav>
         </div>
-        <ul className="site-footer-nav">
-          {FOOTER_NAV.map(({ title, links }) => (
-            <li key={title} className="site-footer-list">
-              <span className="site-footer-list-header">{title}</span>
-              {links.map(({ to, text }) => (
-                <button
-                  key={text}
-                  type="button"
-                  className="site-footer-link"
-                  onClick={() => navigate({ to })}
-                  aria-label={text}
-                >
-                  {text}
-                </button>
-              ))}
-            </li>
-          ))}
-        </ul>
       </div>
-      <div className="site-footer-credit">
-        {year} {TITLE} &copy; Copyright -{' '}
-        <span
-          role="button"
-          tabIndex={0}
-          className="site-footer-credit-link"
-          onClick={() => navigate({ to: '/legal' })}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') navigate({ to: '/legal' })
-          }}
-          aria-label="Privacy & Terms"
-        >
-          Privacy & Terms
-        </span>
+      <div className="site-footer__base">
+        <span>© {year} Melvin Onyia</span>
+        <div className="site-footer__legal">
+          <Link to="/legal">Privacy</Link>
+          <Link to="/legal">Terms</Link>
+        </div>
       </div>
     </footer>
   )

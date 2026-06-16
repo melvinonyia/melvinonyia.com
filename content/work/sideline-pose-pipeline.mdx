@@ -1,0 +1,31 @@
+---
+title: Sideline pose pipeline
+date: 2026-02-04
+excerpt: Low-latency markerless pose estimation from sideline video, feeding training-room dashboards in near-real-time.
+tags:
+  - computer vision
+  - pytorch
+  - infra
+---
+
+## The problem
+
+Markered motion capture is precise and unhelpful — it lives in a lab the
+athlete only visits twice a season. The interesting data is the training day
+they actually have. Sideline video is the only sensor the staff is willing to
+set up, and the pipeline has to do the rest.
+
+## What I built
+
+A markerless pose pipeline that ingests sideline H.264 streams, runs per-frame
+keypoint detection through a quantized PyTorch model, and emits per-athlete
+pose tracks on a 60 ms end-to-end budget. The hot path is split across a small
+fleet of T4s; cold storage and analysis batches share the same schema
+downstream so notebooks and dashboards read the same data.
+
+## Outcome
+
+Two collegiate squads are running the pipeline against their training-room
+dashboards. The performance staff can compare a day's session against an
+athlete's own baseline before the athlete has left the room — closing a loop
+that used to take a week.
