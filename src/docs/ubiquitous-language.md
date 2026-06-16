@@ -67,11 +67,15 @@ Reading is the lone exception; everything else is Shell.
 **Color — named by role, never by value** (same prop works in both modes; only the value swaps):
 
 - **Ground** `--ground` — base background; encodes mode.
-- **Surface** `--surface` — raised background (Cards, thumbs, fields).
+- **Surface** `--surface` — raised background (Cards, thumbs, fields). **Surface-lift** `--surface-lift` — one step brighter for placeholder/shimmer gradients.
 - **Ink** `--ink` — primary text · **Soft** `--soft` — secondary · **Muted** `--muted` — tertiary / metadata · **Dek** `--dek` — standfirst tone.
 - **Accent** `--accent` — bronze-olive; sparing (hover + one solid moment per surface).
 - **Accent-lift** `--accent-lift` — brighter bronze for small / legible text (hover, links).
 - **Hairline** `--hairline` — dividers.
+- **Danger** `--danger` — error state (form failure, destructive confirmation).
+- **Drawer-ground** `--drawer-ground` — the exception. The mobile drawer is always dark, so this token holds one value across both palettes rather than swapping. Use it *only* inside the drawer.
+
+**Tailwind bridge.** The role tokens above are the source of truth for raw CSS (`var(--ground)`, `var(--ink)`). Tailwind v4 generates utility classes (`bg-surface`, `text-ink`, `border-hairline`) from a parallel `--color-*` namespace declared inside `@theme`; those entries are thin aliases (`--color-ground: var(--ground)`) and exist only so the utilities resolve. When a token is added, add both the role declaration and its `@theme` alias.
 
 **Components** (PascalCase = the React component name, `.tsx`):
 

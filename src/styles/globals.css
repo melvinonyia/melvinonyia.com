@@ -28,16 +28,18 @@
  * ------------------------------------------------------------------------- */
 
 :root {
-  --color-bg: rgb(37 37 37);
-  --color-surface: rgb(40 40 40);
-  --color-surface-lift: rgb(48 48 48);
-  --color-border: rgb(64 64 64);
-  --color-fg: rgb(194 194 194);
-  --color-dek: rgb(148 148 148);
-  --color-muted: rgb(123 122 116);
-  --color-accent: rgb(115 98 47);
-  --color-danger: rgb(118 38 38);
-  --color-drawer-ground: rgb(24 24 22);
+  --ground: rgb(37 37 37);
+  --surface: rgb(40 40 40);
+  --surface-lift: rgb(48 48 48);
+  --hairline: rgb(64 64 64);
+  --ink: rgb(194 194 194);
+  --dek: rgb(148 148 148);
+  --soft: rgb(160 158 150);
+  --muted: rgb(123 122 116);
+  --accent: rgb(115 98 47);
+  --accent-lift: rgb(155 138 85);
+  --danger: rgb(118 38 38);
+  --drawer-ground: rgb(24 24 22);
 
   --font-sans: "TT Commons", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "Berkeley Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -92,26 +94,38 @@
    (/writing/$slug, /work/$slug). Light cream bg, near-black foreground.
    Chrome and footer adapt automatically through the tokens. */
 [data-palette="paper"] {
-  --color-bg: rgb(245 245 243);
-  --color-surface: rgb(232 232 229);
-  --color-surface-lift: rgb(240 240 237);
-  --color-border: rgb(200 200 197);
-  --color-fg: rgb(40 40 40);
-  --color-dek: rgb(80 80 77);
-  --color-muted: rgb(120 120 117);
-  --color-accent: rgb(115 98 47);
-  --color-drawer-ground: rgb(24 24 22);
+  --ground: rgb(245 245 243);
+  --surface: rgb(232 232 229);
+  --surface-lift: rgb(240 240 237);
+  --hairline: rgb(200 200 197);
+  --ink: rgb(40 40 40);
+  --dek: rgb(80 80 77);
+  --soft: rgb(95 95 92);
+  --muted: rgb(120 120 117);
+  --accent: rgb(115 98 47);
+  --accent-lift: rgb(155 138 85);
+  --drawer-ground: rgb(24 24 22);
   color-scheme: light;
 }
 
+/* Tailwind v4 exposes color utilities from the --color-* namespace inside
+   @theme. The canonical role tokens above (--ground, --ink, --hairline …)
+   stay the source of truth for raw CSS; these aliases re-expose them
+   under Tailwind's expected prefix so utilities like bg-surface,
+   text-ink, border-hairline resolve at build time. */
 @theme {
-  --color-bg: var(--color-bg);
-  --color-surface: var(--color-surface);
-  --color-border: var(--color-border);
-  --color-fg: var(--color-fg);
-  --color-muted: var(--color-muted);
-  --color-accent: var(--color-accent);
-  --color-danger: var(--color-danger);
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-surface-lift: var(--surface-lift);
+  --color-hairline: var(--hairline);
+  --color-ink: var(--ink);
+  --color-dek: var(--dek);
+  --color-soft: var(--soft);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-lift: var(--accent-lift);
+  --color-danger: var(--danger);
+  --color-drawer-ground: var(--drawer-ground);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
@@ -149,8 +163,8 @@ html {
 
 html,
 body {
-  background: var(--color-bg);
-  color: var(--color-fg);
+  background: var(--ground);
+  color: var(--ink);
   font-family: var(--font-sans);
   font-weight: var(--font-weight-buch);
   -webkit-font-smoothing: antialiased;
@@ -247,7 +261,7 @@ a {
   font-size: 0.8rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
   margin-bottom: clamp(1rem, 2vh, 1.6rem);
 }
 
@@ -262,12 +276,12 @@ a {
 .masthead-statement {
   font-size: clamp(1.1rem, 1.55vw, 1.45rem);
   line-height: 1.5;
-  color: var(--color-fg);
+  color: var(--ink);
   max-width: 38ch;
 }
 
 .masthead-statement__accent {
-  color: var(--color-accent);
+  color: var(--accent);
   font-weight: 600;
 }
 
@@ -290,12 +304,12 @@ a {
   font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .masthead-meta__v {
   font-size: 0.92rem;
-  color: var(--color-fg);
+  color: var(--ink);
   margin: 0;
 }
 
@@ -356,7 +370,7 @@ a {
   right: 0;
   bottom: -0.25rem;
   height: 1px;
-  background: var(--color-border);
+  background: var(--hairline);
   transform-origin: right center;
   transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
 }
@@ -443,7 +457,7 @@ a {
   padding-bottom: 54.25%;
   overflow: hidden;
   margin-bottom: 1rem;
-  background-color: var(--color-surface);
+  background-color: var(--surface);
 }
 
 .card-image img,
@@ -458,7 +472,7 @@ a {
 
 .card-image .card-placeholder {
   display: block;
-  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-lift) 100%);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-lift) 100%);
 }
 
 .card:hover .card-image img,
@@ -471,16 +485,16 @@ a {
   font-weight: 600;
   font-size: var(--text-lede);
   display: inline;
-  color: var(--color-fg);
+  color: var(--ink);
   padding-right: 0.5rem;
   transition: color 0.3s ease-out;
   line-height: 1.2;
 }
 
-.card:hover .card-title { color: var(--color-muted); }
+.card:hover .card-title { color: var(--muted); }
 
 .card-dek {
-  color: var(--color-dek);
+  color: var(--dek);
   display: inline;
   font-size: var(--text-lede);
   font-weight: 400;
@@ -489,7 +503,7 @@ a {
 
 .card-meta {
   padding-top: 1.75rem;
-  color: var(--color-fg);
+  color: var(--ink);
   font-family: var(--font-mono);
   font-size: var(--text-small);
   font-weight: 400;
@@ -535,7 +549,7 @@ a {
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0 0 clamp(2rem, 4vh, 3rem) 0;
 }
 
@@ -544,14 +558,14 @@ a {
   grid-template-columns: 1fr auto;
   column-gap: 2rem;
   padding: clamp(1.4rem, 3vh, 2rem) 0;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--hairline);
   text-decoration: none;
   color: inherit;
   transition: padding-left 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .work-preview__row:last-of-type {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .work-preview__title {
@@ -568,7 +582,7 @@ a {
 
 .work-preview__arrow {
   font-size: 0.7em;
-  color: var(--color-accent);
+  color: var(--accent);
   opacity: 0;
   transform: translateX(-6px);
   transition: opacity 0.25s ease, transform 0.25s ease;
@@ -576,7 +590,7 @@ a {
 
 .work-preview__desc {
   font-size: clamp(0.95rem, 1.2vw, 1.08rem);
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0.6rem 0 0 0;
   max-width: 46ch;
   line-height: 1.45;
@@ -593,17 +607,17 @@ a {
 
 .work-preview__year {
   font-size: 0.95rem;
-  color: var(--color-fg);
+  color: var(--ink);
 }
 
 .work-preview__stack {
   font-size: 0.8rem;
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .work-preview__row:hover .work-preview__title,
 .work-preview__row:focus-visible .work-preview__title {
-  color: var(--color-accent);
+  color: var(--accent);
 }
 
 .work-preview__row:hover .work-preview__arrow,
@@ -661,7 +675,7 @@ a {
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0 0 clamp(2rem, 4vh, 3rem) 0;
 }
 
@@ -682,7 +696,7 @@ a {
 .about-headline {
   margin-top: 10rem;
   font-weight: 400;
-  color: var(--color-fg);
+  color: var(--ink);
   font-size: var(--text-h2);
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -703,7 +717,7 @@ a {
   column-count: 2;
   column-gap: 4rem;
   font-size: var(--text-lede);
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .about-body p { margin-top: 1.5rem; }
@@ -730,7 +744,7 @@ a {
 .about-experience-headline {
   margin-bottom: 2rem;
   font-weight: 400;
-  color: var(--color-fg);
+  color: var(--ink);
   font-size: var(--text-h3);
 }
 
@@ -746,9 +760,9 @@ a {
   grid-template-columns: 1fr 2fr 1fr 1fr;
   grid-gap: 1rem;
   padding: 1rem 0;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--hairline);
   font-weight: 400;
-  color: var(--color-fg);
+  color: var(--ink);
 }
 
 .about-experience-item:last-child {
@@ -768,13 +782,13 @@ a {
   }
   .about-experience-item p:first-child {
     font-size: var(--text-body);
-    color: var(--color-muted);
+    color: var(--muted);
   }
   .about-experience-item p:nth-child(2) {
     font-size: var(--text-lede);
   }
   .about-experience-item p:last-child {
-    color: var(--color-muted);
+    color: var(--muted);
   }
 }
 
@@ -794,7 +808,7 @@ a {
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0 0 1.4rem 0;
 }
 
@@ -808,7 +822,7 @@ a {
 
 .contact-page__blurb {
   font-size: clamp(1.1rem, 1.4vw, 1.35rem);
-  color: var(--color-fg);
+  color: var(--ink);
   line-height: 1.5;
   max-width: 36ch;
   margin: 0 0 clamp(2.4rem, 5vh, 3.5rem) 0;
@@ -818,7 +832,7 @@ a {
   font-size: 0.8rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0 0 0.8rem 0;
 }
 
@@ -827,7 +841,7 @@ a {
   font-size: clamp(1.6rem, 3.4vw, 2.8rem);
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: var(--color-accent);
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -845,18 +859,18 @@ a {
 
 .contact-page__secondary {
   font-size: 0.92rem;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: clamp(2rem, 4vh, 2.75rem) 0 0 0;
 }
 
 .contact-page__secondary a {
-  color: var(--color-fg);
+  color: var(--ink);
   transition: color 0.2s ease;
 }
 
 .contact-page__secondary a:hover,
 .contact-page__secondary a:focus-visible {
-  color: var(--color-accent);
+  color: var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -899,15 +913,17 @@ a {
    onto the dark palette so the drawer bg + logo + hamburger lines all
    stay readable, even on paper-palette routes (article details). */
 .site-header:has(.site-drawer.is-open) {
-  --color-bg: rgb(37 37 37);
-  --color-surface: rgb(40 40 40);
-  --color-surface-lift: rgb(48 48 48);
-  --color-border: rgb(64 64 64);
-  --color-fg: rgb(194 194 194);
-  --color-dek: rgb(148 148 148);
-  --color-muted: rgb(123 122 116);
-  --color-accent: rgb(115 98 47);
-  --color-drawer-ground: rgb(24 24 22);
+  --ground: rgb(37 37 37);
+  --surface: rgb(40 40 40);
+  --surface-lift: rgb(48 48 48);
+  --hairline: rgb(64 64 64);
+  --ink: rgb(194 194 194);
+  --dek: rgb(148 148 148);
+  --soft: rgb(160 158 150);
+  --muted: rgb(123 122 116);
+  --accent: rgb(115 98 47);
+  --accent-lift: rgb(155 138 85);
+  --drawer-ground: rgb(24 24 22);
   color-scheme: dark;
 }
 
@@ -919,7 +935,7 @@ a {
   display: block;
 }
 
-.site-logo svg { fill: var(--color-fg); width: 100%; height: auto; }
+.site-logo svg { fill: var(--ink); width: 100%; height: auto; }
 
 .site-icon {
   position: relative;
@@ -937,7 +953,7 @@ a {
   left: 0;
   width: 2rem;
   height: 0.12rem;
-  background: var(--color-fg);
+  background: var(--ink);
   transition: top 0.3s ease, transform 0.3s ease;
 }
 
@@ -951,7 +967,7 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: var(--color-drawer-ground);
+  background: var(--drawer-ground);
   padding: 5rem;
   position: fixed;
   inset: 0;
@@ -983,12 +999,12 @@ a {
   text-align: left;
   padding: 0;
   font-family: inherit;
-  color: var(--color-fg);
+  color: var(--ink);
   line-height: 1.1;
 }
 
 .site-drawer-item:hover,
-.site-drawer-item:focus-visible { color: var(--color-accent); }
+.site-drawer-item:focus-visible { color: var(--accent); }
 
 .site-drawer-social {
   position: absolute;
@@ -1039,7 +1055,7 @@ a {
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0 0 clamp(1.6rem, 3vh, 2.4rem) 0;
 }
 
@@ -1057,7 +1073,7 @@ a {
   font-size: clamp(1.5rem, 3.6vw, 2.9rem);
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: var(--color-accent);
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -1075,7 +1091,7 @@ a {
 
 .home-contact__avail {
   font-size: 0.9rem;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: clamp(1.6rem, 3vh, 2.2rem) 0 0 0;
 }
 
@@ -1123,13 +1139,13 @@ a {
 
 .site-footer__nav a {
   font-size: 0.92rem;
-  color: var(--color-fg);
+  color: var(--ink);
   transition: color 0.2s ease;
 }
 
 .site-footer__social a {
   font-size: 0.92rem;
-  color: var(--color-muted);
+  color: var(--muted);
   transition: color 0.2s ease;
 }
 
@@ -1137,7 +1153,7 @@ a {
 .site-footer__nav a:focus-visible,
 .site-footer__social a:hover,
 .site-footer__social a:focus-visible {
-  color: var(--color-accent);
+  color: var(--accent);
 }
 
 .site-footer__base {
@@ -1148,13 +1164,13 @@ a {
   gap: 1rem;
   padding-top: clamp(1.5rem, 3vh, 2rem);
   padding-bottom: clamp(1.5rem, 3vh, 2rem);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--hairline);
 }
 
 .site-footer__base span,
 .site-footer__base a {
   font-size: 0.8rem;
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .site-footer__legal {
@@ -1164,7 +1180,7 @@ a {
 
 .site-footer__base a:hover,
 .site-footer__base a:focus-visible {
-  color: var(--color-fg);
+  color: var(--ink);
 }
 
 @media (max-width: 620px) {
@@ -1193,12 +1209,12 @@ a {
   width: 1.5rem;
   align-items: center;
   justify-content: center;
-  color: var(--color-fg);
+  color: var(--ink);
   transition: color 0.3s;
 }
 
 .site-social a:hover,
-.site-social a:focus-visible { color: var(--color-accent); }
+.site-social a:focus-visible { color: var(--accent); }
 .site-social svg { height: 1.5rem; width: 1.5rem; fill: currentColor; }
 
 /* ----------------------------------------------------------------------------
@@ -1224,7 +1240,7 @@ a {
   gap: 1rem;
   padding-bottom: 1rem;
   font-size: var(--text-lede);
-  color: var(--color-fg);
+  color: var(--ink);
 }
 
 .writing-list { list-style: none; padding: 0; margin: 0; }
@@ -1234,17 +1250,17 @@ a {
   grid-template-columns: 8rem 1fr;
   gap: 1.5rem;
   padding: 1.5rem 0;
-  border-bottom: 1px solid var(--color-border);
-  color: var(--color-fg);
+  border-bottom: 1px solid var(--hairline);
+  color: var(--ink);
 }
 
 @media (max-width: 576px) {
   .writing-list-item { grid-template-columns: 1fr; gap: 0.5rem; }
 }
 
-.writing-list-item time { color: var(--color-muted); font-size: var(--text-body); }
+.writing-list-item time { color: var(--muted); font-size: var(--text-body); }
 .writing-list-item h3 { font-size: var(--text-lede); margin: 0; font-weight: 400; }
-.writing-list-item p { font-size: var(--text-body); color: var(--color-muted); margin-top: 0.5rem; }
+.writing-list-item p { font-size: var(--text-body); color: var(--muted); margin-top: 0.5rem; }
 
 /* ----------------------------------------------------------------------------
  * Article detail (writing post + work post) — editorial post layout.
@@ -1283,14 +1299,14 @@ a {
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0 0 1.5rem 0;
 }
 
 .detail-layout-title {
   font-size: clamp(2.3rem, 5vw, 3.3rem);
   font-weight: 700;
-  color: var(--color-fg);
+  color: var(--ink);
   line-height: 1.02;
   letter-spacing: -0.025em;
   margin: 0 0 0.5rem 0;
@@ -1299,7 +1315,7 @@ a {
 .detail-layout-dek {
   font-size: clamp(1.55rem, 3.2vw, 2.3rem);
   font-weight: 400;
-  color: var(--color-muted);
+  color: var(--muted);
   line-height: 1.16;
   letter-spacing: -0.015em;
   margin: 0 0 1.4rem 0;
@@ -1307,7 +1323,7 @@ a {
 
 .detail-layout-readtime {
   font-size: 0.85rem;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0;
 }
 
@@ -1330,7 +1346,7 @@ a {
   text-transform: uppercase;
   font-size: 0.66rem;
   letter-spacing: 0.2em;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0 0 0.3rem 0;
 }
 
@@ -1346,7 +1362,7 @@ a {
 .detail-layout-share-icons a,
 .detail-layout-copy {
   display: inline-flex;
-  color: var(--color-muted);
+  color: var(--muted);
   transition: color 0.2s;
   background: none;
   border: 0;
@@ -1360,7 +1376,7 @@ a {
 .detail-layout-share-icons a:focus-visible,
 .detail-layout-copy:hover,
 .detail-layout-copy:focus-visible {
-  color: var(--color-accent);
+  color: var(--accent);
 }
 
 .detail-layout-share-icons svg {
@@ -1382,7 +1398,7 @@ a {
 .detail-layout-body {
   font-size: 1.19rem;
   line-height: 1.62;
-  color: var(--color-fg);
+  color: var(--ink);
 }
 
 .detail-layout-body p {
@@ -1393,7 +1409,7 @@ a {
 .detail-layout-body h2 { font-size: clamp(1.6rem, 2.4vw, 1.9rem); padding-top: 2.4rem; margin: 0 0 0.9rem 0; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
 .detail-layout-body h3 { font-size: clamp(1.25rem, 1.8vw, 1.45rem); padding-top: 1.8rem; margin: 0 0 0.75rem 0; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; }
 .detail-layout-body a {
-  color: var(--color-accent);
+  color: var(--accent);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
@@ -1407,8 +1423,8 @@ a {
 }
 .detail-layout-body pre code {
   display: block;
-  background-color: var(--color-surface);
-  color: var(--color-fg);
+  background-color: var(--surface);
+  color: var(--ink);
   font-family: var(--font-mono);
   font-size: var(--text-small);
   line-height: 1.5;
@@ -1423,7 +1439,7 @@ a {
 
 .detail-layout-updated {
   font-size: 0.85rem;
-  color: var(--color-muted);
+  color: var(--muted);
   margin: 0 0 1.2rem 0;
 }
 
@@ -1439,8 +1455,8 @@ a {
 .detail-layout-tag {
   display: inline-block;
   padding: 0.45rem 1.05rem;
-  background-color: var(--color-surface);
-  color: var(--color-fg);
+  background-color: var(--surface);
+  color: var(--ink);
   border-radius: 999px;
   font-size: 0.85rem;
   transition: opacity 0.2s;
@@ -1482,10 +1498,10 @@ a {
 .mdx-pullquote {
   margin: 3rem 0;
   padding-left: 1.5rem;
-  border-left: 1px solid var(--color-border);
+  border-left: 1px solid var(--hairline);
   font-size: var(--text-lede);
   line-height: 1.3;
-  color: var(--color-fg);
+  color: var(--ink);
   font-weight: 400;
 }
 
@@ -1495,17 +1511,17 @@ a {
   font-size: var(--text-small);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .mdx-aside {
   margin: 2rem 0;
   padding: 1rem 1.25rem;
-  background-color: var(--color-surface);
-  border-left: 2px solid var(--color-accent);
+  background-color: var(--surface);
+  border-left: 2px solid var(--accent);
   border-radius: 0.375rem;
   font-size: var(--text-body);
-  color: var(--color-muted);
+  color: var(--muted);
   line-height: 1.6;
 }
 
@@ -1515,7 +1531,7 @@ a {
   font-size: var(--text-caption);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-fg);
+  color: var(--ink);
 }
 
 /* ----------------------------------------------------------------------------
@@ -1555,7 +1571,7 @@ a {
   font-weight: 400;
   margin: 1rem 0 3rem;
   max-width: 75%;
-  color: var(--color-muted);
+  color: var(--muted);
   font-size: var(--text-lede);
 }
 
@@ -1583,13 +1599,13 @@ a {
 .legal-container p {
   font-size: var(--text-body);
   line-height: 1.55;
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .legal-headline {
   margin-top: 10rem;
   font-weight: 400;
-  color: var(--color-fg);
+  color: var(--ink);
 }
 
 @media (max-width: 768px) {
@@ -1619,7 +1635,7 @@ a {
   align-items: flex-start;
   justify-content: center;
   padding-top: 12vh;
-  background-color: color-mix(in srgb, var(--color-bg) 70%, transparent);
+  background-color: color-mix(in srgb, var(--ground) 70%, transparent);
   backdrop-filter: blur(10px);
 }
 
@@ -1627,8 +1643,8 @@ a {
   width: 100%;
   max-width: 640px;
   margin: 0 1rem;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background-color: var(--surface);
+  border: 1px solid var(--hairline);
   border-radius: 0.5rem;
   overflow: hidden;
 }
@@ -1637,23 +1653,23 @@ a {
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--hairline);
   padding: 1rem 1.25rem;
   font-family: var(--font-mono);
   font-size: var(--text-small);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-fg);
+  color: var(--ink);
   outline: none;
-  caret-color: var(--color-accent);
+  caret-color: var(--accent);
 }
 
-.palette-input::placeholder { color: var(--color-muted); }
+.palette-input::placeholder { color: var(--muted); }
 
 .palette-empty {
   padding: 2.5rem 1.25rem;
   text-align: center;
-  color: var(--color-muted);
+  color: var(--muted);
   font-family: var(--font-mono);
   font-size: var(--text-small);
   letter-spacing: 0.04em;
@@ -1682,15 +1698,15 @@ a {
   border-top: none;
   border-right: none;
   border-bottom: none;
-  color: var(--color-fg);
+  color: var(--ink);
   font-family: inherit;
   transition: color 0.2s, border-color 0.2s;
 }
 
-.palette-row:hover { color: var(--color-fg); }
+.palette-row:hover { color: var(--ink); }
 
 .palette-row.is-selected {
-  border-left-color: var(--color-accent);
+  border-left-color: var(--accent);
 }
 
 .palette-row-title {
@@ -1708,7 +1724,7 @@ a {
   font-size: var(--text-caption);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .palette-row-return {
@@ -1716,7 +1732,7 @@ a {
   font-size: var(--text-caption);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 /* ----------------------------------------------------------------------------

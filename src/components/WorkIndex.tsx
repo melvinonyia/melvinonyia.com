@@ -21,7 +21,7 @@ export function WorkIndex({ caseStudies }: WorkIndexProps) {
     <div className="index-page">
       <h2 className="index-page__h">Work</h2>
       {caseStudies.length === 0 ? (
-        <p style={{ marginTop: '2rem', color: 'var(--color-muted)' }}>
+        <p style={{ marginTop: '2rem', color: 'var(--muted)' }}>
           No case studies yet — check back soon.
         </p>
       ) : (

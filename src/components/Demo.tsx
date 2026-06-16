@@ -28,7 +28,7 @@ function Placeholder({
     <div
       data-demo-placeholder
       style={{ minHeight: height }}
-      className="flex h-full w-full items-center justify-center rounded-md border border-border/40 bg-surface/40"
+      className="flex h-full w-full items-center justify-center rounded-md border border-hairline/40 bg-surface/40"
     >
       <p className="font-mono text-xs uppercase tracking-wide text-muted">
         {caption}

@@ -3,11 +3,11 @@ import { useState } from 'react'
 export default function MovementCounter() {
   const [reps, setReps] = useState(0)
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-3 rounded-md border border-border/40 bg-surface/60 px-6 py-8">
+    <div className="flex w-full flex-col items-center justify-center gap-3 rounded-md border border-hairline/40 bg-surface/60 px-6 py-8">
       <p className="font-mono text-xs uppercase tracking-wide text-muted">
         rep counter
       </p>
-      <p className="font-sans font-halbfett text-5xl text-fg tabular-nums">
+      <p className="font-sans font-halbfett text-5xl text-ink tabular-nums">
         {reps}
       </p>
       <div className="flex items-center gap-2">
@@ -21,7 +21,7 @@ export default function MovementCounter() {
         <button
           type="button"
           onClick={() => setReps(0)}
-          className="rounded-sm border border-border/60 px-4 py-2 font-sans font-buch text-sm text-muted transition-colors hover:text-fg hover:border-border focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="rounded-sm border border-hairline/60 px-4 py-2 font-sans font-buch text-sm text-muted transition-colors hover:text-ink hover:border-hairline focus-visible:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           reset
         </button>

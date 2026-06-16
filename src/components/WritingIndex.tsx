@@ -21,7 +21,7 @@ export function WritingIndex({ pieces }: WritingIndexProps) {
     <div className="index-page">
       <h2 className="index-page__h">Writing</h2>
       {pieces.length === 0 ? (
-        <p style={{ marginTop: '2rem', color: 'var(--color-muted)' }}>
+        <p style={{ marginTop: '2rem', color: 'var(--muted)' }}>
           No pieces yet — check back soon.
         </p>
       ) : (
