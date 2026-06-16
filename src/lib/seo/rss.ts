@@ -9,8 +9,8 @@ export interface RssChannel {
 export interface RssEntry {
   title: string
   link: string
-  date: string
-  excerpt?: string
+  published: string
+  dek?: string
 }
 
 function escapeXml(s: string): string {
@@ -30,17 +30,17 @@ function toRssDate(iso: string): string {
 
 export function buildRss(channel: RssChannel, entries: RssEntry[]): string {
   const lastBuildDate =
-    entries.length > 0 ? toRssDate(entries[0]!.date) : new Date(0).toUTCString()
+    entries.length > 0 ? toRssDate(entries[0]!.published) : new Date(0).toUTCString()
   const items = entries
     .map((e) => {
-      const desc = e.excerpt
-        ? `\n      <description>${escapeXml(e.excerpt)}</description>`
+      const desc = e.dek
+        ? `\n      <description>${escapeXml(e.dek)}</description>`
         : ''
       return `    <item>
       <title>${escapeXml(e.title)}</title>
       <link>${escapeXml(e.link)}</link>
       <guid isPermaLink="true">${escapeXml(e.link)}</guid>
-      <pubDate>${toRssDate(e.date)}</pubDate>${desc}
+      <pubDate>${toRssDate(e.published)}</pubDate>${desc}
     </item>`
     })
     .join('\n')

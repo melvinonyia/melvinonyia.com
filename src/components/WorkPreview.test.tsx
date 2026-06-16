@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import type { WorkPostSummary } from '~/lib/content/work'
+import type { CaseStudySummary } from '~/lib/content/work'
 
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
@@ -22,49 +22,49 @@ vi.mock('@tanstack/react-router', () => ({
   },
 }))
 
-import { RecentWork } from './RecentWork'
+import { WorkPreview } from './WorkPreview'
 
-const POST: WorkPostSummary = {
-  slug: 'a-test-project',
-  title: 'A Test Project',
-  date: '2025-09-01',
-  excerpt: 'Short summary.',
+const CASE_STUDY: CaseStudySummary = {
+  slug: 'a-test-case-study',
+  title: 'A Test Case Study',
+  published: '2025-09-01',
+  dek: 'Short summary.',
   tags: ['tooling', 'infra'],
-  heroImage: null,
+  leadImage: null,
   ogImage: null,
 }
 
-describe('RecentWork', () => {
-  it('renders nothing when there are no posts', () => {
-    const { container } = render(<RecentWork posts={[]} />)
+describe('WorkPreview', () => {
+  it('renders nothing when there are no cases', () => {
+    const { container } = render(<WorkPreview caseStudies={[]} />)
     expect(container.firstChild).toBeNull()
   })
 
-  it('renders the Selected work eyebrow + a row per post', () => {
-    render(<RecentWork posts={[POST]} />)
+  it('renders the Selected work eyebrow + a row per case', () => {
+    render(<WorkPreview caseStudies={[CASE_STUDY]} />)
     expect(screen.getByText('Selected work')).toBeInTheDocument()
-    expect(screen.getByText('A Test Project')).toBeInTheDocument()
+    expect(screen.getByText('A Test Case Study')).toBeInTheDocument()
     expect(screen.getByText('Short summary.')).toBeInTheDocument()
   })
 
-  it('shows the year derived from the post date', () => {
-    render(<RecentWork posts={[POST]} />)
+  it('shows the year derived from the case published date', () => {
+    render(<WorkPreview caseStudies={[CASE_STUDY]} />)
     expect(screen.getByText('2025')).toBeInTheDocument()
   })
 
   it('shows the tag list joined as a stack line', () => {
-    render(<RecentWork posts={[POST]} />)
+    render(<WorkPreview caseStudies={[CASE_STUDY]} />)
     expect(screen.getByText('tooling · infra')).toBeInTheDocument()
   })
 
   it('links the row to /work/$slug', () => {
-    render(<RecentWork posts={[POST]} />)
-    const row = screen.getByLabelText('A Test Project')
-    expect(row).toHaveAttribute('href', '/work/a-test-project')
+    render(<WorkPreview caseStudies={[CASE_STUDY]} />)
+    const row = screen.getByLabelText('A Test Case Study')
+    expect(row).toHaveAttribute('href', '/work/a-test-case-study')
   })
 
   it('renders the More Work CTA linking to /work', () => {
-    render(<RecentWork posts={[POST]} />)
+    render(<WorkPreview caseStudies={[CASE_STUDY]} />)
     const cta = screen.getByRole('link', { name: 'More Work' })
     expect(cta).toHaveAttribute('href', '/work')
   })

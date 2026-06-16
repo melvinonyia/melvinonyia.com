@@ -1,13 +1,13 @@
-import type { WorkPostSummary } from '~/lib/content/work'
-import type { EssaySummary } from '~/lib/content/writing'
+import type { CaseStudySummary } from '~/lib/content/work'
+import type { PieceSummary } from '~/lib/content/writing'
 
-export type SearchEntryKind = 'route' | 'work' | 'essay' | 'external' | 'mailto'
+export type SearchEntryKind = 'route' | 'case-study' | 'piece' | 'external' | 'mailto'
 
 export interface SearchEntry {
   id: string
   kind: SearchEntryKind
   title: string
-  excerpt?: string
+  dek?: string
   tags?: readonly string[]
   to?: string
   params?: Record<string, string>
@@ -22,14 +22,14 @@ export interface StaticEntryInput {
 }
 
 export interface BuildSearchIndexInput {
-  work: readonly WorkPostSummary[]
-  essays: readonly EssaySummary[]
+  caseStudies: readonly CaseStudySummary[]
+  pieces: readonly PieceSummary[]
   staticEntries: StaticEntryInput
 }
 
 export function buildSearchIndex({
-  work,
-  essays,
+  caseStudies,
+  pieces,
   staticEntries,
 }: BuildSearchIndexInput): SearchEntry[] {
   const entries: SearchEntry[] = []
@@ -38,27 +38,27 @@ export function buildSearchIndex({
     entries.push({ id: r.id, kind: 'route', title: r.title, to: r.to, hint: r.hint })
   }
 
-  for (const post of work) {
+  for (const c of caseStudies) {
     entries.push({
-      id: `work:${post.slug}`,
-      kind: 'work',
-      title: post.title,
-      excerpt: post.excerpt || undefined,
-      tags: post.tags,
+      id: `case-study:${c.slug}`,
+      kind: 'case-study',
+      title: c.title,
+      dek: c.dek || undefined,
+      tags: c.tags,
       to: '/work/$slug',
-      params: { slug: post.slug },
+      params: { slug: c.slug },
     })
   }
 
-  for (const essay of essays) {
+  for (const piece of pieces) {
     entries.push({
-      id: `essay:${essay.slug}`,
-      kind: 'essay',
-      title: essay.title,
-      excerpt: essay.excerpt || undefined,
-      tags: essay.tags,
+      id: `piece:${piece.slug}`,
+      kind: 'piece',
+      title: piece.title,
+      dek: piece.dek || undefined,
+      tags: piece.tags,
       to: '/writing/$slug',
-      params: { slug: essay.slug },
+      params: { slug: piece.slug },
     })
   }
 
@@ -107,13 +107,13 @@ function scoreField(text: string, query: string): number | null {
 export function scoreEntry(entry: SearchEntry, query: string): number | null {
   if (!query) return 0
   const titleScore = scoreField(entry.title, query)
-  const excerptScore = entry.excerpt ? scoreField(entry.excerpt, query) : null
+  const dekScore = entry.dek ? scoreField(entry.dek, query) : null
   const tagScores = entry.tags
     ? entry.tags.map((t) => scoreField(t, query)).filter((s): s is number => s !== null)
     : []
   const candidates: number[] = []
   if (titleScore !== null) candidates.push(titleScore)
-  if (excerptScore !== null) candidates.push(excerptScore * 0.5)
+  if (dekScore !== null) candidates.push(dekScore * 0.5)
   for (const t of tagScores) candidates.push(t * 0.4)
   if (candidates.length === 0) return null
   return Math.max(...candidates)

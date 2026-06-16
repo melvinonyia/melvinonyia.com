@@ -1,32 +1,32 @@
 import type { ComponentType } from 'react'
 
-export interface EssayFrontmatter {
+export interface PieceFrontmatter {
   title: string
-  date: string
-  excerpt?: string
+  published: string
+  dek?: string
   tags?: string[]
   readTime?: number
-  coverImage?: string
+  leadImage?: string
   ogImage?: string
 }
 
-export interface EssaySummary {
+export interface PieceSummary {
   slug: string
   title: string
-  date: string
-  excerpt: string
+  published: string
+  dek: string
   tags: string[]
   readTime?: number
-  coverImage?: string | null
+  leadImage?: string | null
   ogImage: string | null
 }
 
-export interface Essay extends EssaySummary {
+export interface Piece extends PieceSummary {
   Body: ComponentType<{ components?: Record<string, ComponentType<any>> }>
 }
 
 interface MdxModule {
-  frontmatter: EssayFrontmatter
+  frontmatter: PieceFrontmatter
   default: ComponentType<{ components?: Record<string, ComponentType<any>> }>
 }
 
@@ -38,49 +38,49 @@ function slugFromPath(filePath: string): string {
   return match[1]!
 }
 
-function toEssay(filePath: string, mod: MdxModule): Essay {
+function toPiece(filePath: string, mod: MdxModule): Piece {
   return {
     slug: slugFromPath(filePath),
     title: mod.frontmatter.title,
-    date: mod.frontmatter.date,
-    excerpt: mod.frontmatter.excerpt ?? '',
+    published: mod.frontmatter.published,
+    dek: mod.frontmatter.dek ?? '',
     tags: mod.frontmatter.tags ?? [],
     readTime: mod.frontmatter.readTime,
-    coverImage: mod.frontmatter.coverImage ?? null,
+    leadImage: mod.frontmatter.leadImage ?? null,
     ogImage: mod.frontmatter.ogImage ?? null,
     Body: mod.default,
   }
 }
 
-function summarize(essay: Essay): EssaySummary {
-  const { Body: _Body, ...summary } = essay
+function summarize(piece: Piece): PieceSummary {
+  const { Body: _Body, ...summary } = piece
   void _Body
   return summary
 }
 
-export function getEssays(): Essay[] {
+export function getPieces(): Piece[] {
   return Object.entries(modules)
-    .map(([filePath, mod]) => toEssay(filePath, mod))
-    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .map(([filePath, mod]) => toPiece(filePath, mod))
+    .sort((a, b) => (a.published < b.published ? 1 : -1))
 }
 
-export function getEssay(slug: string): Essay | null {
-  return getEssays().find((e) => e.slug === slug) ?? null
+export function getPiece(slug: string): Piece | null {
+  return getPieces().find((p) => p.slug === slug) ?? null
 }
 
-export function getEssaySummaries(): EssaySummary[] {
-  return getEssays().map(summarize)
+export function getPieceSummaries(): PieceSummary[] {
+  return getPieces().map(summarize)
 }
 
-export class EssayNotFoundError extends Error {
+export class PieceNotFoundError extends Error {
   constructor(public readonly slug: string) {
-    super(`Essay not found: ${slug}`)
-    this.name = 'EssayNotFoundError'
+    super(`Piece not found: ${slug}`)
+    this.name = 'PieceNotFoundError'
   }
 }
 
-export function resolveEssay(slug: string): Essay {
-  const essay = getEssay(slug)
-  if (!essay) throw new EssayNotFoundError(slug)
-  return essay
+export function resolvePiece(slug: string): Piece {
+  const piece = getPiece(slug)
+  if (!piece) throw new PieceNotFoundError(slug)
+  return piece
 }

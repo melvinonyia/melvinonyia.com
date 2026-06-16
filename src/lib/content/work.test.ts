@@ -1,55 +1,60 @@
 import { describe, it, expect } from 'vitest'
-import { getWorkPosts, getWorkPost, resolveWorkPost, WorkNotFoundError } from './work'
+import {
+  getCaseStudies,
+  getCaseStudy,
+  resolveCaseStudy,
+  CaseStudyNotFoundError,
+} from './work'
 
 describe('work content collection', () => {
-  it('parses frontmatter into a typed list of posts', () => {
-    const posts = getWorkPosts()
-    expect(posts.length).toBeGreaterThanOrEqual(2)
+  it('parses frontmatter into a typed list of case studies', () => {
+    const cases = getCaseStudies()
+    expect(cases.length).toBeGreaterThanOrEqual(2)
 
-    const fingerprint = posts.find((p) => p.slug === 'movement-fingerprint')
+    const fingerprint = cases.find((c) => c.slug === 'movement-fingerprint')
     expect(fingerprint).toBeDefined()
     expect(fingerprint!.title).toBe('Movement fingerprint engine')
-    expect(fingerprint!.date).toBe('2025-11-12')
+    expect(fingerprint!.published).toBe('2025-11-12')
     expect(fingerprint!.tags).toEqual(
       expect.arrayContaining(['biomechanics', 'signal processing', 'engineering']),
     )
-    expect(fingerprint!.heroImage).toBeNull()
+    expect(fingerprint!.leadImage).toBeNull()
     expect(fingerprint!.ogImage).toBeNull()
     expect(typeof fingerprint!.Body).toBe('function')
   })
 
   it('derives slug from the source filename', () => {
-    const slugs = getWorkPosts().map((p) => p.slug)
+    const slugs = getCaseStudies().map((c) => c.slug)
     expect(slugs).toEqual(expect.arrayContaining(['movement-fingerprint', 'gait-lab-toolkit']))
   })
 
-  it('sorts posts reverse-chronologically by date', () => {
-    const dates = getWorkPosts().map((p) => p.date)
+  it('sorts case studies reverse-chronologically by published date', () => {
+    const dates = getCaseStudies().map((c) => c.published)
     const sorted = [...dates].sort((a, b) => (a < b ? 1 : -1))
     expect(dates).toEqual(sorted)
   })
 
-  it('falls back to an empty excerpt when frontmatter omits it', () => {
-    const gait = getWorkPost('gait-lab-toolkit')
+  it('falls back to an empty dek when frontmatter omits it', () => {
+    const gait = getCaseStudy('gait-lab-toolkit')
     expect(gait).not.toBeNull()
-    expect(gait!.excerpt).toBe('')
+    expect(gait!.dek).toBe('')
   })
 
-  it('exposes excerpt from frontmatter when present', () => {
-    const fingerprint = getWorkPost('movement-fingerprint')
-    expect(fingerprint!.excerpt).toMatch(/per-athlete kinematic signatures/)
+  it('exposes dek from frontmatter when present', () => {
+    const fingerprint = getCaseStudy('movement-fingerprint')
+    expect(fingerprint!.dek).toMatch(/per-athlete kinematic signatures/)
   })
 
-  it('getWorkPost returns null for unknown slugs', () => {
-    expect(getWorkPost('does-not-exist')).toBeNull()
+  it('getCaseStudy returns null for unknown slugs', () => {
+    expect(getCaseStudy('does-not-exist')).toBeNull()
   })
 
-  it('resolveWorkPost returns the post for a known slug', () => {
-    const post = resolveWorkPost('movement-fingerprint')
-    expect(post.slug).toBe('movement-fingerprint')
+  it('resolveCaseStudy returns the case study for a known slug', () => {
+    const c = resolveCaseStudy('movement-fingerprint')
+    expect(c.slug).toBe('movement-fingerprint')
   })
 
-  it('resolveWorkPost throws WorkNotFoundError for an unknown slug', () => {
-    expect(() => resolveWorkPost('does-not-exist')).toThrow(WorkNotFoundError)
+  it('resolveCaseStudy throws CaseStudyNotFoundError for an unknown slug', () => {
+    expect(() => resolveCaseStudy('does-not-exist')).toThrow(CaseStudyNotFoundError)
   })
 })

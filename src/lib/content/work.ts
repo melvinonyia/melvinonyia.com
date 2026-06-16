@@ -1,45 +1,45 @@
 import type { ComponentType } from 'react'
 
-export interface WorkFrontmatter {
+export interface CaseStudyFrontmatter {
   title: string
-  date: string
-  excerpt?: string
+  published: string
+  dek?: string
   tags?: string[]
-  heroImage?: string
+  leadImage?: string
   ogImage?: string
 }
 
-export interface WorkPostSummary {
+export interface CaseStudySummary {
   slug: string
   title: string
-  date: string
-  excerpt: string
+  published: string
+  dek: string
   tags: string[]
-  heroImage: string | null
+  leadImage: string | null
   ogImage: string | null
 }
 
-export interface WorkPost extends WorkPostSummary {
+export interface CaseStudy extends CaseStudySummary {
   Body: ComponentType
 }
 
-function summarize(post: WorkPost): WorkPostSummary {
-  const { Body: _Body, ...summary } = post
+function summarize(c: CaseStudy): CaseStudySummary {
+  const { Body: _Body, ...summary } = c
   void _Body
   return summary
 }
 
-export function getWorkPostSummaries(): WorkPostSummary[] {
-  return getWorkPosts().map(summarize)
+export function getCaseStudySummaries(): CaseStudySummary[] {
+  return getCaseStudies().map(summarize)
 }
 
-export function getWorkPostSummary(slug: string): WorkPostSummary | null {
-  const post = getWorkPost(slug)
-  return post ? summarize(post) : null
+export function getCaseStudySummary(slug: string): CaseStudySummary | null {
+  const c = getCaseStudy(slug)
+  return c ? summarize(c) : null
 }
 
 interface MdxModule {
-  frontmatter: WorkFrontmatter
+  frontmatter: CaseStudyFrontmatter
   default: ComponentType
 }
 
@@ -51,38 +51,38 @@ function slugFromPath(filePath: string): string {
   return match[1]!
 }
 
-function toWorkPost(filePath: string, mod: MdxModule): WorkPost {
+function toCaseStudy(filePath: string, mod: MdxModule): CaseStudy {
   return {
     slug: slugFromPath(filePath),
     title: mod.frontmatter.title,
-    date: mod.frontmatter.date,
-    excerpt: mod.frontmatter.excerpt ?? '',
+    published: mod.frontmatter.published,
+    dek: mod.frontmatter.dek ?? '',
     tags: mod.frontmatter.tags ?? [],
-    heroImage: mod.frontmatter.heroImage ?? null,
+    leadImage: mod.frontmatter.leadImage ?? null,
     ogImage: mod.frontmatter.ogImage ?? null,
     Body: mod.default,
   }
 }
 
-export function getWorkPosts(): WorkPost[] {
+export function getCaseStudies(): CaseStudy[] {
   return Object.entries(modules)
-    .map(([filePath, mod]) => toWorkPost(filePath, mod))
-    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .map(([filePath, mod]) => toCaseStudy(filePath, mod))
+    .sort((a, b) => (a.published < b.published ? 1 : -1))
 }
 
-export function getWorkPost(slug: string): WorkPost | null {
-  return getWorkPosts().find((p) => p.slug === slug) ?? null
+export function getCaseStudy(slug: string): CaseStudy | null {
+  return getCaseStudies().find((c) => c.slug === slug) ?? null
 }
 
-export class WorkNotFoundError extends Error {
+export class CaseStudyNotFoundError extends Error {
   constructor(public readonly slug: string) {
-    super(`Work post not found: ${slug}`)
-    this.name = 'WorkNotFoundError'
+    super(`Case study not found: ${slug}`)
+    this.name = 'CaseStudyNotFoundError'
   }
 }
 
-export function resolveWorkPost(slug: string): WorkPost {
-  const post = getWorkPost(slug)
-  if (!post) throw new WorkNotFoundError(slug)
-  return post
+export function resolveCaseStudy(slug: string): CaseStudy {
+  const c = getCaseStudy(slug)
+  if (!c) throw new CaseStudyNotFoundError(slug)
+  return c
 }

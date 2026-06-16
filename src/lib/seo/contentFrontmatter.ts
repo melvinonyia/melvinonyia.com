@@ -4,8 +4,8 @@ import path from 'node:path'
 export interface ContentFrontmatter {
   slug: string
   title?: string
-  date?: string
-  excerpt?: string
+  published?: string
+  dek?: string
 }
 
 function extractFrontmatter(source: string): Record<string, string> {
@@ -46,13 +46,13 @@ export function readContentFrontmatter(dir: string): ContentFrontmatter[] {
       return {
         slug,
         title: fm.title,
-        date: fm.date,
-        excerpt: fm.excerpt,
+        published: fm.published,
+        dek: fm.dek,
       }
     })
     .sort((a, b) => {
-      const da = a.date ?? ''
-      const db = b.date ?? ''
+      const da = a.published ?? ''
+      const db = b.published ?? ''
       return db.localeCompare(da)
     })
 }

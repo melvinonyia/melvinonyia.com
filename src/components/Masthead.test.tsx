@@ -1,27 +1,27 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import { Hero } from './Hero'
+import { Masthead } from './Masthead'
 
-describe('Hero', () => {
+describe('Masthead', () => {
   it('renders the name as the page h1', () => {
-    render(<Hero name="Melvin Onyia" />)
+    render(<Masthead name="Melvin Onyia" />)
     const heading = screen.getByRole('heading', { level: 1, name: 'Melvin Onyia' })
     expect(heading).toBeInTheDocument()
   })
 
   it('renders the eyebrow above the name', () => {
-    render(<Hero eyebrow="Staff Software Engineer" />)
+    render(<Masthead eyebrow="Staff Software Engineer" />)
     expect(screen.getByText('Staff Software Engineer')).toBeInTheDocument()
   })
 
   it('renders the statement paragraph', () => {
-    render(<Hero statement="A short statement about the work." />)
+    render(<Masthead statement="A short statement about the work." />)
     expect(screen.getByText(/A short statement about the work/)).toBeInTheDocument()
   })
 
   it('renders each meta row as a dt/dd pair', () => {
     render(
-      <Hero
+      <Masthead
         meta={[
           { label: 'Focus', value: 'Human-facing products' },
           { label: 'Based', value: 'Remote · US' },

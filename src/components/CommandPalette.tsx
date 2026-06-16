@@ -22,10 +22,10 @@ function kindLabel(kind: SearchEntry['kind']): string {
   switch (kind) {
     case 'route':
       return 'Route'
-    case 'work':
-      return 'Work'
-    case 'essay':
-      return 'Essay'
+    case 'case-study':
+      return 'Case study'
+    case 'piece':
+      return 'Piece'
     case 'external':
       return 'External'
     case 'mailto':

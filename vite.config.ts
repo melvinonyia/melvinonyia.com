@@ -40,20 +40,20 @@ function emitSeoArtifactsPlugin(): Plugin {
           // already exists
         }
 
-        const work = readContentFrontmatter(path.resolve(__dirname, './content/work'))
-        const essays = readContentFrontmatter(
+        const caseStudies = readContentFrontmatter(path.resolve(__dirname, './content/work'))
+        const pieces = readContentFrontmatter(
           path.resolve(__dirname, './content/writing'),
         )
 
         const sitemapEntries = [
           ...STATIC_SITEMAP_ROUTES.map((p) => ({ loc: `${SITE_URL}${p}` })),
-          ...work.map((w) => ({
-            loc: `${SITE_URL}/work/${w.slug}`,
-            lastmod: w.date,
+          ...caseStudies.map((c) => ({
+            loc: `${SITE_URL}/work/${c.slug}`,
+            lastmod: c.published,
           })),
-          ...essays.map((e) => ({
-            loc: `${SITE_URL}/writing/${e.slug}`,
-            lastmod: e.date,
+          ...pieces.map((p) => ({
+            loc: `${SITE_URL}/writing/${p.slug}`,
+            lastmod: p.published,
           })),
         ]
         writeFileSync(
@@ -68,14 +68,14 @@ function emitSeoArtifactsPlugin(): Plugin {
             feedUrl: `${SITE_URL}/rss.xml`,
             title: 'Melvin Onyia — Writing',
             description:
-              'Essays on biomechanics, performance, and the systems that connect lab work to the field.',
+              'Pieces on biomechanics, performance, and the systems that connect lab work to the field.',
             language: 'en-US',
           },
-          essays.map((e) => ({
-            title: e.title ?? e.slug,
-            link: `${SITE_URL}/writing/${e.slug}`,
-            date: e.date ?? '',
-            excerpt: e.excerpt,
+          pieces.map((p) => ({
+            title: p.title ?? p.slug,
+            link: `${SITE_URL}/writing/${p.slug}`,
+            published: p.published ?? '',
+            dek: p.dek,
           })),
         )
         writeFileSync(path.join(outDir, 'rss.xml'), rssXml, 'utf8')

@@ -1,33 +1,33 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import {
-  getWorkPost,
-  getWorkPostSummaries,
-  resolveWorkPost,
-  WorkNotFoundError,
+  getCaseStudy,
+  getCaseStudySummaries,
+  resolveCaseStudy,
+  CaseStudyNotFoundError,
 } from '~/lib/content/work'
-import { WorkPostView } from '~/components/WorkPostView'
-import { workPostHead } from '~/lib/seo/workPostHead'
+import { CaseStudyView } from '~/components/CaseStudyView'
+import { caseStudyPageHead } from '~/lib/seo/caseStudyPageHead'
 
 export const Route = createFileRoute('/work/$slug')({
   loader: ({ params }) => {
     try {
-      const post = resolveWorkPost(params.slug)
-      const { Body: _Body, ...summary } = post
+      const c = resolveCaseStudy(params.slug)
+      const { Body: _Body, ...summary } = c
       void _Body
-      const position = getWorkPostSummaries().findIndex((p) => p.slug === params.slug)
+      const position = getCaseStudySummaries().findIndex((s) => s.slug === params.slug)
       return { summary, position: position >= 0 ? position : 0 }
     } catch (err) {
-      if (err instanceof WorkNotFoundError) throw notFound()
+      if (err instanceof CaseStudyNotFoundError) throw notFound()
       throw err
     }
   },
-  head: ({ loaderData }) => (loaderData ? workPostHead(loaderData.summary) : {}),
-  component: WorkPostPage,
+  head: ({ loaderData }) => (loaderData ? caseStudyPageHead(loaderData.summary) : {}),
+  component: CaseStudyPage,
 })
 
-function WorkPostPage() {
+function CaseStudyPage() {
   const { summary, position } = Route.useLoaderData()
-  const post = getWorkPost(summary.slug)
-  if (!post) throw notFound()
-  return <WorkPostView post={post} position={position} />
+  const c = getCaseStudy(summary.slug)
+  if (!c) throw notFound()
+  return <CaseStudyView caseStudy={c} position={position} />
 }

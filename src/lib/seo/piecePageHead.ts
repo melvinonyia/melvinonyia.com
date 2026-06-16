@@ -1,14 +1,13 @@
 import { SITE_NAME, SITE_URL } from './homeHead'
-import type { WorkPostSummary } from '~/lib/content/work'
+import type { PieceSummary } from '~/lib/content/writing'
 
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og/work.png`
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og/writing.png`
 
-export function workPostHead(post: WorkPostSummary) {
-  const url = `${SITE_URL}/work/${post.slug}`
-  const title = `${post.title} — ${SITE_NAME}`
-  const description =
-    post.excerpt || `${post.title}. A case study by ${SITE_NAME}.`
-  const ogPath = post.ogImage ?? post.heroImage
+export function piecePageHead(piece: PieceSummary) {
+  const url = `${SITE_URL}/writing/${piece.slug}`
+  const title = `${piece.title} — ${SITE_NAME}`
+  const description = piece.dek || `${piece.title}. A piece by ${SITE_NAME}.`
+  const ogPath = piece.ogImage ?? piece.leadImage
   const image = ogPath ? `${SITE_URL}${ogPath}` : DEFAULT_OG_IMAGE
 
   return {
@@ -22,7 +21,7 @@ export function workPostHead(post: WorkPostSummary) {
       { property: 'og:url', content: url },
       { property: 'og:image', content: image },
       { property: 'og:site_name', content: SITE_NAME },
-      { property: 'article:published_time', content: post.date },
+      { property: 'article:published_time', content: piece.published },
 
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: title },

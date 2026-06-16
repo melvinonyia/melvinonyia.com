@@ -1,15 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { getEssaySummaries } from '~/lib/content/writing'
-import { WritingIndexView } from '~/components/WritingIndexView'
+import { getPieceSummaries } from '~/lib/content/writing'
+import { WritingIndex } from '~/components/WritingIndex'
 import { writingHead } from '~/lib/seo/writingHead'
 
 export const Route = createFileRoute('/writing/')({
   head: writingHead,
-  loader: () => ({ essays: getEssaySummaries() }),
+  loader: () => ({ pieces: getPieceSummaries() }),
   component: WritingIndexPage,
 })
 
 function WritingIndexPage() {
-  const { essays } = Route.useLoaderData()
-  return <WritingIndexView essays={essays} />
+  const { pieces } = Route.useLoaderData()
+  return <WritingIndex pieces={pieces} />
 }

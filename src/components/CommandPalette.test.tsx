@@ -36,10 +36,10 @@ const FIXTURE: SearchEntry[] = [
   { id: 'route:home', kind: 'route', title: 'Home', to: '/' },
   { id: 'route:work', kind: 'route', title: 'Work', to: '/work' },
   {
-    id: 'work:fingerprint',
-    kind: 'work',
+    id: 'case-study:fingerprint',
+    kind: 'case-study',
     title: 'Movement fingerprint',
-    excerpt: 'Gait individuality',
+    dek: 'Gait individuality',
     to: '/work/$slug',
     params: { slug: 'movement-fingerprint' },
   },

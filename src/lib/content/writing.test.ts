@@ -1,59 +1,59 @@
 import { describe, it, expect } from 'vitest'
 import {
-  getEssays,
-  getEssay,
-  getEssaySummaries,
-  resolveEssay,
-  EssayNotFoundError,
+  getPieces,
+  getPiece,
+  getPieceSummaries,
+  resolvePiece,
+  PieceNotFoundError,
 } from './writing'
 
 describe('writing content collection', () => {
-  it('parses frontmatter into a typed list of essays', () => {
-    const essays = getEssays()
-    expect(essays.length).toBeGreaterThanOrEqual(1)
+  it('parses frontmatter into a typed list of pieces', () => {
+    const pieces = getPieces()
+    expect(pieces.length).toBeGreaterThanOrEqual(1)
 
-    const fixture = essays.find((e) => e.slug === 'the-leg-between-lab-and-field')
+    const fixture = pieces.find((p) => p.slug === 'the-leg-between-lab-and-field')
     expect(fixture).toBeDefined()
     expect(fixture!.title).toBe('The leg between lab and field')
-    expect(fixture!.date).toBe('2025-10-08')
+    expect(fixture!.published).toBe('2025-10-08')
     expect(fixture!.tags).toEqual(expect.arrayContaining(['notes', 'biomechanics']))
     expect(typeof fixture!.Body).toBe('function')
   })
 
   it('derives slug from the source filename', () => {
-    const slugs = getEssays().map((e) => e.slug)
+    const slugs = getPieces().map((p) => p.slug)
     expect(slugs).toContain('the-leg-between-lab-and-field')
   })
 
-  it('sorts essays reverse-chronologically by date', () => {
-    const dates = getEssays().map((e) => e.date)
+  it('sorts pieces reverse-chronologically by published date', () => {
+    const dates = getPieces().map((p) => p.published)
     const sorted = [...dates].sort((a, b) => (a < b ? 1 : -1))
     expect(dates).toEqual(sorted)
   })
 
-  it('exposes excerpt from frontmatter when present', () => {
-    const essay = getEssay('the-leg-between-lab-and-field')
-    expect(essay).not.toBeNull()
-    expect(essay!.excerpt).toMatch(/movement-science findings/)
+  it('exposes dek from frontmatter when present', () => {
+    const piece = getPiece('the-leg-between-lab-and-field')
+    expect(piece).not.toBeNull()
+    expect(piece!.dek).toMatch(/movement-science findings/)
   })
 
-  it('getEssay returns null for unknown slugs', () => {
-    expect(getEssay('does-not-exist')).toBeNull()
+  it('getPiece returns null for unknown slugs', () => {
+    expect(getPiece('does-not-exist')).toBeNull()
   })
 
-  it('getEssaySummaries excludes the Body component for loader-safe payloads', () => {
-    const summaries = getEssaySummaries()
+  it('getPieceSummaries excludes the Body component for loader-safe payloads', () => {
+    const summaries = getPieceSummaries()
     expect(summaries.length).toBeGreaterThan(0)
     summaries.forEach((s) => expect('Body' in s).toBe(false))
   })
 
-  it('resolveEssay returns the essay for a known slug', () => {
-    expect(resolveEssay('the-leg-between-lab-and-field').slug).toBe(
+  it('resolvePiece returns the piece for a known slug', () => {
+    expect(resolvePiece('the-leg-between-lab-and-field').slug).toBe(
       'the-leg-between-lab-and-field',
     )
   })
 
-  it('resolveEssay throws EssayNotFoundError for an unknown slug', () => {
-    expect(() => resolveEssay('nope')).toThrow(EssayNotFoundError)
+  it('resolvePiece throws PieceNotFoundError for an unknown slug', () => {
+    expect(() => resolvePiece('nope')).toThrow(PieceNotFoundError)
   })
 })

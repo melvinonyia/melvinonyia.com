@@ -1,13 +1,13 @@
 import { SITE_NAME, SITE_URL } from './homeHead'
-import type { EssaySummary } from '~/lib/content/writing'
+import type { CaseStudySummary } from '~/lib/content/work'
 
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og/writing.png`
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og/work.png`
 
-export function writingPostHead(essay: EssaySummary) {
-  const url = `${SITE_URL}/writing/${essay.slug}`
-  const title = `${essay.title} — ${SITE_NAME}`
-  const description = essay.excerpt || `${essay.title}. An essay by ${SITE_NAME}.`
-  const ogPath = essay.ogImage ?? essay.coverImage
+export function caseStudyPageHead(c: CaseStudySummary) {
+  const url = `${SITE_URL}/work/${c.slug}`
+  const title = `${c.title} — ${SITE_NAME}`
+  const description = c.dek || `${c.title}. A case study by ${SITE_NAME}.`
+  const ogPath = c.ogImage ?? c.leadImage
   const image = ogPath ? `${SITE_URL}${ogPath}` : DEFAULT_OG_IMAGE
 
   return {
@@ -21,7 +21,7 @@ export function writingPostHead(essay: EssaySummary) {
       { property: 'og:url', content: url },
       { property: 'og:image', content: image },
       { property: 'og:site_name', content: SITE_NAME },
-      { property: 'article:published_time', content: essay.date },
+      { property: 'article:published_time', content: c.published },
 
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: title },

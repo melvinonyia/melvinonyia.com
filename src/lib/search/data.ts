@@ -1,5 +1,5 @@
-import { getEssaySummaries } from '~/lib/content/writing'
-import { getWorkPostSummaries } from '~/lib/content/work'
+import { getPieceSummaries } from '~/lib/content/writing'
+import { getCaseStudySummaries } from '~/lib/content/work'
 import { CONTACT_EMAIL, SOCIAL_LINKS } from '~/lib/site/socials'
 import {
   buildSearchIndex,
@@ -34,8 +34,8 @@ let cached: SearchEntry[] | null = null
 export function getSearchEntries(): SearchEntry[] {
   if (cached) return cached
   cached = buildSearchIndex({
-    work: getWorkPostSummaries(),
-    essays: getEssaySummaries(),
+    caseStudies: getCaseStudySummaries(),
+    pieces: getPieceSummaries(),
     staticEntries: STATIC_ENTRIES,
   })
   return cached

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import type { WorkPostSummary } from '~/lib/content/work'
-import type { EssaySummary } from '~/lib/content/writing'
+import type { CaseStudySummary } from '~/lib/content/work'
+import type { PieceSummary } from '~/lib/content/writing'
 import {
   buildSearchIndex,
   scoreEntry,
@@ -9,25 +9,25 @@ import {
   type StaticEntryInput,
 } from './indexer'
 
-function makeWork(overrides: Partial<WorkPostSummary>): WorkPostSummary {
+function makeCaseStudy(overrides: Partial<CaseStudySummary>): CaseStudySummary {
   return {
     slug: 'placeholder',
     title: 'Placeholder',
-    date: '2025-01-01',
-    excerpt: '',
+    published: '2025-01-01',
+    dek: '',
     tags: [],
-    heroImage: null,
+    leadImage: null,
     ogImage: null,
     ...overrides,
   }
 }
 
-function makeEssay(overrides: Partial<EssaySummary>): EssaySummary {
+function makePiece(overrides: Partial<PieceSummary>): PieceSummary {
   return {
     slug: 'placeholder',
     title: 'Placeholder',
-    date: '2025-01-01',
-    excerpt: '',
+    published: '2025-01-01',
+    dek: '',
     tags: [],
     ogImage: null,
     ...overrides,
@@ -50,57 +50,57 @@ const STATIC_FIXTURE: StaticEntryInput = {
 }
 
 describe('buildSearchIndex', () => {
-  it('produces routes, work, essays, externals, and the mailto in that order', () => {
+  it('produces routes, case studies, pieces, externals, and the mailto in that order', () => {
     const entries = buildSearchIndex({
-      work: [makeWork({ slug: 'fingerprint', title: 'Movement fingerprint' })],
-      essays: [makeEssay({ slug: 'leg', title: 'The leg' })],
+      caseStudies: [makeCaseStudy({ slug: 'fingerprint', title: 'Movement fingerprint' })],
+      pieces: [makePiece({ slug: 'leg', title: 'The leg' })],
       staticEntries: STATIC_FIXTURE,
     })
     const kinds = entries.map((e) => e.kind)
-    expect(kinds).toEqual(['route', 'route', 'work', 'essay', 'external', 'mailto'])
+    expect(kinds).toEqual(['route', 'route', 'case-study', 'piece', 'external', 'mailto'])
   })
 
-  it('maps work posts to the /work/$slug route with params', () => {
+  it('maps case studies to the /work/$slug route with params', () => {
     const entries = buildSearchIndex({
-      work: [makeWork({ slug: 'fingerprint', title: 'Movement fingerprint' })],
-      essays: [],
+      caseStudies: [makeCaseStudy({ slug: 'fingerprint', title: 'Movement fingerprint' })],
+      pieces: [],
       staticEntries: STATIC_FIXTURE,
     })
-    const workEntry = entries.find((e) => e.kind === 'work')
-    expect(workEntry).toBeDefined()
-    expect(workEntry!.to).toBe('/work/$slug')
-    expect(workEntry!.params).toEqual({ slug: 'fingerprint' })
-    expect(workEntry!.id).toBe('work:fingerprint')
+    const csEntry = entries.find((e) => e.kind === 'case-study')
+    expect(csEntry).toBeDefined()
+    expect(csEntry!.to).toBe('/work/$slug')
+    expect(csEntry!.params).toEqual({ slug: 'fingerprint' })
+    expect(csEntry!.id).toBe('case-study:fingerprint')
   })
 
-  it('maps essays to the /writing/$slug route with params', () => {
+  it('maps pieces to the /writing/$slug route with params', () => {
     const entries = buildSearchIndex({
-      work: [],
-      essays: [makeEssay({ slug: 'leg', title: 'The leg' })],
+      caseStudies: [],
+      pieces: [makePiece({ slug: 'leg', title: 'The leg' })],
       staticEntries: STATIC_FIXTURE,
     })
-    const essayEntry = entries.find((e) => e.kind === 'essay')!
-    expect(essayEntry.to).toBe('/writing/$slug')
-    expect(essayEntry.params).toEqual({ slug: 'leg' })
+    const pieceEntry = entries.find((e) => e.kind === 'piece')!
+    expect(pieceEntry.to).toBe('/writing/$slug')
+    expect(pieceEntry.params).toEqual({ slug: 'leg' })
   })
 
-  it('omits empty excerpts', () => {
+  it('omits empty deks', () => {
     const entries = buildSearchIndex({
-      work: [makeWork({ slug: 'x', title: 'X', excerpt: '' })],
-      essays: [],
+      caseStudies: [makeCaseStudy({ slug: 'x', title: 'X', dek: '' })],
+      pieces: [],
       staticEntries: STATIC_FIXTURE,
     })
-    const w = entries.find((e) => e.kind === 'work')!
-    expect(w.excerpt).toBeUndefined()
+    const c = entries.find((e) => e.kind === 'case-study')!
+    expect(c.dek).toBeUndefined()
   })
 })
 
 describe('scoreEntry', () => {
   const sample: SearchEntry = {
-    id: 'work:fingerprint',
-    kind: 'work',
+    id: 'case-study:fingerprint',
+    kind: 'case-study',
     title: 'Movement fingerprint',
-    excerpt: 'A study of gait individuality across runners.',
+    dek: 'A study of gait individuality across runners.',
     tags: ['gait', 'biomechanics'],
   }
 
@@ -112,10 +112,10 @@ describe('scoreEntry', () => {
     expect(prefix!).toBeGreaterThan(mid!)
   })
 
-  it('scores a title substring match higher than an excerpt-only match', () => {
+  it('scores a title substring match higher than a dek-only match', () => {
     const titleHit = scoreEntry(sample, 'fingerprint')
-    const excerptOnly = scoreEntry(sample, 'individuality')
-    expect(titleHit!).toBeGreaterThan(excerptOnly!)
+    const dekOnly = scoreEntry(sample, 'individuality')
+    expect(titleHit!).toBeGreaterThan(dekOnly!)
   })
 
   it('matches via subsequence with a lower score', () => {

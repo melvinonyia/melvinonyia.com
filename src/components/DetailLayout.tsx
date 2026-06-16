@@ -3,20 +3,20 @@ import { SiX } from 'react-icons/si'
 import { FaLinkedinIn, FaRegCopy, FaCheck } from 'react-icons/fa'
 import { SITE_URL } from '~/lib/seo/homeHead'
 
-export interface ArticleDetailData {
+export interface DetailLayoutData {
   slug: string
   title: string
-  subtitle?: string
-  date: string
+  dek?: string
+  published: string
   category?: string
   readTime?: number
   tags: string[]
-  coverImage?: string | null
+  leadImage?: string | null
   Body: ComponentType<{ components?: Record<string, ComponentType<any>> }>
 }
 
-interface ArticleDetailProps {
-  data: ArticleDetailData
+interface DetailLayoutProps {
+  data: DetailLayoutData
   basePath: '/writing' | '/work'
   mdxComponents?: Record<string, ComponentType<any>>
 }
@@ -71,7 +71,7 @@ function CopyLinkButton({ url }: { url: string }) {
     <button
       type="button"
       onClick={copy}
-      className="article-detail-copy"
+      className="detail-layout-copy"
       aria-label={copied ? 'Link copied' : 'Copy link'}
       aria-live="polite"
     >
@@ -82,7 +82,7 @@ function CopyLinkButton({ url }: { url: string }) {
 
 function ShareList({ links, url }: { links: ShareLink[]; url: string }) {
   return (
-    <ul className="article-detail-share-icons">
+    <ul className="detail-layout-share-icons">
       {links.map(({ name, href, Icon }) => (
         <li key={name}>
           <a
@@ -102,59 +102,57 @@ function ShareList({ links, url }: { links: ShareLink[]; url: string }) {
   )
 }
 
-export function ArticleDetail({
+export function DetailLayout({
   data,
   basePath,
   mdxComponents,
-}: ArticleDetailProps) {
+}: DetailLayoutProps) {
   const { Body } = data
   const url = `${SITE_URL}${basePath}/${data.slug}`
   const shareLinks = buildShareLinks(url, data.title)
 
   return (
-    <article className="article-detail">
-      <div className="article-detail-lede">
-        <div className="article-detail-lede-inner">
+    <article className="detail-layout">
+      <div className="detail-layout-lede">
+        <div className="detail-layout-lede-inner">
           {data.category && (
-            <p className="article-detail-category">{data.category}</p>
+            <p className="detail-layout-category">{data.category}</p>
           )}
-          <h1 className="article-detail-title">{data.title}</h1>
-          {data.subtitle && (
-            <p className="article-detail-subtitle">{data.subtitle}</p>
-          )}
+          <h1 className="detail-layout-title">{data.title}</h1>
+          {data.dek && <p className="detail-layout-dek">{data.dek}</p>}
           {data.readTime != null && (
-            <p className="article-detail-readtime">{data.readTime} min read</p>
+            <p className="detail-layout-readtime">{data.readTime} min read</p>
           )}
         </div>
       </div>
 
-      <div className="article-detail-main">
-        <aside className="article-detail-share" aria-label="Share on social">
-          <p className="article-detail-share-label">Share</p>
+      <div className="detail-layout-main">
+        <aside className="detail-layout-share" aria-label="Share on social">
+          <p className="detail-layout-share-label">Share</p>
           <ShareList links={shareLinks} url={url} />
         </aside>
 
-        <div className="article-detail-content">
-          {data.coverImage && (
+        <div className="detail-layout-content">
+          {data.leadImage && (
             <img
-              className="article-detail-hero"
-              src={data.coverImage}
+              className="detail-layout-lead"
+              src={data.leadImage}
               alt={data.title}
             />
           )}
 
-          <div className="article-detail-body">
+          <div className="detail-layout-body">
             <Body components={mdxComponents} />
           </div>
 
-          <div className="article-detail-foot">
-            <p className="article-detail-updated">
-              Last updated: {formatDate(data.date)}
+          <div className="detail-layout-foot">
+            <p className="detail-layout-updated">
+              Last updated: {formatDate(data.published)}
             </p>
             {data.tags.length > 0 && (
-              <ul className="article-detail-tags">
+              <ul className="detail-layout-tags">
                 {data.tags.map((tag) => (
-                  <li key={tag} className="article-detail-tag">
+                  <li key={tag} className="detail-layout-tag">
                     {tag}
                   </li>
                 ))}
