@@ -889,6 +889,19 @@ a {
   z-index: 10;
 }
 
+/* Drawer is an overlay — when it opens, force the entire header subtree
+   onto the dark palette so the drawer bg + logo + hamburger lines all
+   stay readable, even on paper-palette routes (article details). */
+.site-header:has(.site-drawer.is-open) {
+  --color-bg: rgb(37 37 37);
+  --color-surface: rgb(40 40 40);
+  --color-border: rgb(64 64 64);
+  --color-fg: rgb(194 194 194);
+  --color-muted: rgb(123 122 116);
+  --color-accent: rgb(115 98 47);
+  color-scheme: dark;
+}
+
 .site-logo {
   position: relative;
   width: 2rem;
