@@ -38,7 +38,6 @@
 
   --font-sans: "TT Commons", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "Berkeley Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --font-serif: var(--font-sans);
 
   --font-weight-buch: 400;
   --font-weight-halbfett: 600;
@@ -92,7 +91,32 @@
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
+}
+
+/* ----------------------------------------------------------------------------
+ * Typography — editorial micro-typography. The system runs on one family at
+ * varying sizes, so the typographer's hand has to show through the detailing
+ * rather than the choice of face:
+ *
+ *   - Old-style proportional figures by default in prose, so a year mid-
+ *     sentence reads as text. Tabular lining figures revert in for any data-
+ *     bearing class (datelines, year columns, palette meta, code).
+ *   - Optical tracking that tightens as size grows. Browsers ship the same
+ *     metric at 0.75rem and 25rem; the marquee and headings need real
+ *     negative tracking, the meta labels stay loose.
+ *   - Case-sensitive forms on the all-caps mono labels so brackets, parens
+ *     and dashes sit at the optical center of the caps, not the x-height.
+ *   - Hanging punctuation on long-form prose so leading quotes and trailing
+ *     hyphens fall outside the measure.
+ *   - Wrap-balancing on headings to kill orphans on display lines.
+ *
+ * Tokens for the family and weights live above; this block is the hand.
+ * ------------------------------------------------------------------------- */
+
+html {
+  font-optical-sizing: auto;
+  font-feature-settings: "kern" 1, "liga" 1, "clig" 1, "calt" 1;
+  font-variant-numeric: oldstyle-nums proportional-nums;
 }
 
 /* ----------------------------------------------------------------------------
@@ -115,28 +139,34 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 120%;
   font-weight: 400;
   margin: 0;
+  text-wrap: balance;
 }
 
 h1 {
   font-size: 6rem;
   font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 h2 {
   font-size: 4rem;
+  letter-spacing: -0.02em;
 }
 
 h3 {
   font-size: 2.5rem;
+  letter-spacing: -0.015em;
 }
 
 h4 {
   font-size: 1.75rem;
+  letter-spacing: -0.01em;
 }
 
 p {
   line-height: 1.75rem;
   font-size: 1.2rem;
+  text-wrap: pretty;
 }
 
 a {
@@ -185,6 +215,7 @@ a {
   font-size: 25rem;
   font-weight: 500;
   line-height: 30rem;
+  letter-spacing: -0.04em;
   white-space: nowrap;
   animation-duration: 80s;
   animation-timing-function: linear;
@@ -250,16 +281,105 @@ a {
   .hero-cta { margin-bottom: 8rem; }
 }
 
-.hero-button {
-  border-bottom: 0.125rem solid #ccc;
+/* Text-arrow CTA: arrow swaps sides on hover, underline wipes across.
+   Ported from framer.com/marketplace/components/text-arrow-cta. */
+.text-arrow-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-bottom: 0.5rem;
   cursor: pointer;
-  display: inline-block;
-  padding-bottom: 0.25rem;
-  transition: border-bottom 0.3s ease-in-out;
+  text-decoration: none;
+  color: inherit;
+  line-height: 1;
 }
 
-.hero-button:hover {
-  border-bottom: 0.125rem solid var(--color-muted);
+.text-arrow-cta__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition:
+    width 0.35s cubic-bezier(0.65, 0, 0.35, 1),
+    opacity 0.25s ease,
+    transform 0.35s cubic-bezier(0.65, 0, 0.35, 1),
+    margin 0.35s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.text-arrow-cta__arrow svg {
+  width: 0.85em;
+  height: 0.85em;
+  flex-shrink: 0;
+  display: block;
+}
+
+.text-arrow-cta__arrow--left {
+  width: 0;
+  margin-right: 0;
+  opacity: 0;
+  transform: scale(0) rotate(-90deg);
+}
+
+.text-arrow-cta__arrow--right {
+  width: 0.85em;
+  margin-left: 0.5rem;
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.text-arrow-cta:hover .text-arrow-cta__arrow--left,
+.text-arrow-cta:focus-visible .text-arrow-cta__arrow--left {
+  width: 0.85em;
+  margin-right: 0.5rem;
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.text-arrow-cta:hover .text-arrow-cta__arrow--right,
+.text-arrow-cta:focus-visible .text-arrow-cta__arrow--right {
+  width: 0;
+  margin-left: 0;
+  opacity: 0;
+  transform: scale(0) rotate(-90deg);
+}
+
+.text-arrow-cta__line {
+  position: absolute;
+  bottom: 0;
+  height: 0.0625rem;
+  background: currentColor;
+  transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+  transition-delay: 0s;
+}
+
+.text-arrow-cta__line--left {
+  left: 0;
+  width: 0;
+}
+
+.text-arrow-cta__line--right {
+  right: 0;
+  width: 100%;
+  transition-delay: 0.2s;
+}
+
+.text-arrow-cta:hover .text-arrow-cta__line--left,
+.text-arrow-cta:focus-visible .text-arrow-cta__line--left {
+  width: 100%;
+  transition-delay: 0.2s;
+}
+
+.text-arrow-cta:hover .text-arrow-cta__line--right,
+.text-arrow-cta:focus-visible .text-arrow-cta__line--right {
+  width: 0;
+  transition-delay: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-arrow-cta__arrow,
+  .text-arrow-cta__line {
+    transition: none;
+  }
 }
 
 /* ----------------------------------------------------------------------------
@@ -940,6 +1060,7 @@ a {
   text-transform: none;
   padding-right: 0.5rem;
   line-height: 1.1;
+  letter-spacing: -0.015em;
   margin: 0;
 }
 
@@ -952,6 +1073,7 @@ a {
   font-weight: 400;
   color: var(--color-muted);
   line-height: 1.1;
+  letter-spacing: -0.015em;
   margin: 0;
 }
 
@@ -1410,5 +1532,63 @@ a {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-muted);
+}
+
+/* ----------------------------------------------------------------------------
+ * Typography application — figures, case forms, hanging punctuation.
+ *
+ * Prose runs on old-style proportional figures (set globally on `html`). The
+ * classes below revert to tabular lining figures because they carry data:
+ * dates, year columns, palette meta, footer credit, code. The same classes
+ * that are all-caps also get OpenType "case" forms so brackets, parens,
+ * en-dashes and bullets sit at caps optical center, not at the x-height.
+ * Long-form prose gets hanging punctuation so leading quotes and trailing
+ * hyphens fall outside the measure.
+ * ------------------------------------------------------------------------- */
+
+.article-card-meta,
+.article-detail-category,
+.article-detail-share-label,
+.article-detail-share-mobile,
+.article-detail-updated,
+.writing-list-item time,
+.about-experience-item p:first-child,
+.about-experience-item p:nth-child(3),
+.mdx-pullquote-attribution,
+.mdx-aside-label,
+.palette-input,
+.palette-empty,
+.palette-row-kind,
+.palette-row-return,
+.site-footer-credit {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* All-caps labels — "case" 1 shifts case-sensitive punctuation up to caps
+   optical center. font-feature-settings replaces the inherited list, so the
+   common features are re-declared here to keep kerning and ligatures alive. */
+.article-card-meta,
+.article-detail-category,
+.article-detail-share-label,
+.article-detail-share-mobile,
+.mdx-pullquote-attribution,
+.mdx-aside-label,
+.palette-input,
+.palette-empty,
+.palette-row-kind,
+.palette-row-return {
+  font-feature-settings: "kern" 1, "liga" 1, "clig" 1, "calt" 1, "case" 1;
+}
+
+.article-detail-body,
+.about-body,
+.legal-container,
+.mdx-pullquote {
+  hanging-punctuation: first last;
+}
+
+/* Code — fixed-width digits with a slashed zero so 0 doesn't read as O. */
+.article-detail-body pre code {
+  font-variant-numeric: tabular-nums slashed-zero;
 }
 

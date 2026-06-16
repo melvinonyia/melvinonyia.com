@@ -34,9 +34,9 @@ describe('Hero', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders the About Melvin CTA link', () => {
-    render(<Hero headlineText="x" heroText="x" ctaLabel="About Melvin" ctaTo="/about" />)
-    const cta = screen.getByRole('link', { name: 'About Melvin' })
+  it('renders the About me CTA link', () => {
+    render(<Hero headlineText="x" heroText="x" ctaLabel="About me" ctaTo="/about" />)
+    const cta = screen.getByRole('link', { name: 'About me' })
     expect(cta).toHaveAttribute('href', '/about')
   })
 })

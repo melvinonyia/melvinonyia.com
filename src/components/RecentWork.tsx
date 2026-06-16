@@ -1,6 +1,6 @@
-import { Link } from '@tanstack/react-router'
 import type { WorkPostSummary } from '~/lib/content/work'
 import { ArticleList } from './ArticleList'
+import { TextArrowCta } from './TextArrowCta'
 
 interface RecentWorkProps {
   posts: WorkPostSummary[]
@@ -24,9 +24,7 @@ export function RecentWork({ posts }: RecentWorkProps) {
       <h3 className="home-strip-header">Recent Work</h3>
       <ArticleList items={items} to="/work/$slug" />
       <div className="home-strip-cta">
-        <Link to="/work" className="hero-button" aria-label="More Work">
-          More Work
-        </Link>
+        <TextArrowCta to="/work" label="More Work" />
       </div>
     </section>
   )

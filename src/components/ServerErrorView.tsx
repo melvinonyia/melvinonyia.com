@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { TextArrowCta } from './TextArrowCta'
 
 export function ServerErrorView() {
   return (
@@ -7,9 +7,7 @@ export function ServerErrorView() {
         <h2>Sorry, you found a glitch</h2>
         <h3>Something went wrong.</h3>
         <div className="error-cta">
-          <Link to="/" className="hero-button" aria-label="Return Home">
-            Return Home
-          </Link>
+          <TextArrowCta to="/" label="Return Home" />
         </div>
       </div>
       <div className="error-illustration" aria-hidden="true">

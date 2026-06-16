@@ -1,6 +1,6 @@
-import { Link } from '@tanstack/react-router'
 import type { EssaySummary } from '~/lib/content/writing'
 import { ArticleList } from './ArticleList'
+import { TextArrowCta } from './TextArrowCta'
 
 interface RecentArticlesProps {
   essays: EssaySummary[]
@@ -24,9 +24,7 @@ export function RecentArticles({ essays }: RecentArticlesProps) {
       <h3 className="home-strip-header">Recent Articles</h3>
       <ArticleList items={items} to="/writing/$slug" />
       <div className="home-strip-cta">
-        <Link to="/writing" className="hero-button" aria-label="More Articles">
-          More Articles
-        </Link>
+        <TextArrowCta to="/writing" label="More Articles" />
       </div>
     </section>
   )

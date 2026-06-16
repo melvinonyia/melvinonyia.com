@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { TextArrowCta } from './TextArrowCta'
 
 export function NotFoundView() {
   return (
@@ -7,9 +7,7 @@ export function NotFoundView() {
         <h2>Sorry, the page is missing</h2>
         <h3>We couldn&apos;t find what you were looking for.</h3>
         <div className="error-cta">
-          <Link to="/" className="hero-button" aria-label="Return Home">
-            Return Home
-          </Link>
+          <TextArrowCta to="/" label="Return Home" />
         </div>
       </div>
     </div>

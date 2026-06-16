@@ -11,8 +11,8 @@ test.describe('home', () => {
     await expect(
       page.getByText(/Crafting highly-performant, secure software solutions/),
     ).toBeVisible()
-    // About Melvin CTA links to /about.
-    await expect(page.getByRole('link', { name: 'About Melvin' })).toHaveAttribute('href', '/about')
+    // About me CTA links to /about.
+    await expect(page.getByRole('link', { name: 'About me' })).toHaveAttribute('href', '/about')
     // Technology icons row has six visible links.
     const techList = page.getByLabel('Technologies').locator('ul')
     await expect(techList.locator('a')).toHaveCount(6)

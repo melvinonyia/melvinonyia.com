@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { TextArrowCta } from './TextArrowCta'
 
 interface HeroProps {
   headlineText?: string
@@ -14,7 +14,7 @@ const DEFAULT_HERO_TEXT =
 export function Hero({
   headlineText = DEFAULT_HEADLINE,
   heroText = DEFAULT_HERO_TEXT,
-  ctaLabel = 'About Melvin',
+  ctaLabel = 'About me',
   ctaTo = '/about',
 }: HeroProps) {
   return (
@@ -29,9 +29,7 @@ export function Hero({
       </div>
       <h2 className="hero-text">{heroText}</h2>
       <div className="hero-cta">
-        <Link to={ctaTo} className="hero-button" aria-label={ctaLabel}>
-          {ctaLabel}
-        </Link>
+        <TextArrowCta to={ctaTo} label={ctaLabel} />
       </div>
     </section>
   )

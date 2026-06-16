@@ -26,10 +26,10 @@ describe('ServerErrorView', () => {
     expect(screen.getByText(/Something went wrong/)).toBeInTheDocument()
   })
 
-  it('renders a Return Home link to / in the hero-button style', () => {
+  it('renders a Return Home link to / using the text-arrow CTA', () => {
     render(<ServerErrorView />)
     const link = screen.getByRole('link', { name: 'Return Home' })
     expect(link).toHaveAttribute('href', '/')
-    expect(link.className).toMatch(/hero-button/)
+    expect(link.className).toMatch(/text-arrow-cta/)
   })
 })

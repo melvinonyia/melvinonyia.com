@@ -28,10 +28,10 @@ describe('NotFoundView', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders a Return Home link to / in the hero-button style', () => {
+  it('renders a Return Home link to / using the text-arrow CTA', () => {
     render(<NotFoundView />)
     const link = screen.getByRole('link', { name: 'Return Home' })
     expect(link).toHaveAttribute('href', '/')
-    expect(link.className).toMatch(/hero-button/)
+    expect(link.className).toMatch(/text-arrow-cta/)
   })
 })
