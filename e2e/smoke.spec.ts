@@ -6,9 +6,9 @@ test.describe('home', () => {
     // Name renders once as the page h1.
     await expect(page.getByRole('heading', { level: 1, name: 'Melvin Onyia' })).toBeVisible()
     // Eyebrow and statement copy are present.
-    await expect(page.getByText('Staff Software Engineer')).toBeVisible()
+    await expect(page.getByText('Software Engineer')).toBeVisible()
     await expect(
-      page.getByText(/Backend and infrastructure engineer who also designs/),
+      page.getByText(/Backend and infrastructure engineer\. I build for the/),
     ).toBeVisible()
   })
 })
@@ -80,7 +80,8 @@ test.describe('chrome present on every route', () => {
     '/writing',
     '/writing/the-leg-between-lab-and-field',
     '/about',
-    '/legal',
+    '/privacy',
+    '/terms',
   ]
   for (const path of paths) {
     test(`${path} renders the M logo + hamburger`, async ({ page }) => {

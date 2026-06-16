@@ -18,10 +18,11 @@ describe('paletteForPath', () => {
     expect(paletteForPath('/work')).toBe('dark')
   })
 
-  it('returns "dark" for home, about, contact, legal', () => {
+  it('returns "dark" for home, about, contact, privacy, terms', () => {
     expect(paletteForPath('/')).toBe('dark')
     expect(paletteForPath('/about')).toBe('dark')
     expect(paletteForPath('/contact')).toBe('dark')
-    expect(paletteForPath('/legal')).toBe('dark')
+    expect(paletteForPath('/privacy')).toBe('dark')
+    expect(paletteForPath('/terms')).toBe('dark')
   })
 })

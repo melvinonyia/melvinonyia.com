@@ -12,14 +12,14 @@ interface MastheadProps {
   meta?: MetaRow[]
 }
 
-const DEFAULT_EYEBROW = 'Staff Software Engineer'
+const DEFAULT_EYEBROW = 'Software Engineer'
 const DEFAULT_NAME = 'Melvin Onyia'
 const DEFAULT_STATEMENT: ReactNode = (
   <>
-    Backend and infrastructure engineer who also designs and trained in biology. I
-    build for the <span className="masthead-statement__accent">human</span> side of
-    software. The code was never the hard part — understanding the people you build
-    for is, and that only gets more valuable.
+    Backend and infrastructure engineer. I build for the{' '}
+    <span className="masthead-statement__accent">human</span> side of software —
+    the code was never the hard part; understanding the people you build for is,
+    and that only gets more valuable.
   </>
 )
 const DEFAULT_META: MetaRow[] = [

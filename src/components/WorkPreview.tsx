@@ -45,7 +45,7 @@ export function WorkPreview({ caseStudies }: WorkPreviewProps) {
         </Link>
       ))}
       <div className="work-preview__cta">
-        <TextArrowCta to="/work" label="More Work" />
+        <TextArrowCta to="/work" label="More work" />
       </div>
     </section>
   )

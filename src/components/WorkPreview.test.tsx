@@ -63,9 +63,9 @@ describe('WorkPreview', () => {
     expect(row).toHaveAttribute('href', '/work/a-test-case-study')
   })
 
-  it('renders the More Work CTA linking to /work', () => {
+  it('renders the More work CTA linking to /work', () => {
     render(<WorkPreview caseStudies={[CASE_STUDY]} />)
-    const cta = screen.getByRole('link', { name: 'More Work' })
+    const cta = screen.getByRole('link', { name: 'More work' })
     expect(cta).toHaveAttribute('href', '/work')
   })
 })

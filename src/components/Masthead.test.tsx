@@ -10,8 +10,8 @@ describe('Masthead', () => {
   })
 
   it('renders the eyebrow above the name', () => {
-    render(<Masthead eyebrow="Staff Software Engineer" />)
-    expect(screen.getByText('Staff Software Engineer')).toBeInTheDocument()
+    render(<Masthead eyebrow="Software Engineer" />)
+    expect(screen.getByText('Software Engineer')).toBeInTheDocument()
   })
 
   it('renders the statement paragraph', () => {

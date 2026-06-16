@@ -27,7 +27,7 @@ export const Route = createRootRoute({
       {
         name: 'description',
         content:
-          'Melvin Onyia — software engineer. Build things, solve problems.',
+          'Backend and infrastructure engineer working the human side of software. Writing on craft, leverage, and movement science.',
       },
     ],
     links: [{ rel: 'stylesheet', href: appCss }],

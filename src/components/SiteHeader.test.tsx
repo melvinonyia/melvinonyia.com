@@ -35,11 +35,11 @@ describe('SiteHeader', () => {
     expect(button).toHaveAttribute('aria-expanded', 'true')
   })
 
-  it('renders About, Writing, Contact in the drawer', () => {
+  it('renders Work, Writing, About, Contact in the drawer', () => {
     const { container } = render(<SiteHeader />)
     const items = container.querySelectorAll('.site-drawer-item')
     const labels = Array.from(items).map((b) => b.textContent)
-    expect(labels).toEqual(['About', 'Writing', 'Work', 'Contact'])
+    expect(labels).toEqual(['Work', 'Writing', 'About', 'Contact'])
   })
 
   it('navigates when a drawer item is clicked', () => {

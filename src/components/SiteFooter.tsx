@@ -42,8 +42,8 @@ export function SiteFooter({ year }: SiteFooterProps) {
       <div className="site-footer__base">
         <span>© {year} Melvin Onyia</span>
         <div className="site-footer__legal">
-          <Link to="/legal">Privacy</Link>
-          <Link to="/legal">Terms</Link>
+          <Link to="/privacy">Privacy</Link>
+          <Link to="/terms">Terms</Link>
         </div>
       </div>
     </footer>

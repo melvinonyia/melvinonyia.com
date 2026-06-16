@@ -1,13 +1,11 @@
-export const SITE_URL = 'https://melvinonyia.com'
-export const SITE_NAME = 'Melvin Onyia'
+import { SITE_NAME, SITE_URL } from './homeHead'
 
-const TITLE = 'Melvin Onyia — Software Engineer'
-const DESCRIPTION =
-  'Backend and infrastructure engineer working the human side of software. Writing on craft, leverage, and movement science.'
-const OG_IMAGE = `${SITE_URL}/og/home.png`
-const HOME_URL = `${SITE_URL}/`
+const TITLE = `Privacy — ${SITE_NAME}`
+const DESCRIPTION = 'Privacy policy for melvinonyia.com — what is collected and why.'
+const OG_IMAGE = `${SITE_URL}/og/default.png`
+const PRIVACY_URL = `${SITE_URL}/privacy`
 
-export function homeHead() {
+export function privacyHead() {
   return {
     meta: [
       { title: TITLE },
@@ -16,7 +14,7 @@ export function homeHead() {
       { property: 'og:title', content: TITLE },
       { property: 'og:description', content: DESCRIPTION },
       { property: 'og:type', content: 'website' },
-      { property: 'og:url', content: HOME_URL },
+      { property: 'og:url', content: PRIVACY_URL },
       { property: 'og:image', content: OG_IMAGE },
       { property: 'og:site_name', content: SITE_NAME },
 
@@ -24,7 +22,9 @@ export function homeHead() {
       { name: 'twitter:title', content: TITLE },
       { name: 'twitter:description', content: DESCRIPTION },
       { name: 'twitter:image', content: OG_IMAGE },
+
+      { name: 'robots', content: 'noindex' },
     ],
-    links: [{ rel: 'canonical', href: HOME_URL }],
+    links: [{ rel: 'canonical', href: PRIVACY_URL }],
   }
 }

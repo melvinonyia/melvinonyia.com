@@ -40,10 +40,10 @@ describe('SiteFooter', () => {
     expect(within(social).getByRole('link', { name: 'X' })).toBeInTheDocument()
   })
 
-  it('renders the copyright with the year and legal links to /legal', () => {
+  it('renders the copyright with the year and Privacy + Terms links', () => {
     render(<SiteFooter year={2026} />)
     expect(screen.getByText(/© 2026 Melvin Onyia/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute('href', '/legal')
-    expect(screen.getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/legal')
+    expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute('href', '/privacy')
+    expect(screen.getByRole('link', { name: 'Terms' })).toHaveAttribute('href', '/terms')
   })
 })

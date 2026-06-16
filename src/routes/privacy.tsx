@@ -1,15 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { legalHead } from '~/lib/seo/legalHead'
+import { privacyHead } from '~/lib/seo/privacyHead'
 
-export const Route = createFileRoute('/legal')({
-  head: legalHead,
-  component: LegalPage,
+export const Route = createFileRoute('/privacy')({
+  head: privacyHead,
+  component: PrivacyPage,
 })
 
-function LegalPage() {
+function PrivacyPage() {
   return (
     <div className="legal-container">
-      <h2 className="legal-headline">Privacy & Terms</h2>
+      <h2 className="legal-headline">Privacy</h2>
       <p>Last updated: January 29, 2022</p>
       <div className="legal-group">
         <p>
@@ -40,7 +40,7 @@ function LegalPage() {
       <h3>Contact</h3>
       <div className="legal-group">
         <p>
-          For takedown requests, licensing, or anything else, write to{' '}
+          For privacy questions, write to{' '}
           <a href="mailto:melvin.onyia@gmail.com">melvin.onyia@gmail.com</a>.
         </p>
       </div>

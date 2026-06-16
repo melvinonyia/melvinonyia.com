@@ -1,11 +1,11 @@
 import { SITE_NAME, SITE_URL } from './homeHead'
 
-const TITLE = `Legal — ${SITE_NAME}`
-const DESCRIPTION = 'Legal notices, attribution, and footer fine print for melvinonyia.com.'
+const TITLE = `Terms — ${SITE_NAME}`
+const DESCRIPTION = 'Terms of use for melvinonyia.com — content licensing and acceptable use.'
 const OG_IMAGE = `${SITE_URL}/og/default.png`
-const LEGAL_URL = `${SITE_URL}/legal`
+const TERMS_URL = `${SITE_URL}/terms`
 
-export function legalHead() {
+export function termsHead() {
   return {
     meta: [
       { title: TITLE },
@@ -14,7 +14,7 @@ export function legalHead() {
       { property: 'og:title', content: TITLE },
       { property: 'og:description', content: DESCRIPTION },
       { property: 'og:type', content: 'website' },
-      { property: 'og:url', content: LEGAL_URL },
+      { property: 'og:url', content: TERMS_URL },
       { property: 'og:image', content: OG_IMAGE },
       { property: 'og:site_name', content: SITE_NAME },
 
@@ -25,6 +25,6 @@ export function legalHead() {
 
       { name: 'robots', content: 'noindex' },
     ],
-    links: [{ rel: 'canonical', href: LEGAL_URL }],
+    links: [{ rel: 'canonical', href: TERMS_URL }],
   }
 }

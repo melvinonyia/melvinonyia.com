@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { homeHead } from './homeHead'
 import { aboutHead } from './aboutHead'
 import { contactHead } from './contactHead'
-import { legalHead } from './legalHead'
+import { privacyHead } from './privacyHead'
+import { termsHead } from './termsHead'
 import { workHead } from './workHead'
 import { writingHead } from './writingHead'
 
@@ -17,7 +18,8 @@ const REGISTRY: Array<{ name: string; head: () => Head; canonical: string }> = [
   { name: 'home', head: homeHead, canonical: 'https://melvinonyia.com/' },
   { name: 'about', head: aboutHead, canonical: 'https://melvinonyia.com/about' },
   { name: 'contact', head: contactHead, canonical: 'https://melvinonyia.com/contact' },
-  { name: 'legal', head: legalHead, canonical: 'https://melvinonyia.com/legal' },
+  { name: 'privacy', head: privacyHead, canonical: 'https://melvinonyia.com/privacy' },
+  { name: 'terms', head: termsHead, canonical: 'https://melvinonyia.com/terms' },
   { name: 'work', head: workHead, canonical: 'https://melvinonyia.com/work' },
   { name: 'writing', head: writingHead, canonical: 'https://melvinonyia.com/writing' },
 ]

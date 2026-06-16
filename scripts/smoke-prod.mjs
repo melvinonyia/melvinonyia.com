@@ -24,7 +24,7 @@ const PAGES = [
   {
     path: '/',
     expectedTitle: /Melvin Onyia/,
-    contentMarker: /Staff Software Engineer/,
+    contentMarker: /Software Engineer/,
   },
   {
     path: '/about',
@@ -52,9 +52,14 @@ const PAGES = [
     contentMarker: /Send message|Drop a line/,
   },
   {
-    path: '/legal',
-    expectedTitle: /Legal — Melvin Onyia/,
-    contentMarker: /Legal/,
+    path: '/privacy',
+    expectedTitle: /Privacy — Melvin Onyia/,
+    contentMarker: /Privacy/,
+  },
+  {
+    path: '/terms',
+    expectedTitle: /Terms — Melvin Onyia/,
+    contentMarker: /Terms/,
   },
 ]
 
