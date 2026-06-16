@@ -25,27 +25,10 @@ function Arrow() {
 export function TextArrowCta({ to, label }: TextArrowCtaProps) {
   return (
     <Link to={to} className="text-arrow-cta" aria-label={label}>
-      <span
-        className="text-arrow-cta__arrow text-arrow-cta__arrow--left"
-        aria-hidden="true"
-      >
-        <Arrow />
-      </span>
       <span className="text-arrow-cta__label">{label}</span>
-      <span
-        className="text-arrow-cta__arrow text-arrow-cta__arrow--right"
-        aria-hidden="true"
-      >
+      <span className="text-arrow-cta__arrow" aria-hidden="true">
         <Arrow />
       </span>
-      <span
-        className="text-arrow-cta__line text-arrow-cta__line--left"
-        aria-hidden="true"
-      />
-      <span
-        className="text-arrow-cta__line text-arrow-cta__line--right"
-        aria-hidden="true"
-      />
     </Link>
   )
 }
