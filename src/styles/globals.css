@@ -978,7 +978,8 @@ a {
   line-height: 1.1;
 }
 
-.site-drawer-item:hover { color: rgb(53 68 120); }
+.site-drawer-item:hover,
+.site-drawer-item:focus-visible { color: var(--color-accent); }
 
 .site-drawer-social {
   position: absolute;
