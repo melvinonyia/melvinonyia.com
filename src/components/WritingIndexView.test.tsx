@@ -36,9 +36,9 @@ const ESSAY: EssaySummary = {
 }
 
 describe('WritingIndexView', () => {
-  it('renders the Blog header', () => {
+  it('renders the Writing header', () => {
     render(<WritingIndexView essays={[]} />)
-    expect(screen.getByText('Blog')).toBeInTheDocument()
+    expect(screen.getByText('Writing')).toBeInTheDocument()
   })
 
   it('renders an empty-state message when there are no essays', () => {

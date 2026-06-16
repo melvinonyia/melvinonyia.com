@@ -18,8 +18,8 @@ export function WritingIndexView({ essays }: WritingIndexViewProps) {
     image: essay.coverImage,
   }))
   return (
-    <div>
-      <h2 className="writing-header">Blog</h2>
+    <div className="index-page">
+      <h2 className="writing-header">Writing</h2>
       {essays.length === 0 ? (
         <p style={{ marginTop: '2rem', color: 'var(--color-muted)' }}>
           No essays yet — check back soon.

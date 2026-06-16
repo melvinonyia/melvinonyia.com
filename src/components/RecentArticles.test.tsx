@@ -44,7 +44,7 @@ describe('RecentArticles', () => {
     expect(container.firstChild).toBeNull()
   })
 
-  it('renders the Writing eyebrow + a top card per essay', () => {
+  it('renders the Writing eyebrow and one ArticleCard per essay', () => {
     render(<RecentArticles essays={[makeEssay()]} />)
     expect(screen.getByText('Writing')).toBeInTheDocument()
     expect(screen.getByText('A Test Essay')).toBeInTheDocument()
@@ -61,18 +61,10 @@ describe('RecentArticles', () => {
     expect(screen.getByText('Movement science · 2025')).toBeInTheDocument()
   })
 
-  it('promotes the first two essays to the top tier and the rest to the grid', () => {
-    const essays = [
-      makeEssay({ slug: 'a', title: 'A' }),
-      makeEssay({ slug: 'b', title: 'B' }),
-      makeEssay({ slug: 'c', title: 'C' }),
-    ]
-    render(<RecentArticles essays={essays} />)
-    // dek is only rendered on the top tier; C is in rest and has no dek.
-    const a = screen.getByLabelText('A')
-    const c = screen.getByLabelText('C')
-    expect(a.className).toMatch(/writing-strip__card--top/)
-    expect(c.className).toMatch(/writing-strip__card--rest/)
+  it('uses the shared .article-card markup, not bespoke writing-strip cards', () => {
+    const { container } = render(<RecentArticles essays={[makeEssay()]} />)
+    expect(container.querySelector('.article-card')).not.toBeNull()
+    expect(container.querySelector('.writing-strip__card')).toBeNull()
   })
 
   it('links the card to /writing/$slug', () => {

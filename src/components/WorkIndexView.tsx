@@ -18,7 +18,7 @@ export function WorkIndexView({ posts }: WorkIndexViewProps) {
     image: post.heroImage,
   }))
   return (
-    <div>
+    <div className="index-page">
       <h2 className="writing-header">Work</h2>
       {posts.length === 0 ? (
         <p style={{ marginTop: '2rem', color: 'var(--color-muted)' }}>

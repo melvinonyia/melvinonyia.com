@@ -63,11 +63,15 @@ describe('WritingPostView', () => {
     expect(tags).toEqual(['code', 'notes'])
   })
 
-  it('renders share links to Facebook, X, and LinkedIn (desktop + mobile)', () => {
+  it('renders X + LinkedIn share links and a Copy link button', () => {
     render(<WritingPostView essay={makeEssay()} essayNumber={1} />)
-    // Each network appears twice (vertical desktop + horizontal mobile).
-    expect(screen.getAllByRole('link', { name: /Share on Facebook/ }).length).toBeGreaterThanOrEqual(1)
-    expect(screen.getAllByRole('link', { name: /Share on X/ }).length).toBeGreaterThanOrEqual(1)
-    expect(screen.getAllByRole('link', { name: /Share on LinkedIn/ }).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByRole('link', { name: 'Share on X' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Share on LinkedIn' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Copy link' })).toBeInTheDocument()
+  })
+
+  it('renders the readtime line when the essay has readTime set', () => {
+    render(<WritingPostView essay={makeEssay({ readTime: 7 })} essayNumber={1} />)
+    expect(screen.getByText('7 min read')).toBeInTheDocument()
   })
 })

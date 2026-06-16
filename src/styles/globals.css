@@ -659,95 +659,10 @@ a {
   margin: 0 0 clamp(2rem, 4vh, 3rem) 0;
 }
 
-.writing-strip__top {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(1.5rem, 3vw, 2.75rem);
-  margin-bottom: clamp(2.25rem, 4.5vh, 3.5rem);
-}
-
-.writing-strip__rest {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: clamp(1.4rem, 2.2vw, 2rem);
-}
-
-.writing-strip__card {
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: inherit;
-}
-
-.writing-strip__thumb {
-  aspect-ratio: 16 / 10;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.writing-strip__thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.writing-strip__title {
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 1.1;
-  margin: 0;
-  transition: color 0.25s ease;
-}
-
-.writing-strip__card--top .writing-strip__thumb { margin-bottom: 1.1rem; }
-.writing-strip__card--top .writing-strip__title {
-  font-size: clamp(1.45rem, 2.4vw, 2rem);
-}
-
-.writing-strip__card--rest .writing-strip__thumb { margin-bottom: 0.9rem; }
-.writing-strip__card--rest .writing-strip__title {
-  font-size: clamp(1.12rem, 1.5vw, 1.32rem);
-}
-
-.writing-strip__dek {
-  font-size: clamp(1rem, 1.2vw, 1.12rem);
-  color: var(--color-fg);
-  line-height: 1.5;
-  margin: 0.75rem 0 0 0;
-  max-width: 42ch;
-}
-
-.writing-strip__meta {
-  font-size: 0.8rem;
-  color: var(--color-muted);
-  margin: 0.8rem 0 0 0;
-}
-
-.writing-strip__card:hover .writing-strip__title,
-.writing-strip__card:focus-visible .writing-strip__title {
-  color: var(--color-accent);
-}
-
 .writing-strip__cta {
   margin-top: clamp(2rem, 4vh, 3rem);
   text-align: right;
   font-size: 0.95rem;
-}
-
-@media (max-width: 760px) {
-  .writing-strip__top {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .writing-strip__title {
-    transition: none;
-  }
 }
 
 /* ----------------------------------------------------------------------------
@@ -755,8 +670,7 @@ a {
  * ------------------------------------------------------------------------- */
 
 .about-section {
-  margin: 0 auto;
-  padding: 0 1.5rem;
+  margin: 0;
 }
 
 .about-headline {
@@ -783,9 +697,10 @@ a {
   column-count: 2;
   column-gap: 4rem;
   font-size: var(--text-lede);
-  color: dimgrey;
+  color: var(--color-muted);
 }
 
+.about-body p { margin-top: 1.5rem; }
 .about-body p:first-child { margin-top: 0; }
 
 @media (max-width: 768px) {
@@ -824,8 +739,8 @@ a {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 1fr;
   grid-gap: 1rem;
-  padding: 1rem 2rem;
-  border-bottom: 1px solid rgb(64 64 64);
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-border);
   font-weight: 400;
   color: var(--color-fg);
 }
@@ -1266,6 +1181,10 @@ a {
  * Writing — index list + post detail.
  * ------------------------------------------------------------------------- */
 
+.index-page {
+  padding-bottom: clamp(5rem, 10vh, 9rem);
+}
+
 .writing-header {
   font-size: var(--text-h3);
   padding-top: 7rem;
@@ -1304,149 +1223,158 @@ a {
 .writing-list-item p { font-size: var(--text-body); color: var(--color-muted); margin-top: 0.5rem; }
 
 /* ----------------------------------------------------------------------------
- * Article detail (writing post + work post) — mirrors main's blog post:
- * inline Title + Subtitle, uppercase category label, vertical SHARE column on
- * the left (desktop) or horizontal at the bottom (mobile), cover image, body,
- * last-updated line, soft pill tags. Renders on the paper palette.
+ * Article detail (writing post + work post) — editorial post layout.
+ * - Lede block: full-width, centered measure. Category eyebrow / h1 / dek /
+ *   readtime. Dek sits beneath the title as a standfirst, not inline.
+ * - Main block: 3-col grid (left gutter, measure, right gutter). Share rail
+ *   sticks to the top of the left gutter; content fills the centered measure.
+ * - Tags pill out at the bottom under a "Last updated" line.
+ * Paper palette is applied to the wrapping route via data-palette="paper".
  * ------------------------------------------------------------------------- */
 
 .article-detail {
-  position: relative;
-  max-width: 60vw;
-  margin: 0 auto;
-  padding-top: 5rem;
+  --measure: min(100%, 42rem);
+  --colgap: clamp(1.5rem, 3vw, 3rem);
+  padding-top: clamp(2.5rem, 6vh, 5rem);
+  padding-bottom: clamp(4rem, 8vh, 6rem);
 }
 
-@media (max-width: 992px) { .article-detail { max-width: 75vw; } }
-@media (max-width: 768px) { .article-detail { max-width: 100%; } }
-@media (max-width: 576px) { .article-detail { padding-top: 1rem; } }
-
-.article-detail-header { padding-bottom: 2rem; }
-
-.article-detail-title {
-  display: inline;
-  font-size: var(--text-h2);
-  font-weight: 600;
-  color: var(--color-fg);
-  text-transform: none;
-  padding-right: 0.5rem;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  margin: 0;
+.article-detail-lede,
+.article-detail-main {
+  display: grid;
+  grid-template-columns: 1fr var(--measure) 1fr;
+  column-gap: var(--colgap);
 }
 
-@media (max-width: 768px) { .article-detail-title { font-size: var(--text-h3); letter-spacing: -0.02em; } }
-@media (max-width: 576px) { .article-detail-title { font-size: var(--text-lede); letter-spacing: -0.01em; } }
-
-.article-detail-subtitle {
-  display: inline;
-  font-size: var(--text-h2);
-  font-weight: 400;
-  color: var(--color-muted);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  margin: 0;
+.article-detail-lede-inner,
+.article-detail-content {
+  grid-column: 2;
+  min-width: 0;
 }
 
-@media (max-width: 768px) { .article-detail-subtitle { font-size: var(--text-h3); letter-spacing: -0.02em; } }
-@media (max-width: 576px) { .article-detail-subtitle { font-size: var(--text-lede); letter-spacing: -0.01em; } }
+.article-detail-main { margin-top: clamp(2.4rem, 5vh, 3.4rem); }
 
 .article-detail-category {
-  margin: 1.5rem 0 0;
-  color: var(--color-muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: var(--color-muted);
+  margin: 0 0 1.5rem 0;
+}
+
+.article-detail-title {
+  font-size: clamp(2.3rem, 5vw, 3.3rem);
+  font-weight: 700;
+  color: var(--color-fg);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.5rem 0;
+}
+
+.article-detail-subtitle {
+  font-size: clamp(1.55rem, 3.2vw, 2.3rem);
+  font-weight: 400;
+  color: var(--color-muted);
+  line-height: 1.16;
+  letter-spacing: -0.015em;
+  margin: 0 0 1.4rem 0;
+}
+
+.article-detail-readtime {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin: 0;
 }
 
 .article-detail-share {
-  position: absolute;
-  top: 15rem;
-  left: calc(50% - 50vw + 5rem);
+  grid-column: 1;
+  justify-self: end;
+  position: sticky;
+  top: 2.5rem;
+  align-self: start;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 1.1rem;
+  padding-top: 0.5rem;
 }
-
-@media (max-width: 992px) { .article-detail-share { display: none; } }
 
 .article-detail-share-label {
   writing-mode: vertical-rl;
-  text-orientation: mixed;
+  transform: rotate(180deg);
   text-transform: uppercase;
-  margin: 0 0 0.5rem 0;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
   color: var(--color-muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  letter-spacing: 0.08em;
+  margin: 0 0 0.3rem 0;
 }
 
 .article-detail-share-icons {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.1rem;
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.article-detail-share-icons a {
+.article-detail-share-icons a,
+.article-detail-copy {
   display: inline-flex;
   color: var(--color-muted);
   transition: color 0.2s;
-}
-
-.article-detail-share-icons a:hover { color: var(--color-fg); }
-.article-detail-share-icons svg { width: 1.25rem; height: 1.25rem; fill: currentColor; }
-
-/* Mobile share row — horizontal version that sits below the body. */
-.article-detail-share-mobile {
-  display: none;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 3rem;
-  color: var(--color-muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-caption);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.article-detail-share-mobile ul {
-  display: flex;
-  flex-direction: row;
-  gap: 0.75rem;
-  list-style: none;
+  background: none;
+  border: 0;
   padding: 0;
-  margin: 0;
+  cursor: pointer;
+  font: inherit;
+  line-height: 0;
 }
 
-@media (max-width: 992px) {
-  .article-detail-share-mobile { display: flex; }
+.article-detail-share-icons a:hover,
+.article-detail-share-icons a:focus-visible,
+.article-detail-copy:hover,
+.article-detail-copy:focus-visible {
+  color: var(--color-accent);
+}
+
+.article-detail-share-icons svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: currentColor;
 }
 
 .article-detail-hero {
   display: block;
   width: 100%;
-  margin-top: 2rem;
   height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 3px;
+  margin: 0 0 clamp(2.4rem, 5vh, 3.4rem) 0;
 }
 
 .article-detail-body {
-  margin-top: 2rem;
-  font-size: var(--text-body);
+  font-size: 1.19rem;
   line-height: 1.62;
   color: var(--color-fg);
 }
 
-.article-detail-body p { margin: 1.5rem 0; }
+.article-detail-body p {
+  margin: 0 0 1.5rem 0;
+  max-width: 66ch;
+}
 .article-detail-body p:first-of-type { margin-top: 0; }
-.article-detail-body h2 { font-size: var(--text-h3); padding-top: 3rem; margin: 0 0 1rem 0; font-weight: 500; line-height: 1.1; letter-spacing: -0.02em; }
-.article-detail-body h3 { font-size: var(--text-lede); padding-top: 2rem; margin: 0 0 1rem 0; font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; }
-.article-detail-body a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 4px; }
-.article-detail-body img { padding-top: 2rem; width: 100%; height: auto; }
+.article-detail-body h2 { font-size: clamp(1.6rem, 2.4vw, 1.9rem); padding-top: 2.4rem; margin: 0 0 0.9rem 0; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
+.article-detail-body h3 { font-size: clamp(1.25rem, 1.8vw, 1.45rem); padding-top: 1.8rem; margin: 0 0 0.75rem 0; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; }
+.article-detail-body a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.article-detail-body img { padding-top: 1.5rem; width: 100%; height: auto; }
 .article-detail-body figure { margin: 0; }
 .article-detail-body pre {
   padding-top: 1rem;
@@ -1465,22 +1393,20 @@ a {
   overflow-x: auto;
 }
 
+.article-detail-foot {
+  margin-top: clamp(2.5rem, 5vh, 3.5rem);
+}
+
 .article-detail-updated {
-  margin: 3rem 0 1rem;
+  font-size: 0.85rem;
   color: var(--color-muted);
-  font-size: var(--text-small);
+  margin: 0 0 1.2rem 0;
 }
-
-.article-detail-footer {
-  margin-bottom: 8rem;
-}
-
-@media (max-width: 576px) { .article-detail-footer { margin-bottom: 3rem; } }
 
 .article-detail-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.6rem;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -1488,15 +1414,45 @@ a {
 
 .article-detail-tag {
   display: inline-block;
-  padding: 0.4rem 0.9rem 0.35rem;
+  padding: 0.45rem 1.05rem;
   background-color: var(--color-surface);
   color: var(--color-fg);
   border-radius: 999px;
-  font-size: var(--text-small);
-  transition: background-color 0.2s;
+  font-size: 0.85rem;
+  transition: opacity 0.2s;
 }
 
-.article-detail-tag:hover { background-color: var(--color-border); }
+.article-detail-tag:hover { opacity: 0.75; }
+
+@media (max-width: 1024px) {
+  .article-detail-lede,
+  .article-detail-main {
+    grid-template-columns: 1fr;
+  }
+  .article-detail-lede-inner,
+  .article-detail-content {
+    grid-column: 1;
+  }
+  .article-detail-share {
+    grid-column: 1;
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.25rem;
+    padding-top: 0;
+    margin-bottom: 1.5rem;
+    justify-self: start;
+  }
+  .article-detail-share-icons {
+    flex-direction: row;
+    gap: 1rem;
+  }
+  .article-detail-share-label {
+    writing-mode: horizontal-tb;
+    transform: none;
+    margin: 0;
+  }
+}
 
 /* MDX blocks used inside writing-post-body */
 .mdx-pullquote {
@@ -1754,7 +1710,6 @@ a {
 .article-card-meta,
 .article-detail-category,
 .article-detail-share-label,
-.article-detail-share-mobile,
 .article-detail-updated,
 .writing-list-item time,
 .about-experience-item p:first-child,
@@ -1774,7 +1729,6 @@ a {
 .article-card-meta,
 .article-detail-category,
 .article-detail-share-label,
-.article-detail-share-mobile,
 .mdx-pullquote-attribution,
 .mdx-aside-label,
 .palette-input,

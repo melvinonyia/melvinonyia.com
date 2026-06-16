@@ -1,6 +1,6 @@
-import type { ComponentType } from 'react'
-import { SiX, SiFacebook } from 'react-icons/si'
-import { FaLinkedinIn } from 'react-icons/fa'
+import { useState, type ComponentType } from 'react'
+import { SiX } from 'react-icons/si'
+import { FaLinkedinIn, FaRegCopy, FaCheck } from 'react-icons/fa'
 import { SITE_URL } from '~/lib/seo/homeHead'
 
 export interface ArticleDetailData {
@@ -9,6 +9,7 @@ export interface ArticleDetailData {
   subtitle?: string
   date: string
   category?: string
+  readTime?: number
   tags: string[]
   coverImage?: string | null
   Body: ComponentType<{ components?: Record<string, ComponentType<any>> }>
@@ -39,30 +40,49 @@ interface ShareLink {
 }
 
 function buildShareLinks(url: string, title: string): ShareLink[] {
-  const encodedUrl = encodeURIComponent(url)
-  const encodedTitle = encodeURIComponent(title)
+  const eu = encodeURIComponent(url)
+  const et = encodeURIComponent(title)
   return [
     {
       name: 'X',
-      href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+      href: `https://twitter.com/intent/tweet?text=${et}&url=${eu}`,
       Icon: SiX,
     },
     {
       name: 'LinkedIn',
-      href: `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}`,
+      href: `https://www.linkedin.com/shareArticle?mini=true&url=${eu}`,
       Icon: FaLinkedinIn,
-    },
-    {
-      name: 'Facebook',
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      Icon: SiFacebook,
     },
   ]
 }
 
-function ShareList({ links }: { links: ShareLink[] }) {
+function CopyLinkButton({ url }: { url: string }) {
+  const [copied, setCopied] = useState(false)
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    } catch {
+      // clipboard may be unavailable (e.g. insecure context); ignore silently.
+    }
+  }
   return (
-    <ul>
+    <button
+      type="button"
+      onClick={copy}
+      className="article-detail-copy"
+      aria-label={copied ? 'Link copied' : 'Copy link'}
+      aria-live="polite"
+    >
+      {copied ? <FaCheck /> : <FaRegCopy />}
+    </button>
+  )
+}
+
+function ShareList({ links, url }: { links: ShareLink[]; url: string }) {
+  return (
+    <ul className="article-detail-share-icons">
       {links.map(({ name, href, Icon }) => (
         <li key={name}>
           <a
@@ -75,6 +95,9 @@ function ShareList({ links }: { links: ShareLink[] }) {
           </a>
         </li>
       ))}
+      <li>
+        <CopyLinkButton url={url} />
+      </li>
     </ul>
   )
 }
@@ -90,54 +113,56 @@ export function ArticleDetail({
 
   return (
     <article className="article-detail">
-      <div className="article-detail-share" aria-label="Share on social">
-        <p className="article-detail-share-label">Share</p>
-        <div className="article-detail-share-icons">
-          <ShareList links={shareLinks} />
+      <div className="article-detail-lede">
+        <div className="article-detail-lede-inner">
+          {data.category && (
+            <p className="article-detail-category">{data.category}</p>
+          )}
+          <h1 className="article-detail-title">{data.title}</h1>
+          {data.subtitle && (
+            <p className="article-detail-subtitle">{data.subtitle}</p>
+          )}
+          {data.readTime != null && (
+            <p className="article-detail-readtime">{data.readTime} min read</p>
+          )}
         </div>
       </div>
 
-      <header className="article-detail-header">
-        <h2 className="article-detail-title">{data.title}</h2>
-        {data.subtitle && (
-          <h2 className="article-detail-subtitle"> {data.subtitle}</h2>
-        )}
-        {data.category && (
-          <p className="article-detail-category">{data.category}</p>
-        )}
-        {data.coverImage && (
-          <img
-            className="article-detail-hero"
-            src={data.coverImage}
-            alt={data.title}
-          />
-        )}
-      </header>
+      <div className="article-detail-main">
+        <aside className="article-detail-share" aria-label="Share on social">
+          <p className="article-detail-share-label">Share</p>
+          <ShareList links={shareLinks} url={url} />
+        </aside>
 
-      <div className="article-detail-body">
-        <Body components={mdxComponents} />
+        <div className="article-detail-content">
+          {data.coverImage && (
+            <img
+              className="article-detail-hero"
+              src={data.coverImage}
+              alt={data.title}
+            />
+          )}
+
+          <div className="article-detail-body">
+            <Body components={mdxComponents} />
+          </div>
+
+          <div className="article-detail-foot">
+            <p className="article-detail-updated">
+              Last updated: {formatDate(data.date)}
+            </p>
+            {data.tags.length > 0 && (
+              <ul className="article-detail-tags">
+                {data.tags.map((tag) => (
+                  <li key={tag} className="article-detail-tag">
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
-
-      <div className="article-detail-share-mobile article-detail-share-icons">
-        <span>Share</span>
-        <ShareList links={shareLinks} />
-      </div>
-
-      <p className="article-detail-updated">
-        Last updated: {formatDate(data.date)}
-      </p>
-
-      {data.tags.length > 0 && (
-        <footer className="article-detail-footer">
-          <ul className="article-detail-tags">
-            {data.tags.map((tag) => (
-              <li key={tag} className="article-detail-tag">
-                {tag}
-              </li>
-            ))}
-          </ul>
-        </footer>
-      )}
     </article>
   )
 }

@@ -9,7 +9,7 @@ interface NavItem {
 
 const NAV_ITEMS: readonly NavItem[] = [
   { label: 'About', to: '/about' },
-  { label: 'Blog', to: '/writing' },
+  { label: 'Writing', to: '/writing' },
   { label: 'Work', to: '/work' },
   { label: 'Contact', to: '/contact' },
 ] as const

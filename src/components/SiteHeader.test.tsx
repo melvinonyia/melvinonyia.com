@@ -39,7 +39,7 @@ describe('SiteHeader', () => {
     const { container } = render(<SiteHeader />)
     const items = container.querySelectorAll('.site-drawer-item')
     const labels = Array.from(items).map((b) => b.textContent)
-    expect(labels).toEqual(['About', 'Blog', 'Work', 'Contact'])
+    expect(labels).toEqual(['About', 'Writing', 'Work', 'Contact'])
   })
 
   it('navigates when a drawer item is clicked', () => {

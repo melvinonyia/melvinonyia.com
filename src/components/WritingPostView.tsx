@@ -18,6 +18,7 @@ export function WritingPostView({ essay }: WritingPostViewProps) {
         subtitle: essay.excerpt || undefined,
         date: essay.date,
         category: essay.tags[0],
+        readTime: essay.readTime,
         tags: essay.tags,
         coverImage: essay.coverImage,
         Body: essay.Body,
