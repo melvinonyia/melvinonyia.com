@@ -12,6 +12,7 @@ function makePost(overrides: Partial<WorkPost> = {}): WorkPost {
     excerpt: 'A signal-processing engine for movement data.',
     tags: ['ml', 'signal-processing'],
     heroImage: null,
+    ogImage: null,
     Body,
     ...overrides,
   }

@@ -17,6 +17,7 @@ function makeWork(overrides: Partial<WorkPostSummary>): WorkPostSummary {
     excerpt: '',
     tags: [],
     heroImage: null,
+    ogImage: null,
     ...overrides,
   }
 }
@@ -28,6 +29,7 @@ function makeEssay(overrides: Partial<EssaySummary>): EssaySummary {
     date: '2025-01-01',
     excerpt: '',
     tags: [],
+    ogImage: null,
     ...overrides,
   }
 }

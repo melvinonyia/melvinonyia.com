@@ -12,6 +12,7 @@ function makeEssay(overrides: Partial<Essay> = {}): Essay {
     excerpt: 'A short excerpt.',
     tags: ['infrastructure', 'notes'],
     readTime: 4,
+    ogImage: null,
     Body,
     ...overrides,
   }

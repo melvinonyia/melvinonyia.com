@@ -9,7 +9,8 @@ function makePost(overrides: Partial<WorkPostSummary> = {}): WorkPostSummary {
     date: '2025-11-12',
     excerpt: 'Per-athlete kinematic signatures.',
     tags: ['biomechanics'],
-    heroImage: '/og/work-movement-fingerprint.png',
+    heroImage: '/images/movement-fingerprint/arch.png',
+    ogImage: null,
     ...overrides,
   }
 }
@@ -52,12 +53,24 @@ describe('workPostHead', () => {
   it('uses heroImage absolutized when present, otherwise default', () => {
     expect(
       findMeta(workPostHead(makePost()).meta, (m) => m.property === 'og:image')?.content,
-    ).toBe('https://melvinonyia.com/og/work-movement-fingerprint.png')
+    ).toBe('https://melvinonyia.com/images/movement-fingerprint/arch.png')
 
     expect(
       findMeta(workPostHead(makePost({ heroImage: null })).meta, (m) => m.property === 'og:image')
         ?.content,
     ).toBe('https://melvinonyia.com/og/work.png')
+  })
+
+  it('ogImage overrides heroImage for the og:image slot', () => {
+    const head = workPostHead(
+      makePost({ ogImage: '/og/work-movement-fingerprint.png' }),
+    )
+    expect(findMeta(head.meta, (m) => m.property === 'og:image')?.content).toBe(
+      'https://melvinonyia.com/og/work-movement-fingerprint.png',
+    )
+    expect(findMeta(head.meta, (m) => m.name === 'twitter:image')?.content).toBe(
+      'https://melvinonyia.com/og/work-movement-fingerprint.png',
+    )
   })
 
   it('sets canonical to the post URL', () => {

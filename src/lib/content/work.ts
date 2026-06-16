@@ -6,6 +6,7 @@ export interface WorkFrontmatter {
   excerpt?: string
   tags?: string[]
   heroImage?: string
+  ogImage?: string
 }
 
 export interface WorkPostSummary {
@@ -15,6 +16,7 @@ export interface WorkPostSummary {
   excerpt: string
   tags: string[]
   heroImage: string | null
+  ogImage: string | null
 }
 
 export interface WorkPost extends WorkPostSummary {
@@ -57,6 +59,7 @@ function toWorkPost(filePath: string, mod: MdxModule): WorkPost {
     excerpt: mod.frontmatter.excerpt ?? '',
     tags: mod.frontmatter.tags ?? [],
     heroImage: mod.frontmatter.heroImage ?? null,
+    ogImage: mod.frontmatter.ogImage ?? null,
     Body: mod.default,
   }
 }

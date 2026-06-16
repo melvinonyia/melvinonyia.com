@@ -8,7 +8,8 @@ export function workPostHead(post: WorkPostSummary) {
   const title = `${post.title} — ${SITE_NAME}`
   const description =
     post.excerpt || `${post.title}. A case study by ${SITE_NAME}.`
-  const image = post.heroImage ? `${SITE_URL}${post.heroImage}` : DEFAULT_OG_IMAGE
+  const ogPath = post.ogImage ?? post.heroImage
+  const image = ogPath ? `${SITE_URL}${ogPath}` : DEFAULT_OG_IMAGE
 
   return {
     meta: [

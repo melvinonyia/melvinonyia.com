@@ -13,7 +13,8 @@ describe('work content collection', () => {
     expect(fingerprint!.tags).toEqual(
       expect.arrayContaining(['biomechanics', 'signal processing', 'engineering']),
     )
-    expect(fingerprint!.heroImage).toBe('/og/work-movement-fingerprint.png')
+    expect(fingerprint!.heroImage).toBe('/images/movement-fingerprint/arch.png')
+    expect(fingerprint!.ogImage).toBeNull()
     expect(typeof fingerprint!.Body).toBe('function')
   })
 

@@ -9,6 +9,7 @@ function makeEssay(overrides: Partial<EssaySummary> = {}): EssaySummary {
     date: '2025-10-08',
     excerpt: 'A short excerpt.',
     tags: ['notes'],
+    ogImage: null,
     ...overrides,
   }
 }
@@ -46,6 +47,31 @@ describe('writingPostHead', () => {
     expect(
       findMeta(head.meta, (m) => m.property === 'article:published_time')?.content,
     ).toBe('2025-10-08')
+  })
+
+  it('resolves og:image as ogImage > coverImage > default', () => {
+    expect(
+      findMeta(writingPostHead(makeEssay()).meta, (m) => m.property === 'og:image')?.content,
+    ).toBe('https://melvinonyia.com/og/writing.png')
+
+    expect(
+      findMeta(
+        writingPostHead(makeEssay({ coverImage: '/images/the-leg-between-lab-and-field/hero.jpg' })).meta,
+        (m) => m.property === 'og:image',
+      )?.content,
+    ).toBe('https://melvinonyia.com/images/the-leg-between-lab-and-field/hero.jpg')
+
+    expect(
+      findMeta(
+        writingPostHead(
+          makeEssay({
+            coverImage: '/images/the-leg-between-lab-and-field/hero.jpg',
+            ogImage: '/og/writing-the-leg-between-lab-and-field.png',
+          }),
+        ).meta,
+        (m) => m.property === 'og:image',
+      )?.content,
+    ).toBe('https://melvinonyia.com/og/writing-the-leg-between-lab-and-field.png')
   })
 
   it('sets canonical to the essay URL', () => {

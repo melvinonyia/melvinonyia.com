@@ -31,6 +31,7 @@ const POST: WorkPostSummary = {
   excerpt: 'Short summary.',
   tags: ['tooling'],
   heroImage: null,
+  ogImage: null,
 }
 
 describe('WorkIndexView', () => {

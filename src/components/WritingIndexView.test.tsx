@@ -32,6 +32,7 @@ const ESSAY: EssaySummary = {
   tags: ['code'],
   readTime: 4,
   coverImage: null,
+  ogImage: null,
 }
 
 describe('WritingIndexView', () => {
