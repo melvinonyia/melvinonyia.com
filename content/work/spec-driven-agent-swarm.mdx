@@ -1,0 +1,52 @@
+---
+title: Spec-driven agent swarm
+published: 2026-06-17
+dek: A lightweight spec-driven workflow — a CLI that turns a rough idea into a PRD, an RFC, and a backlog of vertical-slice tasks, then runs parallel agents against them and lands each as a reviewed pull request.
+tags:
+  - agentic systems
+  - developer tools
+  - cli
+  - orchestration
+---
+
+## The problem
+
+Coding agents are good at writing code and bad at deciding what to write. Hand
+one a fuzzy idea and it sprints confidently in the wrong direction; hand a
+backlog to several at once and they trip over each other's edits, drift from the
+original intent, and leave you to reconcile the mess by hand. The bottleneck
+isn't generation — it's keeping a swarm of agents aligned to a spec, and keeping
+a human in the loop without making the human the slow part.
+
+## What I built
+
+Swarm is a thin spec-driven-development layer: a small CLI with a few commands.
+The contract is a `tasks/` directory in the project.
+
+`swarm plan <idea>` interviews you to exhaustion — grilling the idea until the
+*what* and *why* are sharp — then works down a chain, each step built from the
+one before: a PRD pins down user needs and testable requirements, an RFC turns
+that into a design with its trade-offs, and the RFC is cut into a set of
+independently grabbable tasks, one vertical slice per file. The PRD, the RFC, and
+a tasks overview come out as HTML rather than raw Markdown — far easier on the
+eyes when you actually sit down to review a spec — while the tasks the swarm
+consumes live as Markdown files in the directory underneath.
+
+`swarm analyze` then cross-checks those artifacts for gaps and contradictions, so
+a spec problem gets caught before it fans out into the build. `swarm implement`
+runs the swarm: each agent grabs a slice, implements it behind a set of
+verification gates, and pushes the result to GitHub as a pull request. Nothing
+merges itself. I review and merge — human-in-the-loop by design — once a task has
+passed its gates, so the rigor is automated but the judgment stays mine. The
+whole run is observable from the CLI: what's planned, what's in flight, what's
+gated, and what's waiting on me.
+
+## Outcome
+
+This site was part of the proof of concept. The case studies, the theme-token
+refactor, the SEO and content collections, the CI pipeline — much of it was
+specced, sliced, and landed as swarmed tasks reviewed as PRs, which is also why
+the workflow's seams show in the commit history. Spec-first turned out to be the
+unlock for parallelism: when the intent is written down precisely enough, several
+agents can work at once without colliding, and review collapses to reading a
+focused diff against a task I already understood before it was written.
