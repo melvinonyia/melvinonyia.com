@@ -11,6 +11,7 @@ function makeCaseStudy(overrides: Partial<CaseStudySummary> = {}): CaseStudySumm
     tags: ['biomechanics'],
     leadImage: '/images/movement-fingerprint/arch.png',
     ogImage: null,
+    featured: false,
     ...overrides,
   }
 }

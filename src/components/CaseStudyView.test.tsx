@@ -13,6 +13,7 @@ function makeCaseStudy(overrides: Partial<CaseStudy> = {}): CaseStudy {
     tags: ['ml', 'signal-processing'],
     leadImage: null,
     ogImage: null,
+    featured: false,
     Body,
     ...overrides,
   }

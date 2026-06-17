@@ -32,6 +32,7 @@ const CASE_STUDY: CaseStudySummary = {
   tags: ['tooling', 'infra'],
   leadImage: null,
   ogImage: null,
+  featured: false,
 }
 
 describe('WorkPreview', () => {

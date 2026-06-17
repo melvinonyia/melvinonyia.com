@@ -7,6 +7,7 @@ export interface CaseStudyFrontmatter {
   tags?: string[]
   leadImage?: string
   ogImage?: string
+  featured?: boolean
 }
 
 export interface CaseStudySummary {
@@ -17,6 +18,7 @@ export interface CaseStudySummary {
   tags: string[]
   leadImage: string | null
   ogImage: string | null
+  featured: boolean
 }
 
 export interface CaseStudy extends CaseStudySummary {
@@ -36,6 +38,15 @@ export function getCaseStudySummaries(): CaseStudySummary[] {
 export function getCaseStudySummary(slug: string): CaseStudySummary | null {
   const c = getCaseStudy(slug)
   return c ? summarize(c) : null
+}
+
+/**
+ * Case studies flagged `featured: true` in frontmatter, reverse-chronological.
+ * Used to curate the home page; pass a limit to show only the latest few.
+ */
+export function getFeaturedCaseStudySummaries(limit?: number): CaseStudySummary[] {
+  const featured = getCaseStudySummaries().filter((c) => c.featured)
+  return limit === undefined ? featured : featured.slice(0, limit)
 }
 
 interface MdxModule {
@@ -60,6 +71,7 @@ function toCaseStudy(filePath: string, mod: MdxModule): CaseStudy {
     tags: mod.frontmatter.tags ?? [],
     leadImage: mod.frontmatter.leadImage ?? null,
     ogImage: mod.frontmatter.ogImage ?? null,
+    featured: mod.frontmatter.featured ?? false,
     Body: mod.default,
   }
 }

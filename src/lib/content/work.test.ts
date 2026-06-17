@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   getCaseStudies,
   getCaseStudy,
+  getFeaturedCaseStudySummaries,
   resolveCaseStudy,
   CaseStudyNotFoundError,
 } from './work'
@@ -43,6 +44,24 @@ describe('work content collection', () => {
   it('exposes dek from frontmatter when present', () => {
     const fingerprint = getCaseStudy('movement-fingerprint')
     expect(fingerprint!.dek).toMatch(/per-athlete kinematic signatures/)
+  })
+
+  it('exposes featured as a boolean for every case study', () => {
+    for (const c of getCaseStudies()) {
+      expect(typeof c.featured).toBe('boolean')
+    }
+  })
+
+  it('getFeaturedCaseStudySummaries returns only flagged studies, reverse-chronologically', () => {
+    const featured = getFeaturedCaseStudySummaries()
+    expect(featured.length).toBeGreaterThan(0)
+    expect(featured.every((c) => c.featured)).toBe(true)
+    const dates = featured.map((c) => c.published)
+    expect(dates).toEqual([...dates].sort((a, b) => (a < b ? 1 : -1)))
+  })
+
+  it('getFeaturedCaseStudySummaries caps the result at the given limit', () => {
+    expect(getFeaturedCaseStudySummaries(2)).toHaveLength(2)
   })
 
   it('getCaseStudy returns null for unknown slugs', () => {
