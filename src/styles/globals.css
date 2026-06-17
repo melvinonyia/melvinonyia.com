@@ -35,7 +35,7 @@
   --ink: rgb(194 194 194);
   --dek: rgb(148 148 148);
   --soft: rgb(160 158 150);
-  --muted: rgb(123 122 116);
+  --muted: rgb(141 140 132);
   --accent: rgb(115 98 47);
   --accent-lift: rgb(155 138 85);
   --danger: rgb(118 38 38);
@@ -101,7 +101,7 @@
   --ink: rgb(40 40 40);
   --dek: rgb(80 80 77);
   --soft: rgb(95 95 92);
-  --muted: rgb(120 120 117);
+  --muted: rgb(112 112 109);
   --accent: rgb(115 98 47);
   --accent-lift: rgb(155 138 85);
   --drawer-ground: rgb(24 24 22);
@@ -865,6 +865,10 @@ a {
 
 .contact-page__secondary a {
   color: var(--ink);
+  /* underline distinguishes the link from surrounding muted text — required
+     for WCAG 1.4.1 (use of color); resting state, not just hover. */
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
   transition: color 0.2s ease;
 }
 
@@ -920,7 +924,7 @@ a {
   --ink: rgb(194 194 194);
   --dek: rgb(148 148 148);
   --soft: rgb(160 158 150);
-  --muted: rgb(123 122 116);
+  --muted: rgb(141 140 132);
   --accent: rgb(115 98 47);
   --accent-lift: rgb(155 138 85);
   --drawer-ground: rgb(24 24 22);
