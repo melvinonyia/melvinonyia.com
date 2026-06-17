@@ -72,7 +72,7 @@ export function SiteHeader() {
 
       <nav
         className={open ? 'site-drawer is-open' : 'site-drawer'}
-        aria-hidden={!open}
+        inert={!open}
         aria-label="Primary"
       >
         <div className="site-drawer-nav">

@@ -17,9 +17,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Build first: the TanStack Router Vite plugin emits
+      # src/routeTree.gen.ts (gitignored) as a side effect, and both
+      # tsc and vitest import through it.
+      - run: npm run build
       - run: npm run typecheck
       - run: npm test
-      - run: npm run build
 
   playwright:
     name: Playwright smoke + reduced-motion sweep
