@@ -1,4 +1,4 @@
-# melvinonyia.com v2
+# melvinonyia.com
 
 Fresh build of [melvinonyia.com](https://melvinonyia.com) on Vite + TanStack Start (SSR with streaming), Tailwind v4, dark-only, deployed to Vercel. See `prd-site-v2.md` and `issues/` for the full plan.
 
