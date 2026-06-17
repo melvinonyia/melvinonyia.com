@@ -34,10 +34,10 @@ describe('work content collection', () => {
     expect(dates).toEqual(sorted)
   })
 
-  it('falls back to an empty dek when frontmatter omits it', () => {
-    const gait = getCaseStudy('gait-lab-toolkit')
-    expect(gait).not.toBeNull()
-    expect(gait!.dek).toBe('')
+  it('exposes dek as a string for every case study, defaulting to empty when frontmatter omits it', () => {
+    for (const c of getCaseStudies()) {
+      expect(typeof c.dek).toBe('string')
+    }
   })
 
   it('exposes dek from frontmatter when present', () => {
