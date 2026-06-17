@@ -1420,6 +1420,24 @@ a {
 }
 .detail-layout-body img { padding-top: 1.5rem; width: 100%; height: auto; }
 .detail-layout-body figure { margin: 0; }
+.detail-layout-body ul,
+.detail-layout-body ol {
+  margin: 0 0 1.5rem 0;
+  padding-left: 1.4rem;
+  max-width: 66ch;
+}
+.detail-layout-body ul { list-style: disc; }
+.detail-layout-body ol { list-style: decimal; }
+.detail-layout-body li { margin: 0 0 0.5rem 0; padding-left: 0.3rem; }
+.detail-layout-body li::marker { color: var(--muted); }
+.detail-layout-body li:last-child { margin-bottom: 0; }
+.detail-layout-body :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background-color: var(--surface);
+  padding: 0.1em 0.35em;
+  border-radius: 0.3rem;
+}
 .detail-layout-body pre {
   padding-top: 1rem;
   display: block;
