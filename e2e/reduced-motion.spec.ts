@@ -9,7 +9,9 @@ test.describe('reduced-motion sweep', () => {
 
   test('Cmd-K open/close round-trip works with no animation flake', async ({ page }) => {
     await page.goto('/')
-    await page.keyboard.press('Meta+k')
+    // Wait for hydration so the document keydown listener is installed.
+    await page.waitForLoadState('networkidle')
+    await page.keyboard.press('ControlOrMeta+k')
     await expect(page.getByPlaceholder(/search/i)).toBeFocused()
     await page.keyboard.press('Escape')
     await expect(page.getByPlaceholder(/search/i)).toHaveCount(0)
@@ -28,7 +30,8 @@ test.describe('reduced-motion sweep', () => {
     page,
   }) => {
     await page.goto('/')
-    await page.keyboard.press('Meta+k')
+    await page.waitForLoadState('networkidle')
+    await page.keyboard.press('ControlOrMeta+k')
     await page.getByPlaceholder(/search/i).fill('writing')
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(/\/writing$/)

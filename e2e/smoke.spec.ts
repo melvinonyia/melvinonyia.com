@@ -34,7 +34,10 @@ test.describe('drawer', () => {
 test.describe('command palette', () => {
   test('Meta+K opens the palette and Enter navigates', async ({ page }) => {
     await page.goto('/')
-    await page.keyboard.press('Meta+k')
+    // Wait for hydration — the document keydown listener that catches Cmd+K
+    // is installed in a useEffect, so it's not active until hydration completes.
+    await page.waitForLoadState('networkidle')
+    await page.keyboard.press('ControlOrMeta+k')
     const search = page.getByPlaceholder(/search/i)
     await expect(search).toBeFocused()
     await search.fill('contact')
@@ -44,7 +47,8 @@ test.describe('command palette', () => {
 
   test('Esc closes the palette', async ({ page }) => {
     await page.goto('/')
-    await page.keyboard.press('Meta+k')
+    await page.waitForLoadState('networkidle')
+    await page.keyboard.press('ControlOrMeta+k')
     await expect(page.getByPlaceholder(/search/i)).toBeFocused()
     await page.keyboard.press('Escape')
     await expect(page.getByPlaceholder(/search/i)).toHaveCount(0)
@@ -55,7 +59,7 @@ test.describe('contact page', () => {
   test('renders the email CTA with a mailto link', async ({ page }) => {
     await page.goto('/contact')
     await expect(page.getByRole('heading', { level: 1, name: 'Get in touch' })).toBeVisible()
-    const email = page.getByRole('link', { name: /melvin\.onyia@gmail\.com/i })
+    const email = page.getByRole('link', { name: /hello@melvinonyia\.com/i })
     await expect(email).toHaveAttribute('href', /^mailto:/)
   })
 })
