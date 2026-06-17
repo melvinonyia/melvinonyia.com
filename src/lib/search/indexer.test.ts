@@ -18,6 +18,7 @@ function makeCaseStudy(overrides: Partial<CaseStudySummary>): CaseStudySummary {
     tags: [],
     leadImage: null,
     ogImage: null,
+    featured: false,
     ...overrides,
   }
 }
