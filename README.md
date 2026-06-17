@@ -1,43 +1,44 @@
 # melvinonyia.com
 
-Fresh build of [melvinonyia.com](https://melvinonyia.com) on Vite + TanStack Start (SSR with streaming), Tailwind v4, dark-only, deployed to Vercel. See `prd-site-v2.md` and `issues/` for the full plan.
+Personal site at [melvinonyia.com](https://melvinonyia.com). Vite + TanStack
+Start (SSR + prerender) on React 19, Tailwind v4, MDX for long-form, deployed
+to Vercel. Product docs in `prd/`.
 
 ## Commands
 
 ```sh
-npm install        # install deps
-npm run dev        # start dev server with HMR
-npm run build      # production build (SSR)
-npm test           # run unit tests
-npm run typecheck  # tsc --noEmit
+npm install
+npm run dev          # Vite dev with HMR
+npm run build        # SSR build + prerender → dist/client
+npm test             # Vitest
+npm run test:e2e     # Playwright
+npm run typecheck    # tsc --noEmit
 ```
 
-## Stack
-
-- **Vite 7** + React 19
-- **TanStack Start** (SSR, streaming) + TanStack Router (file-based)
-- **Tailwind v4** via the CSS-first `@theme` directive — tokens live in `src/styles/globals.css` at `:root` as CSS custom properties; Tailwind reads from them
-- **Vitest** + React Testing Library + jsdom
+`npm run build` must run before `typecheck`/`test` on a fresh checkout — the
+TanStack Router Vite plugin emits the (gitignored) `src/routeTree.gen.ts` as a
+side effect.
 
 ## Layout
 
-```
-src/
-├── components/      reusable presentational + interactive primitives
-├── routes/          file-based routes (TanStack Router)
-│   ├── __root.tsx
-│   └── index.tsx
-├── styles/
-│   └── globals.css  tokens + @font-face + Tailwind import + @theme mirror
-└── router.tsx       router factory
+- `src/routes/` — file-based routes; each exposes a `head` from `src/lib/seo/`
+- `content/work/`, `content/writing/` — MDX with frontmatter
+  (`title`, `published`, optional `dek`, `tags`)
+- `src/styles/globals.css` — Tailwind import, `@theme`, design tokens at
+  `:root`, paper-palette override under `[data-palette="paper"]`
+- `src/lib/{search,seo,site,content,motion}` — palette, search index, head
+  builders, content readers
+- `public/fonts/` — Söhne, Berkeley Mono, Editorial New (see its README)
 
-public/fonts/        self-hosted Söhne + Berkeley Mono (.woff2 not committed)
-```
+Cmd/Ctrl+K opens the command palette over a build-time search index.
 
-## Fonts
+## CI
 
-Söhne and Berkeley Mono are licensed and **not** committed. See `public/fonts/README.md` for the expected filenames. Until they're dropped in, the `@font-face` blocks fall back to Inter / JetBrains Mono / system fonts.
+`main` is PR-gated; three jobs must pass before merge:
 
-## Deploy
+- Vitest + typecheck + build
+- Playwright smoke + reduced-motion sweep
+- Lighthouse CI (thresholds at 0.95; perf is skipped on `/` because the page
+  is sub-frame fast and Lighthouse can't identify an LCP candidate)
 
-Vercel auto-detects TanStack Start. Pushing to `main` triggers a preview deployment. The production cutover from the old site is tracked in `issues/17-domain-cutover.md`.
+Vercel auto-deploys: previews per PR, production on merge.
